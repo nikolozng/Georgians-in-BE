@@ -209,9 +209,17 @@ details[open] > .question::before { content: "−"; }
 .form-section .success {
   margin-top: 1.5rem;
   padding: 1rem 1.25rem;
-  background: rgba(214, 40, 40, 0.06);
+  background: rgba(0, 53, 102, 0.06);
+  border-left: 4px solid var(--be-blue);
+  border-radius: 4px;
+}
+.form-section .error {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(214, 40, 40, 0.1);
   border-left: 4px solid var(--ge-red);
   border-radius: 4px;
+  color: var(--ink);
 }
 
 /* === Footer === */

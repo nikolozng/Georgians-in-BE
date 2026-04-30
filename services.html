@@ -21,7 +21,7 @@
     <p class="subtitle">List your service so other Georgians in Belgium can find you. Free, public, no commission.</p>
 
     <section class="form-section">
-      <form id="service-form" novalidate>
+      <form id="service-form">
 
         <div class="field">
           <label for="category">What service do you offer?
@@ -84,8 +84,10 @@
         <button type="submit" class="submit-btn">Submit for review</button>
 
         <div id="success" class="success hidden" role="status">
-          <strong>Thanks!</strong> The form is in beta — submissions aren't being saved yet. Once the backend is wired up, real submissions will be reviewed and published within a few days.
+          <strong>Thanks!</strong> Your submission has been received. We'll review it and publish it within a few days.
         </div>
+
+        <div id="error" class="error hidden" role="alert"></div>
 
       </form>
     </section>
@@ -95,16 +97,69 @@
     </footer>
   </main>
 
+  <!-- Supabase JavaScript client library, loaded from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    // Form handler: prevent the default page reload, show an in-page success message.
+    // Connect to your Supabase project. Both values below are safe to publish —
+    // Row Level Security policies in the database control what they can actually do.
+    const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+
     (function() {
+      // Create a Supabase client. This object is what we use to query the database.
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
       const form = document.getElementById('service-form');
       const success = document.getElementById('success');
-      if (!form || !success) return;
-      form.addEventListener('submit', function(e) {
-        e.preventDefault(); // stop the browser from submitting and reloading
+      const errorBox = document.getElementById('error');
+      const submitBtn = form.querySelector('.submit-btn');
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Hide any previous status messages.
+        success.classList.add('hidden');
+        errorBox.classList.add('hidden');
+
+        // Disable the button and change its label so the user knows we're working.
+        submitBtn.disabled = true;
+        const originalLabel = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting…';
+
+        // Build the row to insert. .trim() removes accidental leading/trailing spaces.
+        // Empty optional fields become null so they look clean in the database.
+        const row = {
+          category: form.category.value.trim(),
+          name: form.name.value.trim(),
+          description: form.description.value.trim(),
+          region: form.region.value.trim(),
+          languages: form.languages.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.phone.value.trim() || null,
+          link: form.link.value.trim() || null
+        };
+
+        // Send the INSERT request. Supabase returns { data, error } — error is null on success.
+        const { error } = await supabase.from('services').insert(row);
+
+        // Re-enable the button regardless of outcome.
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+
+        if (error) {
+          // Friendly inline error for the user; technical details go to the browser console.
+          errorBox.textContent = 'Sorry — something went wrong. Please try again, or email if it keeps failing.';
+          errorBox.classList.remove('hidden');
+          errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          console.error('Supabase insert error:', error);
+          return;
+        }
+
+        // Success — show the message, scroll to it, and clear the form for the next submission.
         success.classList.remove('hidden');
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        form.reset();
       });
     })();
   </script>
