@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Georgians in Belgium · ქართველები ბელგიაში</title>
+  <title>Georgians in Belgium · ქართველები ბელგიაში · geosin.be</title>
+  <meta name="description" content="A community resource for Georgians living in or moving to Belgium — answers to common questions in Georgian and English.">
+  <meta property="og:title" content="Georgians in Belgium · geosin.be">
+  <meta property="og:description" content="A community resource for Georgians living in or moving to Belgium — answers in Georgian and English.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://geosin.be/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ka_GE">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,6 +23,7 @@
     <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
     <a href="/" class="active">FAQ</a>
     <a href="/services.html">Services</a>
+    <a href="/about.html">About</a>
   </nav>
 
   <main class="container">
@@ -30,6 +40,11 @@
       <button type="button" data-lang="en">EN</button>
       <button type="button" data-lang="ka">ქართული</button>
     </div>
+
+    <div class="faq-search">
+      <input type="search" id="faq-search-input" placeholder="Search the FAQs…" aria-label="Search FAQs">
+    </div>
+    <p id="faq-no-results" class="faq-no-results">No FAQs match your search. Try fewer words.</p>
 
     <section class="lang-en" lang="en">
     <h2>Frequently Asked Questions</h2>
@@ -77,6 +92,31 @@
     <details class="faq-item">
       <summary class="question">How do I send money between Belgium and Georgia?</summary>
       <p class="answer">For everyday amounts, <strong>Wise</strong> and <strong>Revolut</strong> offer near-mid-market exchange rates with low fees and arrive in 1–2 days. <strong>Western Union</strong> and <strong>MoneyGram</strong> are everywhere in Belgium but expensive — usually 3–7% lost in fees and spread. For large transfers, a SEPA-style bank wire from your Belgian IBAN is also competitive. Avoid converting cash at airport exchange counters — rates there are usually 5–10% worse than online services.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question">Can I work in Belgium with a Georgian passport? Do I need a permit?</summary>
+      <p class="answer">As a non-EU citizen, generally yes — you need a work permit before starting a job. Belgium uses a <strong>single permit</strong> system: your employer applies on your behalf to the regional authorities (Brussels, Flanders, or Wallonia), and the permit doubles as your residence permit. Special tracks exist for highly-qualified workers, researchers, and intra-company transferees. Self-employed people apply for a <em>carte professionnelle</em> (professional card) instead. EU citizens don't need any of this.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question">How does public transport work in Belgium?</summary>
+      <p class="answer">Trains nationwide are run by <strong>SNCB/NMBS</strong>. Within cities and regions, there are three operators: <strong>STIB-MIVB</strong> (Brussels metro/tram/bus), <strong>De Lijn</strong> (Flanders bus/tram), and <strong>TEC</strong> (Wallonia bus). Each has its own ticketing system, but a single SNCB ticket between two cities is the typical way newcomers travel. Look up routes on <strong>SNCB.be</strong> or apps like Google Maps and Citymapper. Most people in Brussels use a rechargeable <em>MOBIB</em> card.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question">Where can I take free or cheap Dutch / French classes?</summary>
+      <p class="answer">Belgium offers heavily subsidized language courses for residents. In Flanders and Brussels, <strong>Het Huis van het Nederlands</strong> (the House of Dutch) assesses your level and places you in a course. In Wallonia and French-speaking Brussels, <strong>Lire et Écrire</strong> and various <em>communes</em> run cheap French courses. Universities and adult-education centers (e.g. <em>CVO</em> in Flanders) run evening classes for working adults. Once you're registered with a commune, courses typically cost €30–€100 per semester.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question">How do I enroll my kids in school in Belgium?</summary>
+      <p class="answer">Education is free and compulsory between ages 5 and 18. Schools are organized regionally — Dutch-speaking, French-speaking, or German-speaking — and most newcomer kids are placed in their commune's language. Many schools have special <em>OKAN</em> (Flanders) or <em>DASPA</em> (Wallonia) classes for children who don't yet speak the local language. Apply directly through the school or your commune's education office. Popular schools have waiting lists, so apply as early as possible — even before you arrive if your address is set.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question">Can I convert my Georgian driving license to a Belgian one?</summary>
+      <p class="answer">Yes. Belgium has bilateral conversion agreements with several countries, and <strong>Georgia is on the list</strong>. You can exchange your Georgian license for a Belgian one within the first <strong>2 years</strong> of registering as a resident, without retaking the driving test. After 2 years, you'd need to start over with theory and practical exams. Apply through your commune with your Georgian license, ID, residence card, and a small fee. If your license is older than 10 years or expired, the rules can vary.</p>
     </details>
 
     <details class="faq-item">
@@ -134,33 +174,75 @@
     </details>
 
     <details class="faq-item">
+      <summary class="question ka">შემიძლია ბელგიაში მუშაობა ქართული პასპორტით? სჭირდება სამუშაო ნებართვა?</summary>
+      <p class="answer ka">როგორც არა-ევროპელ მოქალაქეს, ჩვეულებრივ კი — სამუშაოს დაწყებამდე საჭიროა სამუშაო ნებართვა. ბელგიაში მოქმედებს <strong>ერთიანი ნებართვის</strong> სისტემა: დამსაქმებელი თავად აკეთებს განაცხადს რეგიონალურ ხელისუფლებაში (ბრიუსელი, ფლანდრია ან ვალონია), და ნებართვა მუშაობს ერთდროულად ბინადრობის დოკუმენტადაც. სპეციალური წესები არსებობს მაღალკვალიფიციური მუშაკებისთვის, მკვლევრებისთვის და კომპანიის შიდა ტრანსფერებისთვის. თვითდასაქმებულები იღებენ <em>carte professionnelle</em>-ს (პროფესიული ბარათი). ევროპელ მოქალაქეებს ეს არ სჭირდებათ.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question ka">როგორ მუშაობს საზოგადოებრივი ტრანსპორტი ბელგიაში?</summary>
+      <p class="answer ka">ქვეყნის მასშტაბით მატარებლებს მართავს <strong>SNCB/NMBS</strong>. ქალაქებსა და რეგიონებში სამი ოპერატორი მუშაობს: <strong>STIB-MIVB</strong> (ბრიუსელის მეტრო/ტრამვაი/ავტობუსი), <strong>De Lijn</strong> (ფლანდრიის ავტობუსი/ტრამვაი) და <strong>TEC</strong> (ვალონიის ავტობუსი). თითოეულს თავისი ბილეთის სისტემა აქვს, მაგრამ ქალაქებს შორის გადაადგილებისთვის ჩვეულებრივ ერთი SNCB-ის ბილეთი საკმარისია. მარშრუტები შეგიძლიათ ნახოთ <strong>SNCB.be</strong>-ზე ან Google Maps-სა და Citymapper-ში. ბრიუსელში ბევრი იყენებს დატენვადი <em>MOBIB</em> ბარათს.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question ka">სად ვისწავლო ჰოლანდიური ან ფრანგული უფასოდ ან იაფად?</summary>
+      <p class="answer ka">ბელგია გთავაზობთ უფასო ან ძალიან იაფ ენების კურსებს. ფლანდრიასა და ბრიუსელში მოიძიეთ <strong>Het Huis van het Nederlands</strong> (ჰოლანდიურის სახლი) — ისინი შეგიფასებენ დონეს და გასწავლიან სუბსიდირებულ კურსზე. ვალონიასა და ფრანგულენოვან ბრიუსელში <strong>Lire et Écrire</strong> და სხვადასხვა <em>commune</em> ორგანიზებულად ატარებენ ფრანგული ენის იაფ კურსებს. უნივერსიტეტებსა და კულტურულ ცენტრებში (მაგ. <em>CVO</em> ფლანდრიაში) ასევე გვხვდება საღამოს ჯგუფები მომუშავე მოზრდილთათვის. რეგისტრაციის შემდეგ კურსი ღირს დაახლოებით €30–€100 სემესტრში.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question ka">როგორ ჩავრიცხო ბავშვი ბელგიის სკოლაში?</summary>
+      <p class="answer ka">ბელგიაში განათლება უფასოა და სავალდებულოა 5-დან 18 წლამდე. სკოლები მართულია რეგიონალურად — ჰოლანდიურენოვანი, ფრანგულენოვანი ან გერმანულენოვანი. ახლადჩამოსული ოჯახების ბავშვები ჩვეულებრივ ხვდებიან მათი მუნიციპალიტეტის ენაზე მომუშავე სკოლაში. ზოგიერთ სკოლას აქვს <em>OKAN</em> (ფლანდრია) ან <em>DASPA</em> (ვალონია) კლასები სპეციალურად ბავშვებისთვის, რომლებმაც ჯერ არ იციან ადგილობრივი ენა. განცხადება უნდა გააკეთოთ პირდაპირ სკოლაში ან მუნიციპალიტეტის განათლების სამსახურში. რიგები გრძელია, ამიტომ რაც შეიძლება ადრე დარეგისტრირდით — შესაძლოა ჩამოსვლამდეც, თუ მისამართი უკვე იცით.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary class="question ka">შემიძლია ჩემი ქართული მართვის მოწმობა ბელგიურით შევცვალო?</summary>
+      <p class="answer ka">კი. ბელგიას აქვს ორმხრივი შეთანხმებები ზოგიერთ ქვეყანასთან მართვის მოწმობების გაცვლის შესახებ, და <strong>საქართველო ამ სიაშია</strong>. ქართული მოწმობის გაცვლა ბელგიურზე შესაძლებელია ბელგიაში დარეგისტრირებიდან <strong>2 წლის</strong> განმავლობაში, ხელახალი გამოცდის გარეშე. 2 წლის შემდეგ მოგიწევთ გადახედვა — თეორიული და პრაქტიკული გამოცდები ნულიდან. განცხადება უნდა გააკეთოთ თქვენს მუნიციპალიტეტში ქართული მოწმობით, პირადობით, ბინადრობის ბარათით და მცირე საფასურით. თუ თქვენი მოწმობა 10 წელზე ძველია ან ვადაგასულია, წესები შეიძლება განსხვავდებოდეს.</p>
+    </details>
+
+    <details class="faq-item">
       <summary class="question ka">რა არის ეს ვებსაიტი?</summary>
       <p class="answer ka">საზოგადოებრივი რესურსი, შექმნილი ბელგიაში მცხოვრები ან ახლადჩამოსული ქართველებისთვის. აქ გროვდება პასუხები ხშირად დასმულ კითხვებზე, მითითებები გამოსადეგ სერვისებზე და სამომავლოდ შეიქმნება დისკუსიების სივრცე. საიტი ახალია და აქტიურად ვითარდება — გამოხმაურებები მისასალმებელია.</p>
     </details>
     </section>
 
     <footer>
-      <p><strong>This is a placeholder page.</strong> Real, community-curated content is being collected.</p>
-      <p class="ka"><strong>ეს არის სატესტო გვერდი.</strong> რეალური შინაარსი ჯერ კიდევ იქმნება.</p>
-      <p>Built by Nikoloz · 2026</p>
+      <p>Built by Nikoloz · 2026 · <a href="/services.html">Services</a> · <a href="/about.html">About</a></p>
     </footer>
   </main>
 
   <script>
-    // Language toggle: switches the visible FAQ section between English and Georgian.
-    // Wrapped in an IIFE (immediately-invoked function expression) so our variables stay private.
+    // Combined behavior: language toggle + FAQ search.
+    // Toggle hides the off-language section. Search hides individual FAQ items
+    // within the currently visible section that don't match the query.
     (function() {
-      // Key under which we save the user's choice in their browser, so it survives across visits.
       const STORAGE_KEY = 'geosin-lang';
 
-      // Find the toggle buttons and the two language sections in the page.
       const buttons = document.querySelectorAll('.lang-toggle button');
       const sections = {
         en: document.querySelector('.lang-en'),
         ka: document.querySelector('.lang-ka')
       };
+      const searchInput = document.getElementById('faq-search-input');
+      const noResults = document.getElementById('faq-no-results');
 
-      // Apply a language: hide the other section, highlight the active button, remember the choice.
+      // Hide / show .faq-item elements within the currently visible language section
+      // based on whether their text matches the search query.
+      function applySearch() {
+        const q = (searchInput ? searchInput.value : '').trim().toLowerCase();
+        let anyVisible = false;
+        Object.keys(sections).forEach(function(key) {
+          const section = sections[key];
+          if (!section || section.classList.contains('hidden')) return;
+          const items = section.querySelectorAll('.faq-item');
+          items.forEach(function(el) {
+            const text = el.textContent.toLowerCase();
+            const matches = !q || text.indexOf(q) !== -1;
+            el.classList.toggle('hidden', !matches);
+            if (matches) anyVisible = true;
+          });
+        });
+        if (noResults) noResults.style.display = (q && !anyVisible) ? 'block' : 'none';
+      }
+
       function setLanguage(lang) {
         Object.keys(sections).forEach(function(key) {
           const el = sections[key];
@@ -173,19 +255,16 @@
         });
         localStorage.setItem(STORAGE_KEY, lang);
         document.documentElement.lang = lang;
+        // Re-apply the search filter to the now-visible section.
+        applySearch();
       }
 
-      // Wire up clicks: each button calls setLanguage with its own data-lang value.
       buttons.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          setLanguage(btn.dataset.lang);
-        });
+        btn.addEventListener('click', function() { setLanguage(btn.dataset.lang); });
       });
+      if (searchInput) searchInput.addEventListener('input', applySearch);
 
-      // Decide which language to show on first paint:
-      //   1. If we've saved a choice before, use that.
-      //   2. Otherwise, if the browser is set to Georgian, default to KA.
-      //   3. Otherwise, default to EN.
+      // Initial language: stored preference, then browser locale, then English default.
       const stored = localStorage.getItem(STORAGE_KEY);
       const browserPrefersGeorgian = (navigator.language || '').toLowerCase().startsWith('ka');
       setLanguage(stored || (browserPrefersGeorgian ? 'ka' : 'en'));
