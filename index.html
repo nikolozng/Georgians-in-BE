@@ -103,6 +103,33 @@
       h1 { font-size: 1.65rem; }
       .container { padding: 1.5rem 1rem 3rem; }
     }
+    .lang-toggle {
+      display: flex;
+      gap: 0.4rem;
+      margin: 0.5rem 0 2rem;
+    }
+    .lang-toggle button {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 0.95rem;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .lang-toggle button:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+    .lang-toggle button.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -116,6 +143,12 @@
     <p class="subtitle ka">ქართველები ბელგიაში — საინფორმაციო რესურსი</p>
     <p class="subtitle">A community resource for Georgians living in or moving to Belgium.</p>
 
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="ka">ქართული</button>
+    </div>
+
+    <section class="lang-en" lang="en">
     <h2>Frequently Asked Questions</h2>
 
     <details class="faq-item">
@@ -167,6 +200,9 @@
       <summary class="question">What is this website?</summary>
       <p class="answer">A community resource built by and for Georgians living in or moving to Belgium. It collects answers to common questions, points to useful services, and will eventually host discussion. New and in active development — feedback welcome.</p>
     </details>
+    </section>
+
+    <section class="lang-ka" lang="ka">
     <h2 class="ka">ხშირად დასმული კითხვები</h2>
 
     <details class="faq-item">
@@ -218,6 +254,7 @@
       <summary class="question ka">რა არის ეს ვებსაიტი?</summary>
       <p class="answer ka">საზოგადოებრივი რესურსი, შექმნილი ბელგიაში მცხოვრები ან ახლადჩამოსული ქართველებისთვის. აქ გროვდება პასუხები ხშირად დასმულ კითხვებზე, მითითებები გამოსადეგ სერვისებზე და სამომავლოდ შეიქმნება დისკუსიების სივრცე. საიტი ახალია და აქტიურად ვითარდება — გამოხმაურებები მისასალმებელია.</p>
     </details>
+    </section>
 
     <footer>
       <p><strong>This is a placeholder page.</strong> Real, community-curated content is being collected.</p>
@@ -225,5 +262,51 @@
       <p>Built by Nikoloz · 2026 · <a href="ROADMAP.md">project roadmap</a></p>
     </footer>
   </main>
+
+  <script>
+    // Language toggle: switches the visible FAQ section between English and Georgian.
+    // Wrapped in an IIFE (immediately-invoked function expression) so our variables stay private.
+    (function() {
+      // Key under which we save the user's choice in their browser, so it survives across visits.
+      const STORAGE_KEY = 'geosin-lang';
+
+      // Find the toggle buttons and the two language sections in the page.
+      const buttons = document.querySelectorAll('.lang-toggle button');
+      const sections = {
+        en: document.querySelector('.lang-en'),
+        ka: document.querySelector('.lang-ka')
+      };
+
+      // Apply a language: hide the other section, highlight the active button, remember the choice.
+      function setLanguage(lang) {
+        Object.keys(sections).forEach(function(key) {
+          const el = sections[key];
+          if (el) el.classList.toggle('hidden', key !== lang);
+        });
+        buttons.forEach(function(btn) {
+          const isActive = btn.dataset.lang === lang;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-pressed', isActive);
+        });
+        localStorage.setItem(STORAGE_KEY, lang);
+        document.documentElement.lang = lang;
+      }
+
+      // Wire up clicks: each button calls setLanguage with its own data-lang value.
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          setLanguage(btn.dataset.lang);
+        });
+      });
+
+      // Decide which language to show on first paint:
+      //   1. If we've saved a choice before, use that.
+      //   2. Otherwise, if the browser is set to Georgian, default to KA.
+      //   3. Otherwise, default to EN.
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const browserPrefersGeorgian = (navigator.language || '').toLowerCase().startsWith('ka');
+      setLanguage(stored || (browserPrefersGeorgian ? 'ka' : 'en'));
+    })();
+  </script>
 </body>
 </html>
