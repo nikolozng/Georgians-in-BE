@@ -1,41 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page not found · geosin.be</title>
-  <meta name="robots" content="noindex">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page not found — geosin.be</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: var(--surface); }
+    .error-page {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+    .error-inner { max-width: 520px; width: 100%; text-align: center; }
+
+    /* Animated 404 */
+    .error-num {
+      font-size: clamp(72px, 15vw, 136px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -6px;
+      margin-bottom: 4px;
+      user-select: none;
+    }
+    .error-num .n4  { color: var(--hairline); }
+    .error-num .n0  {
+      color: var(--rausch-light);
+      display: inline-block;
+      animation: spin-0 6s ease-in-out infinite;
+    }
+    .error-num .n4b { color: var(--hairline); }
+    @keyframes spin-0 {
+      0%, 85%, 100% { transform: rotate(0deg); }
+      92%            { transform: rotate(180deg); }
+    }
+
+    .error-inner h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .error-inner p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .error-inner .ka {
+      font-family: var(--font-georgian);
+      color: var(--muted-soft);
+      font-size: 13px;
+      margin-bottom: 36px;
+      display: block;
+    }
+
+    .error-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    /* Suggestions grid */
+    .suggestions {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      text-align: left;
+    }
+    .suggestions-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .suggestion-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--hairline);
+      text-decoration: none;
+      color: var(--ink);
+      transition: background 0.12s;
+    }
+    .suggestion-row:last-child { border-bottom: none; }
+    .suggestion-row:hover { background: var(--surface); }
+    .sug-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--r-sm);
+      background: var(--rausch-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sug-icon svg { color: var(--rausch); }
+    .sug-body { flex: 1; }
+    .sug-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .sug-desc  { font-size: 12px; color: var(--muted); }
+    .sug-desc .ka { font-family: var(--font-georgian); display: inline; }
+    .sug-arrow { color: var(--muted-soft); font-size: 18px; }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
-    <a href="/">FAQ</a>
-    <a href="/services.html">Services</a>
-    <a href="/about.html">About</a>
-  </nav>
 
-  <main class="container">
-    <h1>404 · Page not found</h1>
-    <p class="subtitle">The page you're looking for doesn't exist, or has moved.</p>
-    <p class="subtitle ka">გვერდი ვერ მოიძებნა — ან არ არსებობს, ან გადაიტანეს.</p>
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+      <a href="services.html#register" class="btn-nav-cta">List a service</a>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
 
-    <section class="prose">
-      <p>Try one of these:</p>
-      <ul class="link-list">
-        <li><a href="/">FAQ</a> — answers to common questions for Georgians in Belgium</li>
-        <li><a href="/services.html">Services</a> — find a service or list your own</li>
-        <li><a href="/about.html">About</a> — what this site is and who runs it</li>
-      </ul>
-    </section>
+<!-- 404 CONTENT -->
+<main class="error-page">
+  <div class="error-inner">
 
-    <footer>
-      <p>Built by Nikoloz · 2026</p>
-    </footer>
-  </main>
+    <div class="error-num" aria-label="404">
+      <span class="n4">4</span><span class="n0">0</span><span class="n4b">4</span>
+    </div>
+
+    <h2>
+      <span data-lang-block="en">This page doesn't exist</span>
+      <span data-lang-block="ka" class="ka" style="display:block;font-family:var(--font-georgian)">ეს გვერდი არ არსებობს</span>
+    </h2>
+
+    <p data-lang-block="en">The link may be broken, or the page may have moved. Let's get you back on track.</p>
+    <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ბმული შეიძლება გატეხილია, ან გვერდი გადავიდა. დაგეხმარებით სწორ გზაზე დაბრუნებაში.</p>
+
+    <div class="error-links">
+      <a href="index.html" class="btn btn-primary btn-sm">Go home</a>
+      <a href="services.html" class="btn btn-ghost btn-sm">Browse services</a>
+      <a href="mailto:hello@geosin.be" class="btn btn-ghost btn-sm">Contact us</a>
+    </div>
+
+    <!-- Quick navigation suggestions -->
+    <div class="suggestions">
+      <div class="suggestions-header">You might be looking for…</div>
+
+      <a href="index.html#faq" class="suggestion-row">
+        <div class="sug-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="sug-body">
+          <div class="sug-title">FAQ — Living in Belgium</div>
+          <div class="sug-desc">Visas, healthcare, schools, driving licences · <span class="ka">ვიზები, ჯანდაცვა, სკოლები</span></div>
+        </div>
+        <span class="sug-arrow">›</span>
+      </a>
+
+      <a href="services.html" class="suggestion-row">
+        <div class="sug-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="sug-body">
+          <div class="sug-title">Services directory</div>
+          <div class="sug-desc">80+ Georgian professionals in Belgium · <span class="ka">80+ ქართველი პროფესიონალი</span></div>
+        </div>
+        <span class="sug-arrow">›</span>
+      </a>
+
+      <a href="services.html#register" class="suggestion-row">
+        <div class="sug-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="sug-body">
+          <div class="sug-title">List your service</div>
+          <div class="sug-desc">Free listing for Georgian professionals · <span class="ka">უფასო განცხადება</span></div>
+        </div>
+        <span class="sug-arrow">›</span>
+      </a>
+
+      <a href="about.html" class="suggestion-row">
+        <div class="sug-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="sug-body">
+          <div class="sug-title">About geosin.be</div>
+          <div class="sug-desc">Our story, team &amp; values · <span class="ka">ჩვენი ისტორია და გუნდი</span></div>
+        </div>
+        <span class="sug-arrow">›</span>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="services.html#register">List a service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px">
+        <a href="#">Privacy</a>
+        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
+  (function() { setLang(localStorage.getItem('geosin-lang') || 'en'); })();
+</script>
 </body>
 </html>

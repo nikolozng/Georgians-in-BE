@@ -1,62 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About · geosin.be · Georgians in Belgium</title>
-  <meta name="description" content="About geosin.be — a community resource by and for Georgians living in or moving to Belgium.">
-  <meta property="og:title" content="About · geosin.be">
-  <meta property="og:description" content="A community resource by and for Georgians living in or moving to Belgium.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://geosin.be/about.html">
-  <meta name="twitter:card" content="summary">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — geosin.be</title>
+  <meta name="description" content="Learn about geosin.be — a volunteer-run community platform for Georgians living in Belgium." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .mission-block {
+      background: var(--ink);
+      border-radius: var(--r-md);
+      padding: 56px 48px;
+      color: #fff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .mission-block h2 { color: #fff; font-size: 28px; margin-bottom: 16px; }
+    .mission-block p  { color: rgba(255,255,255,0.7); line-height: 1.75; margin-bottom: 10px; }
+    .mission-block .ka { font-family: var(--font-georgian); color: rgba(255,255,255,0.45); font-size: 14px; }
+    .mission-flag {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .flag-svg { width: 140px; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4)); }
+    .plus-sign { font-size: 40px; color: rgba(255,255,255,0.25); }
+    .flag-be { width: 110px; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4)); }
+    .timeline { position: relative; max-width: 640px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--hairline);
+    }
+    .tl-item { display: flex; gap: 24px; margin-bottom: 36px; position: relative; }
+    .tl-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--canvas);
+      border: 2px solid var(--hairline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--rausch);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .tl-dot.active { background: var(--rausch); border-color: var(--rausch); color: #fff; }
+    .tl-body { padding-top: 8px; }
+    .tl-year { font-size: 12px; font-weight: 700; color: var(--rausch); margin-bottom: 4px; }
+    .tl-body h4 { font-size: 16px; margin-bottom: 6px; }
+    .tl-body p  { font-size: 14px; color: var(--body-text); }
+    .tl-body .ka { font-family: var(--font-georgian); font-size: 12px; color: var(--muted); }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .value-card {
+      background: var(--surface);
+      border-radius: var(--r-md);
+      padding: 28px 24px;
+      border-left: 3px solid var(--rausch);
+    }
+    .value-card h4 { margin-bottom: 8px; }
+    .value-card p  { font-size: 14px; color: var(--body-text); }
+    .value-card .ka { font-family: var(--font-georgian); font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .partner-card {
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .partner-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--r-sm);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .partner-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .partner-desc { font-size: 12px; color: var(--muted); }
+    @media (max-width: 768px) {
+      .mission-block { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; }
+      .mission-flag  { flex-direction: row; }
+      .values-grid   { grid-template-columns: 1fr; }
+      .partners-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .partners-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
-    <a href="/">FAQ</a>
-    <a href="/services.html">Services</a>
-    <a href="/about.html" class="active">About</a>
-  </nav>
 
-  <main class="container">
-    <h1>About</h1>
-    <p class="subtitle">A community resource by and for Georgians living in or moving to Belgium.</p>
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html" class="active">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+      <a href="services.html#register" class="btn-nav-cta">List a service</a>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
 
-    <section class="prose">
-      <h2>Why this exists</h2>
-      <p>Most of what a Georgian newcomer to Belgium needs to know — how to register, how renting works, where to find a doctor — is scattered across Facebook threads, half-translated government PDFs, and word-of-mouth. <strong>geosin.be</strong> collects answers to the most common questions in one place, in Georgian and English.</p>
-      <p>Eventually it will also include a directory of community-run services (drivers, plumbers, language teachers, etc.) and a discussion forum.</p>
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">About geosin.be</p>
+    <h1>
+      <span data-lang-block="en">Who we are</span>
+      <span data-lang-block="ka" class="ka">ვინ ვართ ჩვენ</span>
+    </h1>
+    <p class="sub">ჩვენ შესახებ · À propos de nous</p>
+  </div>
+</div>
 
-      <h2>Community resources</h2>
-      <p>Beyond this site, here's where the Georgian community in Belgium gathers:</p>
-      <ul class="link-list">
-        <li><a href="https://www.facebook.com/groups/165155437439357" target="_blank" rel="noopener">Facebook group "Georgians in Belgium"</a> — thousands of members, very active for day-to-day questions.</li>
-        <li>Embassy of Georgia in Brussels — official events, document services, formal community gatherings.</li>
-        <li>Georgian Orthodox Church — services in several Belgian cities.</li>
-      </ul>
+<!-- MISSION BLOCK -->
+<section class="section">
+  <div class="container">
+    <div class="mission-block">
+      <div>
+        <h2>
+          <span data-lang-block="en">Built by the community, for the community</span>
+          <span data-lang-block="ka" class="ka">საზოგადოების მიერ, საზოგადოებისთვის</span>
+        </h2>
+        <p data-lang-block="en">
+          geosin.be was started in 2019 by a small group of Georgians who had moved to Belgium and found it difficult to navigate Belgian bureaucracy, find Georgian-speaking professionals, or simply connect with others from home.
+        </p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">
+          geosin.be დაარსდა 2019 წელს ქართველების მცირე ჯგუფის მიერ, რომლებიც ბელგიაში გადასახლდნენ და სირთულეები შეხვდათ ბელგიის ბიუროკრატიასთან გამკლავებაში, ქართველ სპეციალისტებთან კავშირში.
+        </p>
+        <p data-lang-block="en">
+          Today we are a volunteer-run platform connecting over 1,200 Georgians across Brussels, Antwerp, Ghent, Liège, and Bruges. Everything on geosin.be is free — listings, resources, and community support.
+        </p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">
+          დღეს ჩვენ მოხალისეთა მიერ მართული პლატფორმა ვართ, რომელიც 1,200-ზე მეტ ქართველს ბრიუსელში, ანტვერპენში, გენტში, ლიეჟსა და ბრუგეში აკავშირებს.
+        </p>
+      </div>
+      <div class="mission-flag">
+        <!-- Georgian flag SVG -->
+        <svg class="flag-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="120" fill="#fff"/>
+          <!-- large red cross -->
+          <rect x="88" y="0" width="24" height="120" fill="#D01010"/>
+          <rect x="0" y="48" width="200" height="24" fill="#D01010"/>
+          <!-- four small crosses in corners -->
+          <rect x="18" y="12" width="6" height="30" fill="#D01010"/>
+          <rect x="6" y="24" width="30" height="6" fill="#D01010"/>
+          <rect x="118" y="12" width="6" height="30" fill="#D01010"/>
+          <rect x="106" y="24" width="30" height="6" fill="#D01010"/>
+          <rect x="18" y="78" width="6" height="30" fill="#D01010"/>
+          <rect x="6" y="90" width="30" height="6" fill="#D01010"/>
+          <rect x="118" y="78" width="6" height="30" fill="#D01010"/>
+          <rect x="106" y="90" width="30" height="6" fill="#D01010"/>
+        </svg>
+        <span class="plus-sign">+</span>
+        <!-- Belgian flag SVG -->
+        <svg class="flag-be" viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="120" fill="#1a1a1a"/>
+          <rect x="60" width="60" height="120" fill="#FEDD00"/>
+          <rect x="120" width="60" height="120" fill="#EF3340"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <h2>How submissions and data work</h2>
-      <p>The Services page lets community members register their services — drivers, plumbers, teachers, etc. Submissions are reviewed before publication. Once approved, the public listing shows the contact details the submitter provided, exactly so others can reach out. Submissions that are spam, off-topic, or unverifiable are not published. If you submitted something and want it removed, send an email and it'll be deleted.</p>
+<!-- OUR STORY TIMELINE -->
+<section class="section" style="background:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start">
+      <div>
+        <p class="section-eyebrow">Our story</p>
+        <h2 style="margin-bottom:32px">
+          <span data-lang-block="en">How we grew</span>
+          <span data-lang-block="ka" class="ka">როგორ განვვითარდით</span>
+        </h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot">19</div>
+            <div class="tl-body">
+              <div class="tl-year">2019</div>
+              <h4><span data-lang-block="en">Founded</span><span data-lang-block="ka" class="ka">დაარსება</span></h4>
+              <p data-lang-block="en">A WhatsApp group of 12 friends became a Facebook page and then a simple website listing Georgian services in Brussels.</p>
+              <p data-lang-block="ka" class="ka">12 მეგობრის WhatsApp ჯგუფი გახდა Facebook გვერდი და შემდეგ — მარტივი ვებსაიტი.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">20</div>
+            <div class="tl-body">
+              <div class="tl-year">2020</div>
+              <h4><span data-lang-block="en">COVID mutual aid</span><span data-lang-block="ka" class="ka">COVID ურთიერთდახმარება</span></h4>
+              <p data-lang-block="en">During lockdown, the community organised food deliveries and translation support for Georgians stranded in Belgium.</p>
+              <p data-lang-block="ka" class="ka">პანდემიის დროს საზოგადოებამ მოაწყო კვებადახმარება და სათარგმნო მომსახურება.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot">22</div>
+            <div class="tl-body">
+              <div class="tl-year">2022</div>
+              <h4><span data-lang-block="en">Platform launch</span><span data-lang-block="ka" class="ka">პლატფორმის გახსნა</span></h4>
+              <p data-lang-block="en">geosin.be launched as a fully bilingual platform with a verified services directory and resource guides.</p>
+              <p data-lang-block="ka" class="ka">geosin.be გაიხსნა სრულად ორენოვანი პლატფორმის სახით გადამოწმებული სერვისების კატალოგით.</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot active">25</div>
+            <div class="tl-body">
+              <div class="tl-year">2025</div>
+              <h4><span data-lang-block="en">Forum &amp; expansion</span><span data-lang-block="ka" class="ka">ფორუმი და გაფართოება</span></h4>
+              <p data-lang-block="en">A dedicated Georgian-language forum is coming. Services now cover all five major Belgian cities.</p>
+              <p data-lang-block="ka" class="ka">ქართული ფორუმი მოდის. სერვისები ახლა ბელგიის ხუთ მთავარ ქალაქს მოიცავს.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="section-eyebrow">Our values</p>
+        <h2 style="margin-bottom:24px">
+          <span data-lang-block="en">What we stand for</span>
+          <span data-lang-block="ka" class="ka">ჩვენი ღირებულებები</span>
+        </h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <h4><span data-lang-block="en">Free, always</span><span data-lang-block="ka" class="ka">ყოველთვის უფასო</span></h4>
+            <p data-lang-block="en">No fees, no premium tiers. The directory and resources are free to use and list on forever.</p>
+            <p data-lang-block="ka" class="ka">არანაირი გადასახადი. კატალოგი და რესურსები სამუდამოდ უფასოა.</p>
+          </div>
+          <div class="value-card">
+            <h4><span data-lang-block="en">Community-first</span><span data-lang-block="ka" class="ka">საზოგადოება პირველ ადგილზე</span></h4>
+            <p data-lang-block="en">Decisions are made by and for Georgians in Belgium. We don't take commissions or advertising.</p>
+            <p data-lang-block="ka" class="ka">გადაწყვეტილებები მიიღება ბელგიაში მყოფი ქართველების მიერ. ჩვენ კომისიებს არ ვიღებთ.</p>
+          </div>
+          <div class="value-card">
+            <h4><span data-lang-block="en">Bilingual by design</span><span data-lang-block="ka" class="ka">ორენოვანი ბუნებით</span></h4>
+            <p data-lang-block="en">Every page works in Georgian and English. The Georgian script is a first-class citizen here.</p>
+            <p data-lang-block="ka" class="ka">ყველა გვერდი ქართულ და ინგლისურ ენებზეა. ქართული ანბანი აქ პირველი კლასია.</p>
+          </div>
+          <div class="value-card">
+            <h4><span data-lang-block="en">Open &amp; inclusive</span><span data-lang-block="ka" class="ka">ღია და ინკლუზიური</span></h4>
+            <p data-lang-block="en">Welcoming to all Georgians regardless of region, religion, or political view.</p>
+            <p data-lang-block="ka" class="ka">ღია ყველა ქართველისთვის, განურჩევლად რეგიონის, რელიგიისა თუ პოლიტიკური მრწამსისა.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <h2>Contact</h2>
-      <p>For questions, corrections, additions, or removal requests: open an issue on the <a href="https://github.com/Nikolozng/geosin-be" target="_blank" rel="noopener">project repository on GitHub</a>, or reach out via the Facebook group above.</p>
+<!-- TEAM -->
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Volunteers</p>
+      <h2>
+        <span data-lang-block="en">The people behind geosin.be</span>
+        <span data-lang-block="ka" class="ka">ადამიანები geosin.be-ს უკან</span>
+      </h2>
+      <p data-lang-block="en">We're a team of volunteers who moved to Belgium and decided to give back to the community.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ჩვენ მოხალისეთა გუნდი ვართ, რომლებმაც ბელგიაში გადასვლა გადაწყვიტეს და თავი უბრუნეს საზოგადოებას.</p>
+    </div>
+    <div class="team-grid">
 
-      <h2>Open source</h2>
-      <p>The site's code is public on <a href="https://github.com/Nikolozng/geosin-be" target="_blank" rel="noopener">GitHub</a>. Contributions, suggestions, and translations are welcome. This is also the author's first software project — be kind.</p>
+      <div class="team-card">
+        <div class="team-avatar">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=70" alt="Nino Beridze" loading="lazy" />
+        </div>
+        <div class="team-name">Nino Beridze</div>
+        <div class="team-role">Founder &amp; Editor</div>
+        <p class="team-bio">Moved from Tbilisi to Brussels in 2016. Works in EU affairs and runs geosin.be in her spare time.</p>
+      </div>
 
-      <h2 class="ka">ვინ აკეთებს ამას?</h2>
-      <p class="ka">საიტს აშენებს ნიკოლოზი — ბელგიასთან კავშირში მყოფი ქართველი. პროექტი ახალია და ღიაა მონაწილეობისთვის. წინადადებები, შესწორებები და დახმარება — ყოველთვის მისასალმებელია.</p>
-    </section>
+      <div class="team-card">
+        <div class="team-avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=70" alt="Giorgi Kapanadze" loading="lazy" />
+        </div>
+        <div class="team-name">Giorgi Kapanadze</div>
+        <div class="team-role">Tech &amp; Development</div>
+        <p class="team-bio">Software engineer based in Ghent. Built and maintains the geosin.be platform.</p>
+      </div>
 
-    <footer>
-      <p>Built by Nikoloz · 2026 · <a href="/">FAQ</a> · <a href="/services.html">Services</a> · <a href="/forum.html">Forum</a></p>
-    </footer>
-  </main>
+      <div class="team-card">
+        <div class="team-avatar">
+          <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=70" alt="Tamar Jikia" loading="lazy" />
+        </div>
+        <div class="team-name">Tamar Jikia</div>
+        <div class="team-role">Community Outreach</div>
+        <p class="team-bio">Connects the community in Antwerp and Bruges. Organises monthly meetups and events.</p>
+      </div>
+
+    </div>
+    <p style="margin-top:28px;font-size:14px;color:var(--muted)">
+      <span data-lang-block="en">Want to help? <a href="mailto:hello@geosin.be" style="color:var(--rausch);font-size:14px">Get in touch</a> — we welcome Georgian speakers who can help moderate, translate, or organise.</span>
+      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გსურთ დახმარება? <a href="mailto:hello@geosin.be" style="color:var(--rausch);font-size:14px">დაგვიკავშირდით</a> — ვეძებთ ქართულენოვნებს, ვინც დაეხმარება მოდერაციაში, თარგმანში ან ორგანიზებაში.</span>
+    </p>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="section" style="background:var(--surface);border-top:1px solid var(--hairline)">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Partners &amp; supporters</p>
+      <h2>
+        <span data-lang-block="en">Who supports us</span>
+        <span data-lang-block="ka" class="ka">ვინ გვიჭერს მხარს</span>
+      </h2>
+    </div>
+    <div class="partners-grid">
+      <div class="partner-card">
+        <div class="partner-logo">🇬🇪</div>
+        <div class="partner-name">Georgian Embassy Brussels</div>
+        <p class="partner-desc">Information partner</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-logo" style="background:#e8f4f8;color:#2d6fa3;font-size:13px;font-weight:700">BE</div>
+        <div class="partner-name">Fedasil</div>
+        <p class="partner-desc">Housing &amp; reception support</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-logo" style="background:#f5e6ff;color:#7c3aed;font-size:13px">EU</div>
+        <div class="partner-name">Euralia Brussels</div>
+        <p class="partner-desc">EU affairs &amp; advocacy</p>
+      </div>
+      <div class="partner-card">
+        <div class="partner-logo" style="background:#e6f9ee;color:#1a7f37;font-size:12px;font-weight:700">IOM</div>
+        <div class="partner-name">IOM Belgium</div>
+        <p class="partner-desc">Integration resources</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+    <div>
+      <h2 data-lang-block="en">Get involved</h2>
+      <h2 data-lang-block="ka" class="ka">ჩართეთ</h2>
+      <p data-lang-block="en">List your service, share resources, or just say hello at hello@geosin.be</p>
+      <p data-lang-block="ka" class="ka" style="margin-top:4px">დაარეგისტრირეთ სერვისი, გაუზიარეთ რესურსები, ან უბრალოდ მოგვწერეთ hello@geosin.be</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="services.html#register" class="btn btn-primary">List a service</a>
+      <a href="mailto:hello@geosin.be" class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.3)">Say hello</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+        <p class="ka" style="font-family:var(--font-georgian);color:rgba(255,255,255,0.35);font-size:12px;margin-top:6px">ბელგიაში მცხოვრები ქართველების საზოგადოება</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="services.html#register">List a service</a></li>
+          <li><a href="services.html">Legal help</a></li>
+          <li><a href="services.html">Translation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="forum.html">Forum</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
+  (function() { setLang(localStorage.getItem('geosin-lang') || 'en'); })();
+</script>
 </body>
 </html>
