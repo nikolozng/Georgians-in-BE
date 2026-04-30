@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register a service · Georgians in Belgium</title>
+  <title>Services · Georgians in Belgium · geosin.be</title>
+  <meta name="description" content="Find or list a community-run service for Georgians in Belgium — drivers, plumbers, teachers, and more.">
+  <meta property="og:title" content="Services · Georgians in Belgium">
+  <meta property="og:description" content="Find or list a community-run service for Georgians in Belgium.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://geosin.be/services.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,86 +21,109 @@
     <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
     <a href="/">FAQ</a>
     <a href="/services.html" class="active">Services</a>
+    <a href="/about.html">About</a>
   </nav>
 
   <main class="container">
-    <h1>Register a service</h1>
-    <p class="subtitle">List your service so other Georgians in Belgium can find you. Free, public, no commission.</p>
+    <h1>Services</h1>
+    <p class="subtitle">Community-run services by Georgians in Belgium. Browse below, or scroll down to register your own.</p>
 
-    <section class="form-section">
-      <form id="service-form">
+    <!-- ================== BROWSE LISTINGS ================== -->
+    <section aria-labelledby="browse-heading">
+      <h2 id="browse-heading">Find a service</h2>
 
-        <div class="field">
-          <label for="category">What service do you offer?
-            <span class="hint">Pick the closest category</span>
-          </label>
-          <select id="category" name="category" required>
-            <option value="">— pick a category —</option>
-            <option>Driver / Transport</option>
-            <option>Plumber / Electrician / Handyman</option>
-            <option>Cleaner</option>
-            <option>Dutch / French / English Teacher</option>
-            <option>Translator / Interpreter</option>
-            <option>Childcare / Babysitter</option>
-            <option>Hairdresser / Beauty</option>
-            <option>IT / Web / Tech</option>
-            <option>Photographer / Video</option>
-            <option>Mover</option>
-            <option>Restaurant / Catering</option>
-            <option>Other</option>
-          </select>
-        </div>
+      <div class="filter-bar">
+        <input type="search" id="filter-query" placeholder="Search by name, description, region…" aria-label="Search services">
+        <select id="filter-category" aria-label="Filter by category">
+          <option value="">All categories</option>
+        </select>
+      </div>
 
-        <div class="field">
-          <label for="name">Your name or business name</label>
-          <input type="text" id="name" name="name" required maxlength="80">
-        </div>
+      <div id="listings" class="listings">
+        <p class="loading">Loading services…</p>
+      </div>
+    </section>
 
-        <div class="field">
-          <label for="description">Short description
-            <span class="hint">2–3 sentences. What you do, what makes you a good choice.</span>
-          </label>
-          <textarea id="description" name="description" required maxlength="500"></textarea>
-        </div>
+    <!-- ================== REGISTER ================== -->
+    <section class="section-divider" aria-labelledby="register-heading">
+      <h2 id="register-heading">Offer a service?</h2>
+      <p class="subtitle">List your service so other Georgians in Belgium can find you. Free, public, no commission. Submissions are reviewed before going live.</p>
 
-        <div class="field">
-          <label for="region">City or region you serve</label>
-          <input type="text" id="region" name="region" placeholder="e.g. Brussels, Ghent, all of Flanders" required maxlength="80">
-        </div>
+      <div class="form-section">
+        <form id="service-form">
 
-        <div class="field">
-          <label for="languages">Languages you speak</label>
-          <input type="text" id="languages" name="languages" placeholder="e.g. Georgian, English, Dutch" required maxlength="80">
-        </div>
+          <div class="field">
+            <label for="category">What service do you offer?
+              <span class="hint">Pick the closest category</span>
+            </label>
+            <select id="category" name="category" required>
+              <option value="">— pick a category —</option>
+              <option>Driver / Transport</option>
+              <option>Plumber / Electrician / Handyman</option>
+              <option>Cleaner</option>
+              <option>Dutch / French / English Teacher</option>
+              <option>Translator / Interpreter</option>
+              <option>Childcare / Babysitter</option>
+              <option>Hairdresser / Beauty</option>
+              <option>IT / Web / Tech</option>
+              <option>Photographer / Video</option>
+              <option>Mover</option>
+              <option>Restaurant / Catering</option>
+              <option>Other</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label for="email">Contact email</label>
-          <input type="email" id="email" name="email" required maxlength="120">
-        </div>
+          <div class="field">
+            <label for="name">Your name or business name</label>
+            <input type="text" id="name" name="name" required maxlength="80">
+          </div>
 
-        <div class="field">
-          <label for="phone">Phone (optional)</label>
-          <input type="tel" id="phone" name="phone" maxlength="40">
-        </div>
+          <div class="field">
+            <label for="description">Short description
+              <span class="hint">2–3 sentences. What you do, what makes you a good choice.</span>
+            </label>
+            <textarea id="description" name="description" required maxlength="500"></textarea>
+          </div>
 
-        <div class="field">
-          <label for="link">Website or social profile (optional)</label>
-          <input type="url" id="link" name="link" placeholder="https://..." maxlength="200">
-        </div>
+          <div class="field">
+            <label for="region">City or region you serve</label>
+            <input type="text" id="region" name="region" placeholder="e.g. Brussels, Ghent, all of Flanders" required maxlength="80">
+          </div>
 
-        <button type="submit" class="submit-btn">Submit for review</button>
+          <div class="field">
+            <label for="languages">Languages you speak</label>
+            <input type="text" id="languages" name="languages" placeholder="e.g. Georgian, English, Dutch" required maxlength="80">
+          </div>
 
-        <div id="success" class="success hidden" role="status">
-          <strong>Thanks!</strong> Your submission has been received. We'll review it and publish it within a few days.
-        </div>
+          <div class="field">
+            <label for="email">Contact email</label>
+            <input type="email" id="email" name="email" required maxlength="120">
+          </div>
 
-        <div id="error" class="error hidden" role="alert"></div>
+          <div class="field">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" maxlength="40">
+          </div>
 
-      </form>
+          <div class="field">
+            <label for="link">Website or social profile (optional)</label>
+            <input type="url" id="link" name="link" placeholder="https://..." maxlength="200">
+          </div>
+
+          <button type="submit" class="submit-btn">Submit for review</button>
+
+          <div id="success" class="success hidden" role="status">
+            <strong>Thanks!</strong> Your submission has been received. We'll review it and publish it within a few days.
+          </div>
+
+          <div id="error" class="error hidden" role="alert"></div>
+
+        </form>
+      </div>
     </section>
 
     <footer>
-      <p>Built by Nikoloz · 2026 · <a href="/">back to FAQ</a></p>
+      <p>Built by Nikoloz · 2026 · <a href="/">FAQ</a> · <a href="/about.html">About</a></p>
     </footer>
   </main>
 
@@ -107,8 +137,104 @@
     const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
 
     (function() {
-      // Create a Supabase client. This object is what we use to query the database.
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      // -------------------- BROWSE LISTINGS --------------------
+
+      const listingsEl = document.getElementById('listings');
+      const queryInput = document.getElementById('filter-query');
+      const categorySelect = document.getElementById('filter-category');
+
+      // Tiny HTML escaper so user-submitted data can't inject markup.
+      function escapeHtml(str) {
+        return String(str == null ? '' : str).replace(/[<>&"']/g, function(c) {
+          return ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' })[c];
+        });
+      }
+
+      function renderCard(s) {
+        const contacts = [];
+        if (s.email) contacts.push('<a href="mailto:' + escapeHtml(s.email) + '">Email</a>');
+        if (s.phone) {
+          const cleanPhone = (s.phone || '').replace(/\s+/g, '');
+          contacts.push('<a href="tel:' + escapeHtml(cleanPhone) + '">Call</a>');
+        }
+        if (s.link) contacts.push('<a href="' + escapeHtml(s.link) + '" target="_blank" rel="noopener">Website</a>');
+
+        return (
+          '<article class="service-card">' +
+            '<div class="service-meta">' +
+              '<span class="service-cat">' + escapeHtml(s.category) + '</span>' +
+              '<span class="service-region">' + escapeHtml(s.region) + '</span>' +
+            '</div>' +
+            '<h3 class="service-name">' + escapeHtml(s.name) + '</h3>' +
+            '<p class="service-desc">' + escapeHtml(s.description) + '</p>' +
+            '<p class="service-langs"><strong>Speaks:</strong> ' + escapeHtml(s.languages) + '</p>' +
+            '<p class="service-contacts">' + contacts.join(' · ') + '</p>' +
+          '</article>'
+        );
+      }
+
+      let allServices = [];
+
+      function applyFilters() {
+        const query = queryInput.value.trim().toLowerCase();
+        const cat = categorySelect.value;
+
+        const filtered = allServices.filter(function(s) {
+          if (cat && s.category !== cat) return false;
+          if (!query) return true;
+          const haystack = [s.name, s.description, s.region, s.languages, s.category].join(' ').toLowerCase();
+          return haystack.indexOf(query) !== -1;
+        });
+
+        if (filtered.length === 0) {
+          listingsEl.innerHTML = '<p class="empty">No services match your filters.</p>';
+          return;
+        }
+        listingsEl.innerHTML = filtered.map(renderCard).join('');
+      }
+
+      async function loadListings() {
+        const result = await supabase
+          .from('services')
+          .select('id, category, name, description, region, languages, email, phone, link')
+          .eq('approved', true)
+          .order('created_at', { ascending: false });
+
+        if (result.error) {
+          listingsEl.innerHTML = '<p class="empty">Could not load listings. Try refreshing the page.</p>';
+          console.error('Failed to load services:', result.error);
+          return;
+        }
+
+        allServices = result.data || [];
+
+        if (allServices.length === 0) {
+          listingsEl.innerHTML = '<p class="empty">No services listed yet. Be the first — register yours below.</p>';
+          return;
+        }
+
+        // Populate the category filter with the categories actually present.
+        const seen = {};
+        for (const s of allServices) {
+          if (s.category && !seen[s.category]) {
+            seen[s.category] = true;
+            const opt = document.createElement('option');
+            opt.value = s.category;
+            opt.textContent = s.category;
+            categorySelect.appendChild(opt);
+          }
+        }
+
+        listingsEl.innerHTML = allServices.map(renderCard).join('');
+      }
+
+      queryInput.addEventListener('input', applyFilters);
+      categorySelect.addEventListener('change', applyFilters);
+      loadListings();
+
+      // -------------------- REGISTRATION FORM --------------------
 
       const form = document.getElementById('service-form');
       const success = document.getElementById('success');
@@ -118,17 +244,13 @@
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Hide any previous status messages.
         success.classList.add('hidden');
         errorBox.classList.add('hidden');
 
-        // Disable the button and change its label so the user knows we're working.
         submitBtn.disabled = true;
         const originalLabel = submitBtn.textContent;
         submitBtn.textContent = 'Submitting…';
 
-        // Build the row to insert. .trim() removes accidental leading/trailing spaces.
-        // Empty optional fields become null so they look clean in the database.
         const row = {
           category: form.category.value.trim(),
           name: form.name.value.trim(),
@@ -140,23 +262,19 @@
           link: form.link.value.trim() || null
         };
 
-        // Send the INSERT request. Supabase returns { data, error } — error is null on success.
         const { error } = await supabase.from('services').insert(row);
 
-        // Re-enable the button regardless of outcome.
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
 
         if (error) {
-          // Friendly inline error for the user; technical details go to the browser console.
-          errorBox.textContent = 'Sorry — something went wrong. Please try again, or email if it keeps failing.';
+          errorBox.textContent = 'Sorry — something went wrong. Please try again.';
           errorBox.classList.remove('hidden');
           errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
           console.error('Supabase insert error:', error);
           return;
         }
 
-        // Success — show the message, scroll to it, and clear the form for the next submission.
         success.classList.remove('hidden');
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
         form.reset();

@@ -232,9 +232,188 @@ footer {
 }
 footer p { margin: 0.4rem 0; }
 
+/* === Prose pages (about, 404) === */
+.prose { margin-top: 1.5rem; }
+.prose h2 { margin-top: 2rem; }
+.prose p { margin: 0.75rem 0; }
+.link-list {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0 1rem;
+}
+.link-list li { margin-bottom: 0.4rem; }
+
+/* === Callout (forum coming-soon, etc.) === */
+.callout {
+  background: rgba(214, 40, 40, 0.04);
+  border-left: 4px solid var(--ge-red);
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  margin-top: 1.75rem;
+}
+.callout h2 {
+  margin-top: 1.25rem;
+  color: var(--be-blue);
+}
+.callout h2:first-child { margin-top: 0; }
+.callout p:last-child { margin-bottom: 0; }
+
+/* === Call-to-action button === */
+.cta {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--bg) !important;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  text-decoration: none !important;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  transition: opacity 0.15s ease;
+}
+.cta:hover { opacity: 0.85; }
+
+/* === Section divider === */
+.section-divider {
+  margin: 3.5rem 0 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2.5rem;
+}
+
+/* === FAQ search === */
+.faq-search {
+  margin: 0.5rem 0 1.5rem;
+}
+.faq-search input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+}
+.faq-search input:focus {
+  outline: none;
+  border-color: var(--be-blue);
+}
+.faq-no-results {
+  display: none;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* === Service listings (filter + cards) === */
+.filter-bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.6rem;
+  margin: 1rem 0 0.75rem;
+}
+.filter-bar input,
+.filter-bar select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+}
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: var(--be-blue);
+}
+
+.listings {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.service-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.25rem;
+  background: white;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.service-card:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.service-meta {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+.service-cat {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(0, 53, 102, 0.08);
+  color: var(--be-blue);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+.service-region {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.service-name {
+  margin: 0.3rem 0 0.4rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.service-desc {
+  margin: 0 0 0.7rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.service-langs {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.service-contacts {
+  margin: 0;
+  font-size: 0.92rem;
+}
+.service-contacts a {
+  color: var(--be-blue);
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 0.6rem;
+}
+.service-contacts a:hover { text-decoration: underline; }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 2.5rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.01);
+}
+.loading {
+  text-align: center;
+  color: var(--muted);
+  padding: 1.5rem 1rem;
+  font-size: 0.95rem;
+}
+
 /* === Mobile === */
 @media (max-width: 500px) {
   h1 { font-size: 1.65rem; }
   .container { padding: 1.5rem 1rem 3rem; }
   .site-nav { padding: 0.75rem 1rem; gap: 1rem; }
+  .filter-bar { grid-template-columns: 1fr; }
+  .service-card { padding: 1rem; }
 }
