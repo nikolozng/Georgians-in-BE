@@ -1,0 +1,232 @@
+/* === Theme variables === */
+:root {
+  --bg: #faf8f3;
+  --ink: #1a1a1a;
+  --muted: #6a6a6a;
+  --ge-red: #d62828;
+  --be-blue: #003566;
+  --border: #e5e2da;
+}
+
+/* === Base resets === */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Georgian text uses a different font for proper script support */
+.ka { font-family: 'BPG Arial', 'Sylfaen', 'Inter', serif; }
+
+/* === Layout === */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 5rem;
+}
+.hidden { display: none; }
+a { color: var(--be-blue); }
+
+/* === Top navigation === */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 960px;
+  margin: 0 auto;
+}
+.site-nav .brand {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  text-decoration: none;
+  margin-right: auto;
+  letter-spacing: -0.01em;
+}
+.site-nav .brand .accent { color: var(--ge-red); }
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+.site-nav a:hover { color: var(--ink); }
+.site-nav a.active { color: var(--ink); }
+
+/* === Decorative country stripe === */
+.stripe {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+.stripe span {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+}
+.stripe .ge { background: var(--ge-red); }
+.stripe .be {
+  background: linear-gradient(90deg, #000 33.3%, #fae042 33.3% 66.6%, #ed2939 66.6%);
+}
+
+/* === Headings === */
+h1 {
+  font-size: 2.1rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.subtitle {
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+h2 {
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+  color: var(--be-blue);
+  font-weight: 700;
+}
+
+/* === FAQ accordion === */
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 0;
+}
+.faq-item:last-child { border-bottom: none; }
+.question {
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  padding: 0.75rem 0 0.75rem 1.6rem;
+  position: relative;
+}
+.question::-webkit-details-marker { display: none; }
+.question::before {
+  content: "+";
+  color: var(--ge-red);
+  font-weight: 700;
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+}
+details[open] > .question::before { content: "−"; }
+.answer {
+  padding: 0 0 1rem 1.6rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* === Language toggle (FAQ page) === */
+.lang-toggle {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.5rem 0 2rem;
+}
+.lang-toggle button {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.95rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.lang-toggle button:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.lang-toggle button.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* === Forms (services page) === */
+.form-section { margin-top: 1.5rem; }
+.form-section .field { margin-bottom: 1.25rem; }
+.form-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.form-section .hint {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+}
+.form-section input,
+.form-section select,
+.form-section textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+  transition: border-color 0.15s ease;
+}
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+  outline: none;
+  border-color: var(--be-blue);
+}
+.form-section textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.form-section .submit-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.6rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.form-section .submit-btn:hover { opacity: 0.85; }
+.form-section .success {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(214, 40, 40, 0.06);
+  border-left: 4px solid var(--ge-red);
+  border-radius: 4px;
+}
+
+/* === Footer === */
+footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+footer p { margin: 0.4rem 0; }
+
+/* === Mobile === */
+@media (max-width: 500px) {
+  h1 { font-size: 1.65rem; }
+  .container { padding: 1.5rem 1rem 3rem; }
+  .site-nav { padding: 0.75rem 1rem; gap: 1rem; }
+}

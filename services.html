@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register a service · Georgians in Belgium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
+    <a href="/">FAQ</a>
+    <a href="/services.html" class="active">Services</a>
+  </nav>
+
+  <main class="container">
+    <h1>Register a service</h1>
+    <p class="subtitle">List your service so other Georgians in Belgium can find you. Free, public, no commission.</p>
+
+    <section class="form-section">
+      <form id="service-form" novalidate>
+
+        <div class="field">
+          <label for="category">What service do you offer?
+            <span class="hint">Pick the closest category</span>
+          </label>
+          <select id="category" name="category" required>
+            <option value="">— pick a category —</option>
+            <option>Driver / Transport</option>
+            <option>Plumber / Electrician / Handyman</option>
+            <option>Cleaner</option>
+            <option>Dutch / French / English Teacher</option>
+            <option>Translator / Interpreter</option>
+            <option>Childcare / Babysitter</option>
+            <option>Hairdresser / Beauty</option>
+            <option>IT / Web / Tech</option>
+            <option>Photographer / Video</option>
+            <option>Mover</option>
+            <option>Restaurant / Catering</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="name">Your name or business name</label>
+          <input type="text" id="name" name="name" required maxlength="80">
+        </div>
+
+        <div class="field">
+          <label for="description">Short description
+            <span class="hint">2–3 sentences. What you do, what makes you a good choice.</span>
+          </label>
+          <textarea id="description" name="description" required maxlength="500"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="region">City or region you serve</label>
+          <input type="text" id="region" name="region" placeholder="e.g. Brussels, Ghent, all of Flanders" required maxlength="80">
+        </div>
+
+        <div class="field">
+          <label for="languages">Languages you speak</label>
+          <input type="text" id="languages" name="languages" placeholder="e.g. Georgian, English, Dutch" required maxlength="80">
+        </div>
+
+        <div class="field">
+          <label for="email">Contact email</label>
+          <input type="email" id="email" name="email" required maxlength="120">
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone (optional)</label>
+          <input type="tel" id="phone" name="phone" maxlength="40">
+        </div>
+
+        <div class="field">
+          <label for="link">Website or social profile (optional)</label>
+          <input type="url" id="link" name="link" placeholder="https://..." maxlength="200">
+        </div>
+
+        <button type="submit" class="submit-btn">Submit for review</button>
+
+        <div id="success" class="success hidden" role="status">
+          <strong>Thanks!</strong> The form is in beta — submissions aren't being saved yet. Once the backend is wired up, real submissions will be reviewed and published within a few days.
+        </div>
+
+      </form>
+    </section>
+
+    <footer>
+      <p>Built by Nikoloz · 2026 · <a href="/">back to FAQ</a></p>
+    </footer>
+  </main>
+
+  <script>
+    // Form handler: prevent the default page reload, show an in-page success message.
+    (function() {
+      const form = document.getElementById('service-form');
+      const success = document.getElementById('success');
+      if (!form || !success) return;
+      form.addEventListener('submit', function(e) {
+        e.preventDefault(); // stop the browser from submitting and reloading
+        success.classList.remove('hidden');
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+</body>
+</html>

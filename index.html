@@ -7,132 +7,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #faf8f3;
-      --ink: #1a1a1a;
-      --muted: #6a6a6a;
-      --ge-red: #d62828;
-      --be-blue: #003566;
-      --border: #e5e2da;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      color: var(--ink);
-      background: var(--bg);
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
-    .ka { font-family: 'BPG Arial', 'Sylfaen', 'Inter', serif; }
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 2.5rem 1.25rem 5rem;
-    }
-    .stripe {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 1.5rem;
-    }
-    .stripe span {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-    }
-    .stripe .ge { background: var(--ge-red); }
-    .stripe .be {
-      background: linear-gradient(90deg, #000 33.3%, #fae042 33.3% 66.6%, #ed2939 66.6%);
-    }
-    h1 {
-      font-size: 2.1rem;
-      margin: 0 0 0.4rem;
-      letter-spacing: -0.02em;
-      font-weight: 700;
-    }
-    .subtitle {
-      color: var(--muted);
-      margin: 0 0 0.4rem;
-      font-size: 1.05rem;
-    }
-    h2 {
-      margin-top: 3rem;
-      margin-bottom: 0.75rem;
-      font-size: 1.3rem;
-      color: var(--be-blue);
-      font-weight: 700;
-    }
-    .faq-item {
-      border-bottom: 1px solid var(--border);
-      padding: 0.5rem 0;
-    }
-    .faq-item:last-child { border-bottom: none; }
-    .question {
-      font-weight: 600;
-      cursor: pointer;
-      list-style: none;
-      padding: 0.75rem 0 0.75rem 1.6rem;
-      position: relative;
-    }
-    .question::-webkit-details-marker { display: none; }
-    .question::before {
-      content: "+";
-      color: var(--ge-red);
-      font-weight: 700;
-      position: absolute;
-      left: 0;
-      top: 0.75rem;
-    }
-    details[open] > .question::before { content: "−"; }
-    .answer {
-      padding: 0 0 1rem 1.6rem;
-      color: var(--ink);
-      margin: 0;
-    }
-    footer {
-      margin-top: 4rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-    footer p { margin: 0.4rem 0; }
-    a { color: var(--be-blue); }
-    @media (max-width: 500px) {
-      h1 { font-size: 1.65rem; }
-      .container { padding: 1.5rem 1rem 3rem; }
-    }
-    .lang-toggle {
-      display: flex;
-      gap: 0.4rem;
-      margin: 0.5rem 0 2rem;
-    }
-    .lang-toggle button {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.35rem 0.95rem;
-      font-family: inherit;
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-    .lang-toggle button:hover {
-      border-color: var(--ink);
-      color: var(--ink);
-    }
-    .lang-toggle button.active {
-      background: var(--ink);
-      color: var(--bg);
-      border-color: var(--ink);
-    }
-    .hidden { display: none; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <nav class="site-nav">
+    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
+    <a href="/" class="active">FAQ</a>
+    <a href="/services.html">Services</a>
+  </nav>
+
   <main class="container">
     <div class="stripe" aria-hidden="true">
       <span class="ge" title="Georgia"></span>
@@ -196,7 +79,7 @@
       <p class="answer">For everyday amounts, <strong>Wise</strong> and <strong>Revolut</strong> offer near-mid-market exchange rates with low fees and arrive in 1–2 days. <strong>Western Union</strong> and <strong>MoneyGram</strong> are everywhere in Belgium but expensive — usually 3–7% lost in fees and spread. For large transfers, a SEPA-style bank wire from your Belgian IBAN is also competitive. Avoid converting cash at airport exchange counters — rates there are usually 5–10% worse than online services.</p>
     </details>
 
-<details class="faq-item">
+    <details class="faq-item">
       <summary class="question">What is this website?</summary>
       <p class="answer">A community resource built by and for Georgians living in or moving to Belgium. It collects answers to common questions, points to useful services, and will eventually host discussion. New and in active development — feedback welcome.</p>
     </details>
@@ -259,7 +142,7 @@
     <footer>
       <p><strong>This is a placeholder page.</strong> Real, community-curated content is being collected.</p>
       <p class="ka"><strong>ეს არის სატესტო გვერდი.</strong> რეალური შინაარსი ჯერ კიდევ იქმნება.</p>
-      <p>Built by Nikoloz · 2026 · <a href="ROADMAP.md">project roadmap</a></p>
+      <p>Built by Nikoloz · 2026</p>
     </footer>
   </main>
 
