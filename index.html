@@ -1,274 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Georgians in Belgium · ქართველები ბელგიაში · geosin.be</title>
-  <meta name="description" content="A community resource for Georgians living in or moving to Belgium — answers to common questions in Georgian and English.">
-  <meta property="og:title" content="Georgians in Belgium · geosin.be">
-  <meta property="og:description" content="A community resource for Georgians living in or moving to Belgium — answers in Georgian and English.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://geosin.be/">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:locale:alternate" content="ka_GE">
-  <meta name="twitter:card" content="summary">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geosin.be — Georgians in Belgium</title>
+  <meta name="description" content="A community hub for Georgians living in Belgium. Find services, share resources, and connect." />
+  <meta property="og:title" content="geosin.be — Georgians in Belgium" />
+  <meta property="og:description" content="A community hub for Georgians living in Belgium. Find services, share resources, and connect." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Home-specific overrides */
+    .hero { min-height: 580px; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      overflow: hidden;
+    }
+    .step-item {
+      padding: 32px 28px;
+      border-right: 1px solid var(--hairline);
+    }
+    .step-item:last-child { border-right: none; }
+    .step-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--rausch);
+      margin-bottom: 12px;
+    }
+    .step-item h4 { margin-bottom: 8px; }
+    .step-item p  { font-size: 14px; color: var(--body-text); }
+    .highlight-band {
+      background: linear-gradient(135deg, #fff5f7 0%, #fff 60%);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }
+    @media (max-width: 768px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .step-item  { border-right: none; border-bottom: 1px solid var(--hairline); }
+      .step-item:last-child { border-bottom: none; }
+    }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
-    <a href="/" class="active">FAQ</a>
-    <a href="/services.html">Services</a>
-    <a href="/about.html">About</a>
-  </nav>
 
-  <main class="container">
-    <div class="stripe" aria-hidden="true">
-      <span class="ge" title="Georgia"></span>
-      <span class="be" title="Belgium"></span>
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+      <a href="services.html#register" class="btn-nav-cta">List a service</a>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img
+    class="hero-img"
+    src="https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=1600&q=80"
+    alt="Tbilisi skyline"
+    loading="eager"
+  />
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-eyebrow">Brussels · Antwerp · Ghent · Liège</span>
+      <h1>
+        Your Georgian community in Belgium
+        <span class="ka">თქვენი ქართული საზოგადოება ბელგიაში</span>
+      </h1>
+      <p class="hero-lead" data-lang-block="en">
+        Find trusted Georgian service providers, connect with fellow expatriates, and navigate life in Belgium with confidence.
+      </p>
+      <p class="hero-lead" data-lang-block="ka" style="font-family:var(--font-georgian)">
+        იპოვეთ სანდო ქართული სერვის-მომწოდებლები, დაუკავშირდით თანამემამულეებს და თამამად იცხოვრეთ ბელგიაში.
+      </p>
+      <div class="hero-actions">
+        <a href="services.html" class="btn btn-primary">Browse services</a>
+        <a href="about.html" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.5)">About us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">1,200+</div>
+        <div class="stat-label">
+          Community members
+          <span class="ka">საზოგადოების წევრი</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">80+</div>
+        <div class="stat-label">
+          Listed services
+          <span class="ka">სერვისი</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">
+          Belgian cities covered
+          <span class="ka">ქალაქი</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2019</div>
+        <div class="stat-label">
+          Founded
+          <span class="ka">დაარსდა</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT WE OFFER -->
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">What we offer</p>
+      <h2>
+        <span data-lang-block="en">Everything you need to settle in</span>
+        <span data-lang-block="ka" class="ka">ყველაფერი, რაც გჭირდებათ ბელგიაში დასამკვიდრებლად</span>
+      </h2>
+      <p data-lang-block="en">From legal help to Georgian groceries — our community has you covered.</p>
+      <p data-lang-block="ka" class="ka">იურიდიული დახმარებიდან ქართულ საკვებამდე — ჩვენი საზოგადოება გიმზადებთ.</p>
+    </div>
+    <div class="feature-grid">
+
+      <a href="services.html" class="feature-card" style="text-decoration:none">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Services directory</span>
+          <span data-lang-block="ka" class="ka">სერვისების კატალოგი</span>
+        </h3>
+        <p data-lang-block="en">Browse verified Georgian professionals: translators, doctors, lawyers, tutors, tradespeople, and more.</p>
+        <p data-lang-block="ka" class="ka">დაათვალიერეთ გადამოწმებული ქართველი პროფესიონალები: მთარგმნელები, ექიმები, იურისტები, მასწავლებლები.</p>
+      </a>
+
+      <a href="about.html" class="feature-card" style="text-decoration:none">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Community</span>
+          <span data-lang-block="ka" class="ka">საზოგადოება</span>
+        </h3>
+        <p data-lang-block="en">Connect with over 1,200 Georgians across Belgium. Share experiences, ask questions, attend events.</p>
+        <p data-lang-block="ka" class="ka">დაუკავშირდით 1,200-ზე მეტ ქართველს ბელგიაში. გაუზიარეთ გამოცდილება, დასვით კითხვები.</p>
+      </a>
+
+      <a href="forum.html" class="feature-card" style="text-decoration:none">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Forum <span style="font-size:11px;color:var(--rausch);font-weight:700;margin-left:6px;vertical-align:middle">COMING SOON</span></span>
+          <span data-lang-block="ka" class="ka">ფორუმი</span>
+        </h3>
+        <p data-lang-block="en">A dedicated space to ask questions, share news from home, and discuss life in Belgium — in Georgian.</p>
+        <p data-lang-block="ka" class="ka">სპეციალური სივრცე კითხვების, სახლიდან სიახლეების და ბელგიაში ცხოვრების განსახილველად.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="highlight-band">
+  <div class="container section-sm">
+    <div class="section-heading" style="margin-bottom:28px">
+      <p class="section-eyebrow">How it works</p>
+      <h2>
+        <span data-lang-block="en">Simple and free to use</span>
+        <span data-lang-block="ka" class="ka">მარტივი და უფასო</span>
+      </h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <h4>
+          <span data-lang-block="en">Browse services</span>
+          <span data-lang-block="ka" class="ka">სერვისების დათვალიერება</span>
+        </h4>
+        <p data-lang-block="en">Filter by city or category and find the right person for your needs.</p>
+        <p data-lang-block="ka" class="ka">გაფილტრეთ ქალაქის ან კატეგორიის მიხედვით.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <h4>
+          <span data-lang-block="en">Contact directly</span>
+          <span data-lang-block="ka" class="ka">პირდაპირ დაკავშირება</span>
+        </h4>
+        <p data-lang-block="en">Every listing includes a phone number, email, or WhatsApp link — no middlemen.</p>
+        <p data-lang-block="ka" class="ka">ყოველ განცხადებაში ტელეფონი, ელ-ფოსტა ან WhatsApp — შუამავლის გარეშე.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <h4>
+          <span data-lang-block="en">List your own service</span>
+          <span data-lang-block="ka" class="ka">დაარეგისტრირეთ სერვისი</span>
+        </h4>
+        <p data-lang-block="en">Are you a Georgian professional in Belgium? List your service for free and reach the community.</p>
+        <p data-lang-block="ka" class="ka">ხართ ქართველი პროფესიონალი ბელგიაში? დაარეგისტრირეთ სერვისი უფასოდ.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="section faq-section" id="faq">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">FAQ</p>
+      <h2>
+        <span data-lang-block="en">Common questions</span>
+        <span data-lang-block="ka" class="ka">ხშირად დასმული კითხვები</span>
+      </h2>
+      <p class="faq-lead" data-lang-block="en">Everything you need to know about living in Belgium as a Georgian citizen.</p>
+      <p class="faq-lead" data-lang-block="ka" style="font-family:var(--font-georgian)">ყველაფერი, რაც გჭირდებათ ბელგიაში ქართველ მოქალაქედ ცხოვრების შესახებ.</p>
     </div>
 
-    <h1>Georgians in Belgium</h1>
-    <p class="subtitle ka">ქართველები ბელგიაში — საინფორმაციო რესურსი</p>
-    <p class="subtitle">A community resource for Georgians living in or moving to Belgium.</p>
+    <div class="faq-list" style="max-width:780px">
 
-    <div class="lang-toggle" role="group" aria-label="Language">
-      <button type="button" data-lang="en">EN</button>
-      <button type="button" data-lang="ka">ქართული</button>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            Do I need a visa to live and work in Belgium?
+            <span class="ka">მჭირდება ვიზა ბელგიაში საცხოვრებლად და სამუშაოდ?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Georgian citizens can enter the Schengen Area (including Belgium) visa-free for up to 90 days in any 180-day period. For longer stays or work, you must apply for a long-stay D visa at the Belgian Embassy in Tbilisi before travelling. Once in Belgium, you register at your local commune within 8 days of arrival.
+          <span class="ka">ქართველ მოქალაქეებს შეუძლიათ შევიდნენ შენგენის ზონაში (მათ შორის ბელგიაში) ვიზის გარეშე — 180 დღეში 90 დღემდე. გრძელვადიანი ყოფნის ან სამუშაო ნებართვისთვის საჭიროა D ვიზის მოთხოვნა ბელგიის საელჩოში თბილისში, ჩამოსვლამდე. ბელგიაში ჩამოსვლის შემდეგ 8 დღის განმავლობაში უნდა დარეგისტრირდეთ ადგილობრივ კომუნაში.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            How do I register at my commune?
+            <span class="ka">როგორ დავრეგისტრირდე კომუნაში?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Visit your local commune (gemeentehuis / maison communale) within 8 days of arriving. Bring your passport, valid visa or residence permit, proof of address (rental contract or host declaration), and passport photos. The commune will issue a "Annex 3" certificate and schedule a home visit from local police to verify your address before issuing a residence card.
+          <span class="ka">ჩამოსვლიდან 8 დღის განმავლობაში ეწვიეთ ადგილობრივ კომუნას. წაიღეთ პასპორტი, ვიზა/ბინადრობის ნებართვა, საცხოვრებლის დამადასტურებელი დოკუმენტი და ფოტო. კომუნა გასცემს "Annex 3"-ს და მოაწყობს პოლიციის ვიზიტს მისამართის შესამოწმებლად.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            Can I use my Georgian driving licence in Belgium?
+            <span class="ka">შემიძლია ბელგიაში ქართული მართვის მოწმობის გამოყენება?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Georgian driving licences are not automatically recognised in Belgium. You may drive with your Georgian licence for the first year of residence, but you will need to exchange it for a Belgian one. This requires an official translation and sometimes a theory or practical test depending on the canton. Contact a local Georgian translator listed on our services page to help with the paperwork.
+          <span class="ka">ქართული მართვის მოწმობა ბელგიაში ავტომატურად არ აღიარება. პირველი წლის განმავლობაში შეგიძლიათ ქართული მოწმობით მართვა, შემდეგ კი საჭიროა ბელგიურ მოწმობაზე გადასვლა. ეს მოითხოვს ოფიციალურ თარგმანს და ზოგჯერ გამოცდას.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            How do I access healthcare in Belgium?
+            <span class="ka">როგორ მივიღო ჯანდაცვის მომსახურება ბელგიაში?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Once you are registered at your commune and have a residence permit, you must register with a Belgian health insurance fund (mutualité / ziekenfonds). The main ones are CM, Mutualité Neutre, and FSMB. After affiliating, you receive a SIS card (now e-ID based) and can visit a GP (huisarts / médecin généraliste). Belgium operates a GP-first system: you generally need a referral to see a specialist.
+          <span class="ka">კომუნაში რეგისტრაციის შემდეგ უნდა დარეგისტრირდეთ სავალდებულო ჯანმრთელობის სადაზღვევო ფონდში (mutualité). მთავარი ფონდებია CM, Mutualité Neutre. ამის შემდეგ შეგიძლიათ მიმართოთ ოჯახის ექიმს.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            Where can I find Georgian food in Belgium?
+            <span class="ka">სად შევიძინო ქართული საკვები ბელგიაში?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Several Georgian and Eastern European grocery shops operate in Brussels, Antwerp, and Ghent. Check our services directory for up-to-date listings. Additionally, some community members offer home-delivery of Georgian products. Georgian restaurants have also opened in Brussels — see the Food &amp; Dining category on our services page.
+          <span class="ka">ბრიუსელში, ანტვერპენსა და გენტში რამდენიმე ქართული და აღმოსავლეთ ევროპული საკვების მაღაზია მუშაობს. სრული სია იხილეთ ჩვენს სერვისების კატალოგში.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            How do I enrol my children in school?
+            <span class="ka">როგორ ჩავაწერო შვილი სკოლაში?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          School enrolment in Belgium is managed by region. In Brussels, contact the Central Enrolment Service (Service d'Inscription); in Flanders, use the Inschrijven service online. Children have a right to education from age 2.5. Public schools are free and bilingual options exist. Community members on our platform can assist with translation during enrolment.
+          <span class="ka">სკოლებში ჩარიცხვა ბელგიაში რეგიონების მიხედვით მართავს. ბრიუსელში დაუკავშირდით Central Enrolment Service-ს; ფლანდრიაში — Inschrijven ონლაინ სერვისს. სკოლა 2.5 წლიდანაა ხელმისაწვდომი.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            Do I need to learn Dutch or French?
+            <span class="ka">საჭიროა ნიდერლანდური ან ფრანგული ენის სწავლა?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          It depends on where you live. Brussels is officially bilingual (French and Dutch), Flanders primarily Dutch, and Wallonia primarily French. For most administrative tasks, French or Dutch is required. Free language courses are available through VDAB (Flanders), Le Forem (Wallonia), and Actiris (Brussels). Several Georgian community members on geosin.be offer private language tutoring.
+          <span class="ka">ეს დამოკიდებულია საცხოვრებელ ადგილზე. ბრიუსელი ოფიციალურად ორენოვანია, ფლანდრია — ნიდერლანდურენოვანი, ვალონია — ფრანგულენოვანი. უფასო ენის კურსები ხელმისაწვდომია VDAB, Le Forem და Actiris-ის მეშვეობით.</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">
+            How can I send money back to Georgia from Belgium?
+            <span class="ka">როგორ გადავგზავნო ფული საქართველოში ბელგიიდან?</span>
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          Popular options include Wise (formerly TransferWise), Remitly, and Western Union — all available online. For larger transfers, your Belgian bank's international wire service may be cost-effective. Check current exchange rates before transferring. Some community members have also used informal peer-to-peer transfer networks, but these carry risks.
+          <span class="ka">პოპულარული ვარიანტებია Wise, Remitly და Western Union — ყველა ონლაინ ხელმისაწვდომია. უფრო დიდი თანხებისთვის ბელგიური ბანკის საერთაშორისო გადარიცხვა შეიძლება ეფექტური იყოს.</span>
+        </div>
+      </div>
+
     </div>
+  </div>
+</section>
 
-    <div class="faq-search">
-      <input type="search" id="faq-search-input" placeholder="Search the FAQs…" aria-label="Search FAQs">
+<!-- CTA STRIP -->
+<div class="cta-strip">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+    <div>
+      <h2 data-lang-block="en">Are you a Georgian professional in Belgium?</h2>
+      <h2 data-lang-block="ka" class="ka">ხართ ქართველი პროფესიონალი ბელგიაში?</h2>
+      <p data-lang-block="en">List your service for free and connect with the community.</p>
+      <p data-lang-block="ka" class="ka" style="margin-top:4px">დაარეგისტრირეთ სერვისი უფასოდ და დაუკავშირდით საზოგადოებას.</p>
     </div>
-    <p id="faq-no-results" class="faq-no-results">No FAQs match your search. Try fewer words.</p>
+    <a href="services.html#register" class="btn btn-primary" style="flex-shrink:0">
+      <span data-lang-block="en">List a service</span>
+      <span data-lang-block="ka" class="ka">სერვისის დამატება</span>
+    </a>
+  </div>
+</div>
 
-    <section class="lang-en" lang="en">
-    <h2>Frequently Asked Questions</h2>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+        <p class="ka" style="font-family:var(--font-georgian);color:rgba(255,255,255,0.35);font-size:12px;margin-top:6px">ბელგიაში მცხოვრები ქართველების საზოგადოება</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="services.html#register">List a service</a></li>
+          <li><a href="services.html?cat=legal">Legal help</a></li>
+          <li><a href="services.html?cat=translation">Translation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="forum.html">Forum</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
+      </span>
+    </div>
+  </div>
+</footer>
 
-    <details class="faq-item">
-      <summary class="question">How do I register my address when I arrive?</summary>
-      <p class="answer">Within 8 days of arrival, visit your local town hall (gemeentehuis in Flanders, maison communale in Wallonia/Brussels) to register. Bring your passport and proof of address (rental contract or host declaration). You'll receive a temporary registration; police will visit to verify, then your residence card is issued.</p>
-    </details>
+<div class="toast" id="toast"></div>
 
-    <details class="faq-item">
-      <summary class="question">Do I need a visa to come to Belgium as a Georgian citizen?</summary>
-      <p class="answer">Georgian passport holders can enter the Schengen Area visa-free for up to 90 days within any 180-day period. For longer stays (work, study, family reunion), a national D-visa is required from the Belgian embassy before travel.</p>
-    </details>
+<script>
+  /* ── Language toggle ── */
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
 
-    <details class="faq-item">
-      <summary class="question">Where can I find a Georgian community?</summary>
-      <p class="answer">There's an active Facebook group "Georgians in Belgium" with thousands of members. The Georgian Embassy in Brussels also organizes cultural events, and the Georgian Orthodox Church holds services in several cities.</p>
-    </details>
+  /* ── FAQ accordion ── */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
 
-    <details class="faq-item">
-      <summary class="question">How does Belgian healthcare work for new residents?</summary>
-      <p class="answer">Belgium has a public health insurance system (mutualité in French, ziekenfonds in Dutch). Once you have a national registration number, you must register with one mutuality. Most healthcare costs are then partially reimbursed.</p>
-    </details>
+  /* ── Mobile nav ── */
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
 
-    <details class="faq-item">
-      <summary class="question">What kind of residence permit will I receive?</summary>
-      <p class="answer">It depends on your reason for being in Belgium — work, study, family reunion, long-term residency. Long-stay arrivals start with a temporary <em>Annex 15</em> certificate while the application is processed, then receive an electronic residence card stamped with their category. Renewal periods vary by reason. Your commune (<em>gemeentehuis</em> / <em>maison communale</em>) handles all of this and tells you which type applies to your situation.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">How do I find an apartment to rent?</summary>
-      <p class="answer">The main listing sites are <strong>Immoweb</strong> (largest), <strong>Logic-Immo</strong>, and <strong>Zimmo</strong>, plus city-specific Facebook groups. Most listings go through real estate agencies — and by Belgian law the agency fee is paid by the <em>landlord</em>, not you. To apply, expect to provide ID, last 3 months of pay slips or proof of income, and sometimes references. In Brussels and Antwerp the market moves fast: apply the same day a listing appears.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">What's a rental deposit (<em>huurwaarborg / garantie locative</em>) and how do I get it back?</summary>
-      <p class="answer">Typically <strong>2 months' rent</strong>, held in a <em>blocked bank account in your name</em> — not in the landlord's. At the end of the lease, you both sign a release form and the bank releases the money. If there's a dispute, it goes to the justice of the peace. Never pay a deposit in cash directly to a landlord — always insist on the blocked account.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">Can I open a Belgian bank account before I have a residence card?</summary>
-      <p class="answer">It's harder but doable. Traditional banks (KBC, ING, BNP Paribas Fortis, Belfius) usually want a Belgian address and national registration number first. Online banks like <strong>Wise</strong>, <strong>Revolut</strong>, and <strong>N26</strong> let you open an account with just your passport — handy as a starter while you wait for full registration. Switch to a regular Belgian account later for things like salary deposits and rent direct debits.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">How do I send money between Belgium and Georgia?</summary>
-      <p class="answer">For everyday amounts, <strong>Wise</strong> and <strong>Revolut</strong> offer near-mid-market exchange rates with low fees and arrive in 1–2 days. <strong>Western Union</strong> and <strong>MoneyGram</strong> are everywhere in Belgium but expensive — usually 3–7% lost in fees and spread. For large transfers, a SEPA-style bank wire from your Belgian IBAN is also competitive. Avoid converting cash at airport exchange counters — rates there are usually 5–10% worse than online services.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">Can I work in Belgium with a Georgian passport? Do I need a permit?</summary>
-      <p class="answer">As a non-EU citizen, generally yes — you need a work permit before starting a job. Belgium uses a <strong>single permit</strong> system: your employer applies on your behalf to the regional authorities (Brussels, Flanders, or Wallonia), and the permit doubles as your residence permit. Special tracks exist for highly-qualified workers, researchers, and intra-company transferees. Self-employed people apply for a <em>carte professionnelle</em> (professional card) instead. EU citizens don't need any of this.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">How does public transport work in Belgium?</summary>
-      <p class="answer">Trains nationwide are run by <strong>SNCB/NMBS</strong>. Within cities and regions, there are three operators: <strong>STIB-MIVB</strong> (Brussels metro/tram/bus), <strong>De Lijn</strong> (Flanders bus/tram), and <strong>TEC</strong> (Wallonia bus). Each has its own ticketing system, but a single SNCB ticket between two cities is the typical way newcomers travel. Look up routes on <strong>SNCB.be</strong> or apps like Google Maps and Citymapper. Most people in Brussels use a rechargeable <em>MOBIB</em> card.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">Where can I take free or cheap Dutch / French classes?</summary>
-      <p class="answer">Belgium offers heavily subsidized language courses for residents. In Flanders and Brussels, <strong>Het Huis van het Nederlands</strong> (the House of Dutch) assesses your level and places you in a course. In Wallonia and French-speaking Brussels, <strong>Lire et Écrire</strong> and various <em>communes</em> run cheap French courses. Universities and adult-education centers (e.g. <em>CVO</em> in Flanders) run evening classes for working adults. Once you're registered with a commune, courses typically cost €30–€100 per semester.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">How do I enroll my kids in school in Belgium?</summary>
-      <p class="answer">Education is free and compulsory between ages 5 and 18. Schools are organized regionally — Dutch-speaking, French-speaking, or German-speaking — and most newcomer kids are placed in their commune's language. Many schools have special <em>OKAN</em> (Flanders) or <em>DASPA</em> (Wallonia) classes for children who don't yet speak the local language. Apply directly through the school or your commune's education office. Popular schools have waiting lists, so apply as early as possible — even before you arrive if your address is set.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">Can I convert my Georgian driving license to a Belgian one?</summary>
-      <p class="answer">Yes. Belgium has bilateral conversion agreements with several countries, and <strong>Georgia is on the list</strong>. You can exchange your Georgian license for a Belgian one within the first <strong>2 years</strong> of registering as a resident, without retaking the driving test. After 2 years, you'd need to start over with theory and practical exams. Apply through your commune with your Georgian license, ID, residence card, and a small fee. If your license is older than 10 years or expired, the rules can vary.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question">What is this website?</summary>
-      <p class="answer">A community resource built by and for Georgians living in or moving to Belgium. It collects answers to common questions, points to useful services, and will eventually host discussion. New and in active development — feedback welcome.</p>
-    </details>
-    </section>
-
-    <section class="lang-ka" lang="ka">
-    <h2 class="ka">ხშირად დასმული კითხვები</h2>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ დავარეგისტრირო მისამართი ბელგიაში ჩასვლისთანავე?</summary>
-      <p class="answer ka">ბელგიაში ჩამოსვლიდან 8 დღის განმავლობაში უნდა მიხვიდეთ ადგილობრივ მუნიციპალიტეტში (gemeentehuis ფლანდრიაში, maison communale ვალონიასა და ბრიუსელში). თან უნდა გქონდეთ პასპორტი და მისამართის დამადასტურებელი დოკუმენტი (ქირის ხელშეკრულება ან მასპინძლის დეკლარაცია).</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">საჭიროა თუ არა ვიზა ქართველი მოქალაქისთვის?</summary>
-      <p class="answer ka">ქართულ პასპორტიანებს შეუძლიათ შენგენის ზონაში უვიზოდ შესვლა — 90 დღემდე ნებისმიერ 180-დღიან პერიოდში. ხანგრძლივი დარჩენისთვის (სამუშაო, სწავლა, ოჯახური გაერთიანება) საჭიროა D-ვიზა, რომელიც წინასწარ უნდა აიღოთ ბელგიის საელჩოში.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">სად ვიპოვო ქართული თემი ბელგიაში?</summary>
-      <p class="answer ka">არსებობს აქტიური Facebook ჯგუფი "Georgians in Belgium", რომელშიც ათასობით წევრია. ბრიუსელში ასევე ფუნქციონირებს საქართველოს საელჩო, რომელიც ხშირად აწყობს კულტურულ ღონისძიებებს.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ მუშაობს ბელგიის ჯანდაცვის სისტემა ახალი მცხოვრებლებისთვის?</summary>
-      <p class="answer ka">ბელგიას აქვს საჯარო ჯანმრთელობის დაზღვევის სისტემა (ფრანგულად <em>mutualité</em>, ფლამანდიურად <em>ziekenfonds</em>). როდესაც მიიღებთ ეროვნული რეგისტრაციის ნომერს, აუცილებლად უნდა დარეგისტრირდეთ ერთ-ერთ მიუტუალიტეში. ჯანდაცვის ხარჯების უმეტესი ნაწილი შემდგომ ნაწილობრივ უნაზღაურდებათ.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">რა ტიპის ბინადრობის ნებართვას მივიღებ?</summary>
-      <p class="answer ka">ეს დამოკიდებულია იმაზე, თუ რატომ ხართ ბელგიაში — სამუშაოდ, სასწავლებლად, ოჯახური გაერთიანებისთვის თუ გრძელვადიანი ცხოვრებისთვის. გრძელვადიან ჩამოსვლისას თავიდან გეძლევათ დროებითი სარეგისტრაციო ცნობა (<em>Annex 15</em>), სანამ თქვენი განცხადება მუშავდება. შემდეგ მიიღებთ ელექტრონულ ბინადრობის ბარათს თქვენი კატეგორიის აღნიშვნით. განახლების პერიოდები მიზნის მიხედვით განსხვავდება. თქვენი მუნიციპალიტეტი (<em>gemeentehuis</em> / <em>maison communale</em>) უზრუნველყოფს ყველაფერს და გეტყვით, თუ რომელი ტიპი გეხებათ.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ ვიპოვო საცხოვრებელი ბინა გასაქირავებლად?</summary>
-      <p class="answer ka">ძირითადი საიტებია <strong>Immoweb</strong> (ყველაზე დიდი), <strong>Logic-Immo</strong> და <strong>Zimmo</strong>, ასევე ქალაქის მიხედვით აქტიური Facebook ჯგუფები. ბინების უმეტესობა უძრავი ქონების სააგენტოებზე გადის — ბელგიური კანონის მიხედვით სააგენტოს საფასურს იხდის <em>მესაკუთრე</em>, არა თქვენ. განცხადებისთვის თან უნდა გქონდეთ პირადობის ასლი, ბოლო 3 თვის ხელფასის ჩამონათვალი ან შემოსავლის დამადასტურებელი დოკუმენტი, ზოგჯერ რეკომენდაციებიც. ბრიუსელსა და ანტვერპენში ბაზარი სწრაფად მოძრაობს — განცხადება გააკეთეთ იმავე დღეს, როცა ბინა გამოჩნდება.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">რა არის ქირის დეპოზიტი (<em>huurwaarborg / garantie locative</em>) და როგორ ავიღო უკან?</summary>
-      <p class="answer ka">ჩვეულებრივ <strong>2 თვის ქირის ოდენობა</strong>, რომელიც ინახება <em>თქვენი სახელზე გახსნილ დაბლოკილ საბანკო ანგარიშზე</em> — და არა მესაკუთრის ხელში. ქირავნობის დასრულებისას მესაკუთრე და თქვენ ერთად აწერთ ხელს განთავისუფლების ფორმას, ბანკი კი გამოუშვებს თანხას. დავის შემთხვევაში საქმე გადადის ადგილობრივ მსაჯულთან. არასოდეს გადაიხადოთ დეპოზიტი ნაღდი ფულით პირდაპირ მესაკუთრესთან — ყოველთვის დაჟინებით მოითხოვეთ დაბლოკილი ანგარიში.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">შემიძლია ბელგიური საბანკო ანგარიში გავხსნა, სანამ ბინადრობის ბარათს მივიღებ?</summary>
-      <p class="answer ka">შესაძლებელია, თუმცა უფრო რთულია. ტრადიციულ ბანკებს (KBC, ING, BNP Paribas Fortis, Belfius) ჩვეულებრივ სჭირდებათ ბელგიური მისამართი და ეროვნული რეგისტრაციის ნომერი. ონლაინ ბანკები, როგორებიცაა <strong>Wise</strong>, <strong>Revolut</strong> და <strong>N26</strong>, საშუალებას გაძლევთ გახსნათ ანგარიში მხოლოდ პასპორტით — მოსახერხებელია „დროებით" ანგარიშად, სანამ სრულ რეგისტრაციას მოიპოვებთ. მოგვიანებით გადახვიდეთ ჩვეულებრივ ბელგიურ ანგარიშზე ხელფასისა და ქირის ავტომატური გადახდისთვის.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ გადავრიცხო ფული ბელგიასა და საქართველოს შორის?</summary>
-      <p class="answer ka">ყოველდღიური ოდენობებისთვის <strong>Wise</strong> და <strong>Revolut</strong> გთავაზობენ თითქმის საბაზრო კურსს დაბალი საკომისიოთი და თანხა შემოდის 1-2 დღეში. <strong>Western Union</strong> და <strong>MoneyGram</strong> ფართოდაა ხელმისაწვდომი ბელგიაში, მაგრამ ძვირია — ჩვეულებრივ 3-7% იკარგება საკომისიოსა და კურსში. დიდი თანხებისთვის თქვენი ბელგიური IBAN-იდან საბანკო გადარიცხვაც კონკურენტუნარიანია. თავი აარიდეთ აეროპორტში ნაღდი ფულის გადაცვლას — იქ კურსი ჩვეულებრივ 5-10%-ით უარესია, ვიდრე ონლაინ სერვისებისა.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">შემიძლია ბელგიაში მუშაობა ქართული პასპორტით? სჭირდება სამუშაო ნებართვა?</summary>
-      <p class="answer ka">როგორც არა-ევროპელ მოქალაქეს, ჩვეულებრივ კი — სამუშაოს დაწყებამდე საჭიროა სამუშაო ნებართვა. ბელგიაში მოქმედებს <strong>ერთიანი ნებართვის</strong> სისტემა: დამსაქმებელი თავად აკეთებს განაცხადს რეგიონალურ ხელისუფლებაში (ბრიუსელი, ფლანდრია ან ვალონია), და ნებართვა მუშაობს ერთდროულად ბინადრობის დოკუმენტადაც. სპეციალური წესები არსებობს მაღალკვალიფიციური მუშაკებისთვის, მკვლევრებისთვის და კომპანიის შიდა ტრანსფერებისთვის. თვითდასაქმებულები იღებენ <em>carte professionnelle</em>-ს (პროფესიული ბარათი). ევროპელ მოქალაქეებს ეს არ სჭირდებათ.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ მუშაობს საზოგადოებრივი ტრანსპორტი ბელგიაში?</summary>
-      <p class="answer ka">ქვეყნის მასშტაბით მატარებლებს მართავს <strong>SNCB/NMBS</strong>. ქალაქებსა და რეგიონებში სამი ოპერატორი მუშაობს: <strong>STIB-MIVB</strong> (ბრიუსელის მეტრო/ტრამვაი/ავტობუსი), <strong>De Lijn</strong> (ფლანდრიის ავტობუსი/ტრამვაი) და <strong>TEC</strong> (ვალონიის ავტობუსი). თითოეულს თავისი ბილეთის სისტემა აქვს, მაგრამ ქალაქებს შორის გადაადგილებისთვის ჩვეულებრივ ერთი SNCB-ის ბილეთი საკმარისია. მარშრუტები შეგიძლიათ ნახოთ <strong>SNCB.be</strong>-ზე ან Google Maps-სა და Citymapper-ში. ბრიუსელში ბევრი იყენებს დატენვადი <em>MOBIB</em> ბარათს.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">სად ვისწავლო ჰოლანდიური ან ფრანგული უფასოდ ან იაფად?</summary>
-      <p class="answer ka">ბელგია გთავაზობთ უფასო ან ძალიან იაფ ენების კურსებს. ფლანდრიასა და ბრიუსელში მოიძიეთ <strong>Het Huis van het Nederlands</strong> (ჰოლანდიურის სახლი) — ისინი შეგიფასებენ დონეს და გასწავლიან სუბსიდირებულ კურსზე. ვალონიასა და ფრანგულენოვან ბრიუსელში <strong>Lire et Écrire</strong> და სხვადასხვა <em>commune</em> ორგანიზებულად ატარებენ ფრანგული ენის იაფ კურსებს. უნივერსიტეტებსა და კულტურულ ცენტრებში (მაგ. <em>CVO</em> ფლანდრიაში) ასევე გვხვდება საღამოს ჯგუფები მომუშავე მოზრდილთათვის. რეგისტრაციის შემდეგ კურსი ღირს დაახლოებით €30–€100 სემესტრში.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">როგორ ჩავრიცხო ბავშვი ბელგიის სკოლაში?</summary>
-      <p class="answer ka">ბელგიაში განათლება უფასოა და სავალდებულოა 5-დან 18 წლამდე. სკოლები მართულია რეგიონალურად — ჰოლანდიურენოვანი, ფრანგულენოვანი ან გერმანულენოვანი. ახლადჩამოსული ოჯახების ბავშვები ჩვეულებრივ ხვდებიან მათი მუნიციპალიტეტის ენაზე მომუშავე სკოლაში. ზოგიერთ სკოლას აქვს <em>OKAN</em> (ფლანდრია) ან <em>DASPA</em> (ვალონია) კლასები სპეციალურად ბავშვებისთვის, რომლებმაც ჯერ არ იციან ადგილობრივი ენა. განცხადება უნდა გააკეთოთ პირდაპირ სკოლაში ან მუნიციპალიტეტის განათლების სამსახურში. რიგები გრძელია, ამიტომ რაც შეიძლება ადრე დარეგისტრირდით — შესაძლოა ჩამოსვლამდეც, თუ მისამართი უკვე იცით.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">შემიძლია ჩემი ქართული მართვის მოწმობა ბელგიურით შევცვალო?</summary>
-      <p class="answer ka">კი. ბელგიას აქვს ორმხრივი შეთანხმებები ზოგიერთ ქვეყანასთან მართვის მოწმობების გაცვლის შესახებ, და <strong>საქართველო ამ სიაშია</strong>. ქართული მოწმობის გაცვლა ბელგიურზე შესაძლებელია ბელგიაში დარეგისტრირებიდან <strong>2 წლის</strong> განმავლობაში, ხელახალი გამოცდის გარეშე. 2 წლის შემდეგ მოგიწევთ გადახედვა — თეორიული და პრაქტიკული გამოცდები ნულიდან. განცხადება უნდა გააკეთოთ თქვენს მუნიციპალიტეტში ქართული მოწმობით, პირადობით, ბინადრობის ბარათით და მცირე საფასურით. თუ თქვენი მოწმობა 10 წელზე ძველია ან ვადაგასულია, წესები შეიძლება განსხვავდებოდეს.</p>
-    </details>
-
-    <details class="faq-item">
-      <summary class="question ka">რა არის ეს ვებსაიტი?</summary>
-      <p class="answer ka">საზოგადოებრივი რესურსი, შექმნილი ბელგიაში მცხოვრები ან ახლადჩამოსული ქართველებისთვის. აქ გროვდება პასუხები ხშირად დასმულ კითხვებზე, მითითებები გამოსადეგ სერვისებზე და სამომავლოდ შეიქმნება დისკუსიების სივრცე. საიტი ახალია და აქტიურად ვითარდება — გამოხმაურებები მისასალმებელია.</p>
-    </details>
-    </section>
-
-    <footer>
-      <p>Built by Nikoloz · 2026 · <a href="/services.html">Services</a> · <a href="/about.html">About</a></p>
-    </footer>
-  </main>
-
-  <script>
-    // Combined behavior: language toggle + FAQ search.
-    // Toggle hides the off-language section. Search hides individual FAQ items
-    // within the currently visible section that don't match the query.
-    (function() {
-      const STORAGE_KEY = 'geosin-lang';
-
-      const buttons = document.querySelectorAll('.lang-toggle button');
-      const sections = {
-        en: document.querySelector('.lang-en'),
-        ka: document.querySelector('.lang-ka')
-      };
-      const searchInput = document.getElementById('faq-search-input');
-      const noResults = document.getElementById('faq-no-results');
-
-      // Hide / show .faq-item elements within the currently visible language section
-      // based on whether their text matches the search query.
-      function applySearch() {
-        const q = (searchInput ? searchInput.value : '').trim().toLowerCase();
-        let anyVisible = false;
-        Object.keys(sections).forEach(function(key) {
-          const section = sections[key];
-          if (!section || section.classList.contains('hidden')) return;
-          const items = section.querySelectorAll('.faq-item');
-          items.forEach(function(el) {
-            const text = el.textContent.toLowerCase();
-            const matches = !q || text.indexOf(q) !== -1;
-            el.classList.toggle('hidden', !matches);
-            if (matches) anyVisible = true;
-          });
-        });
-        if (noResults) noResults.style.display = (q && !anyVisible) ? 'block' : 'none';
-      }
-
-      function setLanguage(lang) {
-        Object.keys(sections).forEach(function(key) {
-          const el = sections[key];
-          if (el) el.classList.toggle('hidden', key !== lang);
-        });
-        buttons.forEach(function(btn) {
-          const isActive = btn.dataset.lang === lang;
-          btn.classList.toggle('active', isActive);
-          btn.setAttribute('aria-pressed', isActive);
-        });
-        localStorage.setItem(STORAGE_KEY, lang);
-        document.documentElement.lang = lang;
-        // Re-apply the search filter to the now-visible section.
-        applySearch();
-      }
-
-      buttons.forEach(function(btn) {
-        btn.addEventListener('click', function() { setLanguage(btn.dataset.lang); });
-      });
-      if (searchInput) searchInput.addEventListener('input', applySearch);
-
-      // Initial language: stored preference, then browser locale, then English default.
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const browserPrefersGeorgian = (navigator.language || '').toLowerCase().startsWith('ka');
-      setLanguage(stored || (browserPrefersGeorgian ? 'ka' : 'en'));
-    })();
-  </script>
+  /* ── Init ── */
+  (function() {
+    const lang = localStorage.getItem('geosin-lang') || 'en';
+    setLang(lang);
+  })();
+</script>
 </body>
 </html>

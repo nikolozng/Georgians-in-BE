@@ -1,285 +1,740 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Services · Georgians in Belgium · geosin.be</title>
-  <meta name="description" content="Find or list a community-run service for Georgians in Belgium — drivers, plumbers, teachers, and more.">
-  <meta property="og:title" content="Services · Georgians in Belgium">
-  <meta property="og:description" content="Find or list a community-run service for Georgians in Belgium.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://geosin.be/services.html">
-  <meta name="twitter:card" content="summary">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=BPG+Arial&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — geosin.be</title>
+  <meta name="description" content="Find Georgian service providers in Belgium — translators, lawyers, doctors, tutors, food and more." />
+  <meta property="og:title" content="Services — geosin.be" />
+  <meta property="og:description" content="Find Georgian service providers in Belgium — translators, lawyers, doctors, tutors and more." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/services.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .services-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 20px;
+    }
+    .sidebar h5 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .sidebar-links { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      color: var(--body-text);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .sidebar-link:hover { background: var(--surface); color: var(--ink); }
+    .sidebar-link.active { background: var(--ink); color: #fff; }
+    .sidebar-link .count {
+      font-size: 11px;
+      background: var(--surface);
+      color: var(--muted);
+      padding: 2px 7px;
+      border-radius: var(--r-full);
+    }
+    .sidebar-link.active .count { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+    .sidebar-divider { border: none; border-top: 1px solid var(--hairline); margin: 14px 0; }
+    .city-filter { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .city-check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--body-text); cursor: pointer; }
+    .city-check input { accent-color: var(--rausch); width: 15px; height: 15px; cursor: pointer; }
+    .search-bar-sm {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      transition: border-color 0.15s;
+    }
+    .search-bar-sm:focus-within { border-color: var(--ink); border-width: 2px; }
+    .search-bar-sm input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--ink);
+      width: 100%;
+      background: none;
+    }
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .results-count { font-size: 14px; color: var(--muted); }
+    .sort-select {
+      font-size: 13px;
+      color: var(--body-text);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-sm);
+      padding: 6px 10px;
+      background: var(--canvas);
+      outline: none;
+      cursor: pointer;
+    }
+    .service-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+    }
+    .loading-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    /* Service card body — adjusted because we don't have card images for dynamic data */
+    .service-card { display: flex; flex-direction: column; }
+    .service-card-body { padding: 22px 22px 20px; }
+    .service-contacts { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; gap: 14px; flex-wrap: wrap; }
+    .service-contacts a { color: var(--rausch); font-size: 13px; font-weight: 600; text-decoration: none; }
+    .service-contacts a:hover { text-decoration: underline; }
+    .service-langs { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    /* Register form section */
+    .register-section {
+      background: var(--surface);
+      border-top: 3px solid var(--rausch);
+    }
+    .register-intro { max-width: 520px; margin-bottom: 40px; }
+    .register-intro h2 { margin-bottom: 10px; }
+    .register-intro p { color: var(--body-text); }
+    .form-success {
+      display: none;
+      background: #e6f4ea;
+      border: 1px solid #c3e6cb;
+      border-radius: var(--r-md);
+      padding: 24px 28px;
+      color: #1a7f37;
+      font-size: 15px;
+    }
+    .form-error-banner {
+      display: none;
+      background: #fde7e9;
+      border: 1px solid #f5b5bc;
+      border-radius: var(--r-md);
+      padding: 16px 22px;
+      color: var(--error);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      .services-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .service-card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .service-card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <nav class="site-nav">
-    <a href="/" class="brand">geosin<span class="accent">.</span>be</a>
-    <a href="/">FAQ</a>
-    <a href="/services.html" class="active">Services</a>
-    <a href="/about.html">About</a>
-  </nav>
 
-  <main class="container">
-    <h1>Services</h1>
-    <p class="subtitle">Community-run services by Georgians in Belgium. Browse below, or scroll down to register your own.</p>
-
-    <!-- ================== BROWSE LISTINGS ================== -->
-    <section aria-labelledby="browse-heading">
-      <h2 id="browse-heading">Find a service</h2>
-
-      <div class="filter-bar">
-        <input type="search" id="filter-query" placeholder="Search by name, description, region…" aria-label="Search services">
-        <select id="filter-category" aria-label="Filter by category">
-          <option value="">All categories</option>
-        </select>
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
       </div>
+      <a href="#register" class="btn-nav-cta">List a service</a>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
 
-      <div id="listings" class="listings">
-        <p class="loading">Loading services…</p>
-      </div>
-    </section>
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">Community directory</p>
+    <h1>
+      <span data-lang-block="en">Georgian services in Belgium</span>
+      <span data-lang-block="ka" class="ka">ქართული სერვისები ბელგიაში</span>
+    </h1>
+    <p class="sub">სერვისების კატალოგი · Annuaire des services</p>
+  </div>
+</div>
 
-    <!-- ================== REGISTER ================== -->
-    <section class="section-divider" aria-labelledby="register-heading">
-      <h2 id="register-heading">Offer a service?</h2>
-      <p class="subtitle">List your service so other Georgians in Belgium can find you. Free, public, no commission. Submissions are reviewed before going live.</p>
+<!-- MAIN CONTENT -->
+<section class="section">
+  <div class="container">
+    <div class="services-layout">
 
-      <div class="form-section">
-        <form id="service-form">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="search-bar-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#929292" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search-input" placeholder="Search services…" oninput="filterCards()" />
+        </div>
 
-          <div class="field">
-            <label for="category">What service do you offer?
-              <span class="hint">Pick the closest category</span>
+        <h5>Category / კატეგორია</h5>
+        <div class="sidebar-links" id="cat-links">
+          <button class="sidebar-link active" data-cat="all" onclick="setCat(this,'all')">All services <span class="count" data-count="all">0</span></button>
+          <button class="sidebar-link" data-cat="legal" onclick="setCat(this,'legal')">Legal &amp; admin <span class="count" data-count="legal">0</span></button>
+          <button class="sidebar-link" data-cat="translation" onclick="setCat(this,'translation')">Translation <span class="count" data-count="translation">0</span></button>
+          <button class="sidebar-link" data-cat="health" onclick="setCat(this,'health')">Health &amp; wellness <span class="count" data-count="health">0</span></button>
+          <button class="sidebar-link" data-cat="education" onclick="setCat(this,'education')">Education &amp; tuition <span class="count" data-count="education">0</span></button>
+          <button class="sidebar-link" data-cat="food" onclick="setCat(this,'food')">Food &amp; catering <span class="count" data-count="food">0</span></button>
+          <button class="sidebar-link" data-cat="property" onclick="setCat(this,'property')">Property &amp; housing <span class="count" data-count="property">0</span></button>
+          <button class="sidebar-link" data-cat="beauty" onclick="setCat(this,'beauty')">Beauty &amp; care <span class="count" data-count="beauty">0</span></button>
+          <button class="sidebar-link" data-cat="transport" onclick="setCat(this,'transport')">Transport <span class="count" data-count="transport">0</span></button>
+          <button class="sidebar-link" data-cat="it" onclick="setCat(this,'it')">IT &amp; tech <span class="count" data-count="it">0</span></button>
+          <button class="sidebar-link" data-cat="finance" onclick="setCat(this,'finance')">Finance &amp; tax <span class="count" data-count="finance">0</span></button>
+        </div>
+
+        <hr class="sidebar-divider" />
+
+        <h5>City / ქალაქი</h5>
+        <div class="city-filter">
+          <label class="city-check"><input type="checkbox" value="brussels" onchange="filterCards()" checked /> Brussels</label>
+          <label class="city-check"><input type="checkbox" value="antwerp" onchange="filterCards()" checked /> Antwerp</label>
+          <label class="city-check"><input type="checkbox" value="ghent" onchange="filterCards()" checked /> Ghent</label>
+          <label class="city-check"><input type="checkbox" value="liege" onchange="filterCards()" checked /> Liège</label>
+          <label class="city-check"><input type="checkbox" value="bruges" onchange="filterCards()" checked /> Bruges</label>
+          <label class="city-check"><input type="checkbox" value="remote" onchange="filterCards()" checked /> Remote / Online</label>
+          <label class="city-check"><input type="checkbox" value="other" onchange="filterCards()" checked /> Other</label>
+        </div>
+
+        <hr class="sidebar-divider" />
+        <a href="#register" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">
+          + List your service
+        </a>
+      </aside>
+
+      <!-- LISTINGS GRID -->
+      <div>
+        <div class="results-header">
+          <p class="results-count" id="results-count">Loading services…</p>
+          <select class="sort-select" id="sort-select" onchange="filterCards()">
+            <option value="newest">Newest first</option>
+            <option value="alpha">A – Z</option>
+          </select>
+        </div>
+
+        <div class="service-card-grid" id="cards-grid">
+          <p class="loading-state">Loading services…</p>
+        </div>
+
+      </div><!-- /listings -->
+
+    </div><!-- /services-layout -->
+  </div>
+</section>
+
+<!-- REGISTER YOUR SERVICE -->
+<section class="section register-section" id="register">
+  <div class="container">
+    <div class="register-intro">
+      <p class="section-eyebrow">For providers / პროვაიდერებისთვის</p>
+      <h2>
+        <span data-lang-block="en">List your service — it's free</span>
+        <span data-lang-block="ka" class="ka">დაარეგისტრირეთ სერვისი — უფასოდ</span>
+      </h2>
+      <p data-lang-block="en">Reach the Georgian community in Belgium. Fill in the form and we'll publish your listing within 48 hours after a quick review.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">მიაღწიეთ ქართულ საზოგადოებას ბელგიაში. შეავსეთ ფორმა და ჩვენ გამოვაქვეყნებთ თქვენს განცხადებას 48 საათში.</p>
+    </div>
+
+    <div class="form-success" id="form-success">
+      <strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.
+      <br /><span class="ka" style="font-family:var(--font-georgian)">გმადლობთ! თქვენი განცხადება გაიგზავნა და განიხილება 48 საათში.</span>
+    </div>
+
+    <div class="form-card" id="register-form-card">
+      <div class="form-error-banner" id="form-error-banner"></div>
+      <form id="register-form" onsubmit="submitForm(event)" novalidate>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label class="form-label" for="f-name">
+              Full name <span class="ka">· სახელი და გვარი</span>
             </label>
-            <select id="category" name="category" required>
-              <option value="">— pick a category —</option>
-              <option>Driver / Transport</option>
-              <option>Plumber / Electrician / Handyman</option>
-              <option>Cleaner</option>
-              <option>Dutch / French / English Teacher</option>
-              <option>Translator / Interpreter</option>
-              <option>Childcare / Babysitter</option>
-              <option>Hairdresser / Beauty</option>
-              <option>IT / Web / Tech</option>
-              <option>Photographer / Video</option>
-              <option>Mover</option>
-              <option>Restaurant / Catering</option>
+            <input class="form-input" id="f-name" type="text" placeholder="Nino Beridze" required maxlength="80" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-email">
+              Email <span class="ka">· ელ-ფოსტა</span>
+            </label>
+            <input class="form-input" id="f-email" type="email" placeholder="nino@example.com" required maxlength="120" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-phone">
+              Phone / WhatsApp <span class="ka">· ტელეფონი</span>
+            </label>
+            <input class="form-input" id="f-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-city">
+              City <span class="ka">· ქალაქი</span>
+            </label>
+            <select class="form-select" id="f-city" required>
+              <option value="">Select city…</option>
+              <option>Brussels</option>
+              <option>Antwerp</option>
+              <option>Ghent</option>
+              <option>Liège</option>
+              <option>Bruges</option>
+              <option>Remote / Online</option>
               <option>Other</option>
             </select>
           </div>
 
-          <div class="field">
-            <label for="name">Your name or business name</label>
-            <input type="text" id="name" name="name" required maxlength="80">
-          </div>
-
-          <div class="field">
-            <label for="description">Short description
-              <span class="hint">2–3 sentences. What you do, what makes you a good choice.</span>
+          <div class="form-group">
+            <label class="form-label" for="f-cat">
+              Category <span class="ka">· კატეგორია</span>
             </label>
-            <textarea id="description" name="description" required maxlength="500"></textarea>
+            <select class="form-select" id="f-cat" required>
+              <option value="">Select category…</option>
+              <option>Legal &amp; admin</option>
+              <option>Translation</option>
+              <option>Health &amp; wellness</option>
+              <option>Education &amp; tuition</option>
+              <option>Food &amp; catering</option>
+              <option>Property &amp; housing</option>
+              <option>Beauty &amp; care</option>
+              <option>Transport</option>
+              <option>IT &amp; tech</option>
+              <option>Finance &amp; tax</option>
+              <option>Other</option>
+            </select>
           </div>
 
-          <div class="field">
-            <label for="region">City or region you serve</label>
-            <input type="text" id="region" name="region" placeholder="e.g. Brussels, Ghent, all of Flanders" required maxlength="80">
+          <div class="form-group">
+            <label class="form-label" for="f-service">
+              Service title <span class="ka">· სერვისის სათაური</span>
+            </label>
+            <input class="form-input" id="f-service" type="text" placeholder="e.g. Certified Georgian–French translator" required maxlength="120" />
           </div>
 
-          <div class="field">
-            <label for="languages">Languages you speak</label>
-            <input type="text" id="languages" name="languages" placeholder="e.g. Georgian, English, Dutch" required maxlength="80">
+          <div class="form-group">
+            <label class="form-label" for="f-languages">
+              Languages spoken <span class="ka">· ენები</span>
+            </label>
+            <input class="form-input" id="f-languages" type="text" placeholder="e.g. Georgian, English, French" required maxlength="80" />
           </div>
 
-          <div class="field">
-            <label for="email">Contact email</label>
-            <input type="email" id="email" name="email" required maxlength="120">
+          <div class="form-group">
+            <label class="form-label" for="f-link">
+              Website / social (optional) <span class="ka">· ვებსაიტი</span>
+            </label>
+            <input class="form-input" id="f-link" type="url" placeholder="https://..." maxlength="200" />
           </div>
 
-          <div class="field">
-            <label for="phone">Phone (optional)</label>
-            <input type="tel" id="phone" name="phone" maxlength="40">
+          <div class="form-group span-2">
+            <label class="form-label" for="f-desc">
+              Description <span class="ka">· აღწერა</span>
+            </label>
+            <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." required maxlength="500"></textarea>
+            <span class="form-hint">Please write in English or Georgian (or both). Max 500 characters.</span>
           </div>
 
-          <div class="field">
-            <label for="link">Website or social profile (optional)</label>
-            <input type="url" id="link" name="link" placeholder="https://..." maxlength="200">
+          <div class="form-group span-2" style="display:flex;align-items:flex-start;gap:10px">
+            <input type="checkbox" id="f-agree" required style="margin-top:3px;accent-color:var(--rausch);width:16px;height:16px;flex-shrink:0" />
+            <label for="f-agree" style="font-size:13px;color:var(--body-text);cursor:pointer">
+              I confirm that I am a Georgian national or professional providing services in Belgium, and agree to have my contact details published once the listing is approved.
+              <span class="ka" style="display:block;font-family:var(--font-georgian);margin-top:3px;font-size:12px;color:var(--muted)">ვადასტურებ, რომ ვარ ქართველი პროფესიონალი ბელგიაში და თანახმა ვარ ჩემი საკონტაქტო მონაცემები გამოქვეყნდეს დამტკიცების შემდეგ.</span>
+            </label>
           </div>
 
-          <button type="submit" class="submit-btn">Submit for review</button>
+        </div>
 
-          <div id="success" class="success hidden" role="status">
-            <strong>Thanks!</strong> Your submission has been received. We'll review it and publish it within a few days.
-          </div>
+        <div style="margin-top:28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button type="submit" class="btn btn-primary" id="submit-btn">
+            <span data-lang-block="en">Submit listing</span>
+            <span data-lang-block="ka" class="ka">განცხადების გაგზავნა</span>
+          </button>
+          <span style="font-size:13px;color:var(--muted)" data-lang-block="en">Free to list · Reviewed within 48 h</span>
+          <span style="font-size:13px;color:var(--muted);font-family:var(--font-georgian)" data-lang-block="ka">უფასო · განიხილება 48 საათში</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 
-          <div id="error" class="error hidden" role="alert"></div>
-
-        </form>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+        <p class="ka" style="font-family:var(--font-georgian);color:rgba(255,255,255,0.35);font-size:12px;margin-top:6px">ბელგიაში მცხოვრები ქართველების საზოგადოება</p>
       </div>
-    </section>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="#register">List a service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="forum.html">Forum</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 geosin.be — made by and for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px">
+        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
+      </span>
+    </div>
+  </div>
+</footer>
 
-    <footer>
-      <p>Built by Nikoloz · 2026 · <a href="/">FAQ</a> · <a href="/about.html">About</a></p>
-    </footer>
-  </main>
+<!-- Supabase JavaScript client library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Supabase JavaScript client library, loaded from a CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  /* ========== Supabase config ==========
+     These values are safe to publish — Row Level Security in the DB
+     controls what they're allowed to do. The publishable key only has the
+     permissions we explicitly grant via RLS policies.
+  */
+  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <script>
-    // Connect to your Supabase project. Both values below are safe to publish —
-    // Row Level Security policies in the database control what they can actually do.
-    const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+  /* ========== Mappings ==========
+     The DB stores categories and regions as free-form text (matching the
+     dropdown values). The filter UI uses short slug keys ("legal", "brussels"),
+     so we map between them.
+  */
+  const CAT_TO_SLUG = {
+    'Legal & admin': 'legal',
+    'Translation': 'translation',
+    'Health & wellness': 'health',
+    'Education & tuition': 'education',
+    'Food & catering': 'food',
+    'Property & housing': 'property',
+    'Beauty & care': 'beauty',
+    'Transport': 'transport',
+    'IT & tech': 'it',
+    'Finance & tax': 'finance',
+    'Other': 'other'
+  };
+  function regionToSlug(region) {
+    const r = (region || '').toLowerCase();
+    if (r.includes('brussel') || r.includes('bruxelles')) return 'brussels';
+    if (r.includes('antwerp')) return 'antwerp';
+    if (r.includes('ghent') || r.includes('gent')) return 'ghent';
+    if (r.includes('liège') || r.includes('liege')) return 'liege';
+    if (r.includes('bruges') || r.includes('brugge')) return 'bruges';
+    if (r.includes('remote') || r.includes('online') || r.includes('any')) return 'remote';
+    return 'other';
+  }
 
-    (function() {
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  /* ========== Language toggle (shared across pages) ========== */
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
 
-      // -------------------- BROWSE LISTINGS --------------------
+  /* ========== Mobile nav ========== */
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
 
-      const listingsEl = document.getElementById('listings');
-      const queryInput = document.getElementById('filter-query');
-      const categorySelect = document.getElementById('filter-category');
+  /* ========== Listings ========== */
+  let allServices = [];
+  let currentCat = 'all';
 
-      // Tiny HTML escaper so user-submitted data can't inject markup.
-      function escapeHtml(str) {
-        return String(str == null ? '' : str).replace(/[<>&"']/g, function(c) {
-          return ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' })[c];
-        });
+  function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[<>&"']/g, c => ({
+      '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+    })[c]);
+  }
+
+  function renderCard(s) {
+    const catSlug = CAT_TO_SLUG[s.category] || 'other';
+    const citySlug = regionToSlug(s.region);
+    const contacts = [];
+    if (s.email) contacts.push(`<a href="mailto:${escapeHtml(s.email)}">Email</a>`);
+    if (s.phone) {
+      const cleanPhone = (s.phone || '').replace(/\s+/g, '');
+      contacts.push(`<a href="tel:${escapeHtml(cleanPhone)}">Call</a>`);
+    }
+    if (s.link) contacts.push(`<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener">Website</a>`);
+
+    return `
+      <div class="service-card" data-cat="${catSlug}" data-city="${citySlug}">
+        <div class="service-card-body">
+          <div class="service-card-cat">${escapeHtml(s.category)}</div>
+          <h4>${escapeHtml(s.name)}</h4>
+          <p>${escapeHtml(s.description)}</p>
+          ${s.languages ? `<p class="service-langs"><strong>Languages:</strong> ${escapeHtml(s.languages)}</p>` : ''}
+          <div class="service-card-meta">
+            <span>${escapeHtml(s.region)}</span>
+            <span class="badge">Community-listed</span>
+          </div>
+          ${contacts.length ? `<div class="service-contacts">${contacts.join('')}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function getCheckedCities() {
+    return [...document.querySelectorAll('.city-filter input:checked')].map(i => i.value);
+  }
+
+  function applySort(items) {
+    const mode = (document.getElementById('sort-select') || {}).value || 'newest';
+    const out = [...items];
+    if (mode === 'alpha') {
+      out.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    } else {
+      out.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    }
+    return out;
+  }
+
+  function filterCards() {
+    const grid = document.getElementById('cards-grid');
+    const countEl = document.getElementById('results-count');
+    if (!grid) return;
+
+    const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+    const cities = getCheckedCities();
+
+    const filtered = allServices.filter(s => {
+      const slug = CAT_TO_SLUG[s.category] || 'other';
+      if (currentCat !== 'all' && slug !== currentCat) return false;
+      if (cities.length === 0) return false;
+      if (!cities.includes(regionToSlug(s.region))) return false;
+      if (q) {
+        const haystack = [s.name, s.description, s.region, s.languages, s.category].join(' ').toLowerCase();
+        if (!haystack.includes(q)) return false;
       }
+      return true;
+    });
 
-      function renderCard(s) {
-        const contacts = [];
-        if (s.email) contacts.push('<a href="mailto:' + escapeHtml(s.email) + '">Email</a>');
-        if (s.phone) {
-          const cleanPhone = (s.phone || '').replace(/\s+/g, '');
-          contacts.push('<a href="tel:' + escapeHtml(cleanPhone) + '">Call</a>');
-        }
-        if (s.link) contacts.push('<a href="' + escapeHtml(s.link) + '" target="_blank" rel="noopener">Website</a>');
+    const sorted = applySort(filtered);
 
-        return (
-          '<article class="service-card">' +
-            '<div class="service-meta">' +
-              '<span class="service-cat">' + escapeHtml(s.category) + '</span>' +
-              '<span class="service-region">' + escapeHtml(s.region) + '</span>' +
-            '</div>' +
-            '<h3 class="service-name">' + escapeHtml(s.name) + '</h3>' +
-            '<p class="service-desc">' + escapeHtml(s.description) + '</p>' +
-            '<p class="service-langs"><strong>Speaks:</strong> ' + escapeHtml(s.languages) + '</p>' +
-            '<p class="service-contacts">' + contacts.join(' · ') + '</p>' +
-          '</article>'
-        );
+    if (sorted.length === 0) {
+      grid.innerHTML = '<p class="no-results">No services match your filters yet.</p>';
+    } else {
+      grid.innerHTML = sorted.map(renderCard).join('');
+    }
+
+    countEl.innerHTML = `Showing <strong>${sorted.length}</strong> of ${allServices.length} service${allServices.length === 1 ? '' : 's'}`;
+  }
+
+  function setCat(btn, cat) {
+    currentCat = cat;
+    document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterCards();
+  }
+
+  function updateCategoryCounts() {
+    const counts = { all: allServices.length };
+    Object.values(CAT_TO_SLUG).forEach(slug => { counts[slug] = 0; });
+    allServices.forEach(s => {
+      const slug = CAT_TO_SLUG[s.category] || 'other';
+      counts[slug] = (counts[slug] || 0) + 1;
+    });
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const k = el.dataset.count;
+      el.textContent = counts[k] || 0;
+    });
+  }
+
+  async function loadServices() {
+    const grid = document.getElementById('cards-grid');
+    const countEl = document.getElementById('results-count');
+    const result = await supabase
+      .from('services')
+      .select('id, category, name, description, region, languages, email, phone, link, created_at')
+      .eq('approved', true)
+      .order('created_at', { ascending: false });
+
+    if (result.error) {
+      console.error('Failed to load services:', result.error);
+      grid.innerHTML = '<p class="no-results">Could not load services. Please refresh the page.</p>';
+      countEl.innerHTML = '<strong>0</strong> services';
+      return;
+    }
+
+    allServices = result.data || [];
+
+    if (allServices.length === 0) {
+      grid.innerHTML = '<p class="no-results">No services listed yet. Be the first — list yours below.</p>';
+      countEl.innerHTML = '<strong>0</strong> services yet';
+      updateCategoryCounts();
+      return;
+    }
+
+    updateCategoryCounts();
+    filterCards();
+  }
+
+  /* ========== Form submit (Supabase insert) ========== */
+  async function submitForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('register-form');
+    const errorBanner = document.getElementById('form-error-banner');
+    const submitBtn = document.getElementById('submit-btn');
+
+    errorBanner.style.display = 'none';
+
+    // Manual validation since the form has novalidate
+    const required = form.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(el => {
+      if (!el.value || (el.type === 'checkbox' && !el.checked)) {
+        el.style.borderColor = 'var(--error)';
+        valid = false;
+      } else {
+        el.style.borderColor = '';
       }
+    });
+    if (!valid) {
+      errorBanner.textContent = 'Please fill in all required fields and accept the agreement.';
+      errorBanner.style.display = 'block';
+      errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
 
-      let allServices = [];
+    submitBtn.disabled = true;
+    const originalLabel = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Submitting…';
 
-      function applyFilters() {
-        const query = queryInput.value.trim().toLowerCase();
-        const cat = categorySelect.value;
+    const fName = document.getElementById('f-name').value.trim();
+    const fService = document.getElementById('f-service').value.trim();
+    const fDesc = document.getElementById('f-desc').value.trim();
+    const fLink = document.getElementById('f-link').value.trim();
 
-        const filtered = allServices.filter(function(s) {
-          if (cat && s.category !== cat) return false;
-          if (!query) return true;
-          const haystack = [s.name, s.description, s.region, s.languages, s.category].join(' ').toLowerCase();
-          return haystack.indexOf(query) !== -1;
-        });
+    // Map design's form fields to my DB schema:
+    //   DB.name        ← f-service (the service title shown on the card)
+    //   DB.description ← f-desc + signature line "— [full name]"
+    //   DB.region      ← f-city
+    //   DB.category    ← f-cat
+    //   DB.languages   ← f-languages
+    //   DB.email       ← f-email
+    //   DB.phone       ← f-phone (nullable)
+    //   DB.link        ← f-link (nullable)
+    const row = {
+      name: fService,
+      description: fDesc + (fName ? `\n\n— ${fName}` : ''),
+      region: document.getElementById('f-city').value.trim(),
+      category: document.getElementById('f-cat').value.trim(),
+      languages: document.getElementById('f-languages').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      phone: document.getElementById('f-phone').value.trim() || null,
+      link: fLink || null
+    };
 
-        if (filtered.length === 0) {
-          listingsEl.innerHTML = '<p class="empty">No services match your filters.</p>';
-          return;
-        }
-        listingsEl.innerHTML = filtered.map(renderCard).join('');
+    const { error } = await supabase.from('services').insert(row);
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalLabel;
+
+    if (error) {
+      console.error('Supabase insert error:', error);
+      errorBanner.textContent = 'Sorry — submission failed. Please try again, or email hello@geosin.be if it keeps failing.';
+      errorBanner.style.display = 'block';
+      errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    document.getElementById('register-form-card').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ========== Init ========== */
+  (function() {
+    const lang = localStorage.getItem('geosin-lang') || 'en';
+    setLang(lang);
+
+    // Apply ?cat= URL param for deep linking from footer
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat');
+    if (cat) {
+      const btn = document.querySelector(`.sidebar-link[data-cat="${cat}"]`);
+      if (btn) {
+        document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = cat;
       }
+    }
 
-      async function loadListings() {
-        const result = await supabase
-          .from('services')
-          .select('id, category, name, description, region, languages, email, phone, link')
-          .eq('approved', true)
-          .order('created_at', { ascending: false });
+    // Scroll to register if hash present
+    if (location.hash === '#register') {
+      setTimeout(() => document.getElementById('register').scrollIntoView({ behavior: 'smooth' }), 200);
+    }
 
-        if (result.error) {
-          listingsEl.innerHTML = '<p class="empty">Could not load listings. Try refreshing the page.</p>';
-          console.error('Failed to load services:', result.error);
-          return;
-        }
-
-        allServices = result.data || [];
-
-        if (allServices.length === 0) {
-          listingsEl.innerHTML = '<p class="empty">No services listed yet. Be the first — register yours below.</p>';
-          return;
-        }
-
-        // Populate the category filter with the categories actually present.
-        const seen = {};
-        for (const s of allServices) {
-          if (s.category && !seen[s.category]) {
-            seen[s.category] = true;
-            const opt = document.createElement('option');
-            opt.value = s.category;
-            opt.textContent = s.category;
-            categorySelect.appendChild(opt);
-          }
-        }
-
-        listingsEl.innerHTML = allServices.map(renderCard).join('');
-      }
-
-      queryInput.addEventListener('input', applyFilters);
-      categorySelect.addEventListener('change', applyFilters);
-      loadListings();
-
-      // -------------------- REGISTRATION FORM --------------------
-
-      const form = document.getElementById('service-form');
-      const success = document.getElementById('success');
-      const errorBox = document.getElementById('error');
-      const submitBtn = form.querySelector('.submit-btn');
-
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        success.classList.add('hidden');
-        errorBox.classList.add('hidden');
-
-        submitBtn.disabled = true;
-        const originalLabel = submitBtn.textContent;
-        submitBtn.textContent = 'Submitting…';
-
-        const row = {
-          category: form.category.value.trim(),
-          name: form.name.value.trim(),
-          description: form.description.value.trim(),
-          region: form.region.value.trim(),
-          languages: form.languages.value.trim(),
-          email: form.email.value.trim(),
-          phone: form.phone.value.trim() || null,
-          link: form.link.value.trim() || null
-        };
-
-        const { error } = await supabase.from('services').insert(row);
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
-
-        if (error) {
-          errorBox.textContent = 'Sorry — something went wrong. Please try again.';
-          errorBox.classList.remove('hidden');
-          errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          console.error('Supabase insert error:', error);
-          return;
-        }
-
-        success.classList.remove('hidden');
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        form.reset();
-      });
-    })();
-  </script>
+    loadServices();
+  })();
+</script>
 </body>
 </html>

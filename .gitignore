@@ -1,0 +1,4 @@
+# Backup files from sed/text editors
+*.bak
+*~
+.DS_Store
