@@ -457,6 +457,21 @@
   */
   const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+
+  // Defensive: if the Supabase library failed to load (ad-blocker, CDN issue, file:// origin),
+  // show a clear message in the listings grid instead of staying stuck on "Loading…".
+  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+    document.addEventListener('DOMContentLoaded', function() {
+      const grid = document.getElementById('cards-grid');
+      if (grid) {
+        grid.innerHTML = '<p class="no-results">Could not load the Supabase library. If you\'re viewing this file locally (file://), please open the live site at https://geosin.be/services.html instead. If you\'re on the live site, check that no ad-blocker or browser extension is blocking cdn.jsdelivr.net.</p>';
+      }
+      const countEl = document.getElementById('results-count');
+      if (countEl) countEl.textContent = 'Service listing temporarily unavailable.';
+    });
+    throw new Error('Supabase library not loaded — see grid for details.');
+  }
+
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   /* ========== Mappings ==========
