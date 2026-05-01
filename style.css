@@ -834,3 +834,11 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .cta-strip h2 { font-size: 22px; }
 }
+
+/* ── Pure language toggle ──
+   Hide inline .ka spans when EN is active; hide inline .en spans when KA is active.
+   The setLang() function sets document.documentElement.lang, which triggers these rules.
+*/
+html[lang="en"] .ka { display: none !important; }
+html[lang="ka"] .en { display: none !important; }
+/* Specifically: when the language switches, the nav-mark "G" stays visible (no .ka/.en class on it). */
