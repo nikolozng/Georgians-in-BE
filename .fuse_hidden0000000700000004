@@ -627,7 +627,7 @@
   async function loadServices() {
     const grid = document.getElementById('cards-grid');
     const countEl = document.getElementById('results-count');
-    const result = await sb
+    const result = await supabase
       .from('services')
       .select('id, category, name, description, region, languages, email, phone, link, created_at')
       .eq('approved', true)

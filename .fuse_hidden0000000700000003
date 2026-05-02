@@ -474,7 +474,7 @@
     throw new Error('Supabase library not loaded — see grid for details.');
   }
 
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   /* ========== Mappings ==========
      The DB stores categories and regions as free-form text (matching the
@@ -627,7 +627,7 @@
   async function loadServices() {
     const grid = document.getElementById('cards-grid');
     const countEl = document.getElementById('results-count');
-    const result = await sb
+    const result = await supabase
       .from('services')
       .select('id, category, name, description, region, languages, email, phone, link, created_at')
       .eq('approved', true)
@@ -709,7 +709,7 @@
       link: fLink || null
     };
 
-    const { error } = await sb.from('services').insert(row);
+    const { error } = await supabase.from('services').insert(row);
 
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalLabel;
