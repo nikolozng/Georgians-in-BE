@@ -4,116 +4,208 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — geosin.be</title>
-  <meta name="description" content="Learn about geosin.be — a volunteer-run community platform for Georgians living in Belgium." />
+  <meta name="description" content="A practical platform helping Georgians navigate life in Belgium — jobs, housing, paperwork, scam protection, and trusted services." />
+  <meta property="og:title" content="About — geosin.be" />
+  <meta property="og:description" content="A practical platform helping Georgians navigate life in Belgium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/about.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    .mission-block {
-      background: var(--ink);
-      border-radius: var(--r-md);
-      padding: 56px 48px;
-      color: #fff;
+    .lead-block {
+      max-width: 760px;
+      margin: 0 auto 56px;
+    }
+    .lead-block h2 {
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .lead-block p {
+      font-size: 17px;
+      color: var(--body-text);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .ps-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
+      gap: 24px;
+      margin: 16px 0 56px;
     }
-    .mission-block h2 { color: #fff; font-size: 28px; margin-bottom: 16px; }
-    .mission-block p  { color: rgba(255,255,255,0.7); line-height: 1.75; margin-bottom: 10px; }
-    .mission-block .ka { font-family: var(--font-georgian); color: rgba(255,255,255,0.45); font-size: 14px; }
-    .mission-flag {
+    @media (max-width: 720px) { .ps-grid { grid-template-columns: 1fr; } }
+    .ps-card {
+      border-radius: var(--r-md);
+      padding: 28px 30px;
+    }
+    .ps-card.problem {
+      background: var(--surface);
+      border-left: 4px solid var(--rausch);
+    }
+    .ps-card.solution {
+      background: #f1f8ff;
+      border-left: 4px solid var(--be-blue, #0066cc);
+    }
+    .ps-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+    .ps-card.problem h3 { color: var(--rausch); }
+    .ps-card.solution h3 { color: #0066cc; }
+    .ps-card ul { padding-left: 20px; list-style: disc; }
+    .ps-card li {
+      font-size: 15px;
+      color: var(--body-text);
+      line-height: 1.65;
+      margin-bottom: 6px;
+    }
+
+    .can-do-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 24px 0 56px;
+    }
+    @media (max-width: 900px) { .can-do-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .can-do-grid { grid-template-columns: 1fr; } }
+    .can-do-card {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-    .flag-svg { width: 140px; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4)); }
-    .plus-sign { font-size: 40px; color: rgba(255,255,255,0.25); }
-    .flag-be { width: 110px; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.4)); }
-    .timeline { position: relative; max-width: 640px; }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 19px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--hairline);
-    }
-    .tl-item { display: flex; gap: 24px; margin-bottom: 36px; position: relative; }
-    .tl-dot {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--canvas);
-      border: 2px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--rausch);
-      flex-shrink: 0;
-      z-index: 1;
-    }
-    .tl-dot.active { background: var(--rausch); border-color: var(--rausch); color: #fff; }
-    .tl-body { padding-top: 8px; }
-    .tl-year { font-size: 12px; font-weight: 700; color: var(--rausch); margin-bottom: 4px; }
-    .tl-body h4 { font-size: 16px; margin-bottom: 6px; }
-    .tl-body p  { font-size: 14px; color: var(--body-text); }
-    .tl-body .ka { font-family: var(--font-georgian); font-size: 12px; color: var(--muted); }
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .value-card {
-      background: var(--surface);
-      border-radius: var(--r-md);
-      padding: 28px 24px;
-      border-left: 3px solid var(--rausch);
-    }
-    .value-card h4 { margin-bottom: 8px; }
-    .value-card p  { font-size: 14px; color: var(--body-text); }
-    .value-card .ka { font-family: var(--font-georgian); font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .partners-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-    .partner-card {
+      gap: 8px;
+      padding: 22px 22px;
       border: 1px solid var(--hairline);
       border-radius: var(--r-md);
-      padding: 24px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--canvas);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
     }
-    .partner-logo {
-      width: 48px;
-      height: 48px;
+    .can-do-card:hover {
+      border-color: var(--rausch);
+      box-shadow: 0 4px 14px rgba(255, 56, 92, 0.08);
+      transform: translateY(-2px);
+    }
+    .can-do-card .icon {
+      width: 36px; height: 36px;
       border-radius: var(--r-sm);
-      background: var(--surface);
+      background: var(--rausch-light);
+      color: var(--rausch);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .can-do-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .can-do-card p {
+      font-size: 13px;
       color: var(--muted);
+      line-height: 1.55;
     }
-    .partner-name { font-size: 13px; font-weight: 600; color: var(--ink); }
-    .partner-desc { font-size: 12px; color: var(--muted); }
+    .can-do-card .arrow {
+      margin-top: auto;
+      font-size: 13px;
+      color: var(--rausch);
+      font-weight: 600;
+    }
+
+    .steps-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin: 24px 0 56px;
+    }
+    @media (max-width: 768px) { .steps-3 { grid-template-columns: 1fr; } }
+    .step-3 {
+      padding: 28px 28px;
+      border-right: 1px solid var(--hairline);
+      background: var(--canvas);
+    }
+    .step-3:last-child { border-right: none; }
     @media (max-width: 768px) {
-      .mission-block { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; }
-      .mission-flag  { flex-direction: row; }
-      .values-grid   { grid-template-columns: 1fr; }
-      .partners-grid { grid-template-columns: 1fr 1fr; }
+      .step-3 { border-right: none; border-bottom: 1px solid var(--hairline); }
+      .step-3:last-child { border-bottom: none; }
     }
-    @media (max-width: 480px) {
-      .partners-grid { grid-template-columns: 1fr; }
+    .step-3 .num {
+      display: inline-block;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 28px;
+      margin-bottom: 12px;
     }
+    .step-3 h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step-3 p { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+
+    .trust-box {
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r-md);
+      padding: 36px 40px;
+      margin-bottom: 56px;
+    }
+    .trust-box h2 { color: #fff; font-size: 24px; margin-bottom: 14px; }
+    .trust-box .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 24px;
+    }
+    @media (max-width: 720px) { .trust-box .pillars { grid-template-columns: 1fr; gap: 18px; } }
+    .pillar h4 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .pillar p { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; }
+
+    .cta-box {
+      background: linear-gradient(135deg, #fff5f7 0%, #fff 60%);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 40px 44px;
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .cta-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .cta-box p { color: var(--body-text); margin-bottom: 22px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .team-mini {
+      max-width: 720px;
+      border-top: 1px solid var(--hairline);
+      padding-top: 40px;
+    }
+    .team-mini .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .team-mini h3 { font-size: 18px; margin-bottom: 8px; }
+    .team-mini p { font-size: 14px; color: var(--body-text); line-height: 1.65; margin-bottom: 6px; }
+    .team-mini p .ka { color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -148,116 +240,195 @@
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="container">
-    <p class="section-eyebrow" style="margin-bottom:8px">About geosin.be</p>
+    <p class="section-eyebrow" style="margin-bottom:8px">About</p>
     <h1>
-      <span data-lang-block="en">Who we are</span>
-      <span data-lang-block="ka" class="ka">ვინ ვართ ჩვენ</span>
+      <span data-lang-block="en">A practical platform, not a charity</span>
+      <span data-lang-block="ka" class="ka">პრაქტიკული ხელსაწყო, არა ფონდი</span>
     </h1>
-    <p class="sub">ჩვენ შესახებ · À propos de nous</p>
+    <p class="sub">პრაქტიკული პლატფორმა · Une plateforme pratique</p>
   </div>
 </div>
 
-
-
-<!-- TEAM -->
 <section class="section">
   <div class="container">
-    <div class="section-heading">
-      <p class="section-eyebrow">Volunteers</p>
-      <h2>
-        <span data-lang-block="en">The people behind geosin.be</span>
-        <span data-lang-block="ka" class="ka">ადამიანები geosin.be-ს უკან</span>
-      </h2>
-      <p data-lang-block="en">We're a team of volunteers who moved to Belgium and decided to give back to the community.</p>
-      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ჩვენ მოხალისეთა გუნდი ვართ, რომლებმაც ბელგიაში გადასვლა გადაწყვიტეს და თავი უბრუნეს საზოგადოებას.</p>
+
+    <!-- 1. MISSION / WHAT IS THIS -->
+    <div class="lead-block">
+      <h2 data-lang-block="en">A platform helping Georgians navigate life in Belgium.</h2>
+      <h2 data-lang-block="ka" class="ka">პლატფორმა, რომელიც ქართველებს ეხმარება ბელგიაში ცხოვრებაში.</h2>
+      <p data-lang-block="en">geosin.be is a tool. It exists so that finding a job, an apartment, the right paperwork, or a trusted Georgian-speaking professional in Belgium takes minutes — not weeks of asking around in Facebook groups.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">geosin.be არის ხელსაწყო. ის არსებობს იმისთვის, რომ ბელგიაში სამუშაოს, ბინის, საჭირო დოკუმენტების ან სანდო ქართულენოვანი სპეციალისტის პოვნა მოხდეს წუთებში — არა Facebook-ში კვირაობით ძიების ფასად.</p>
+      <p data-lang-block="en">No accounts required. No fees. No newsletter pop-ups. You arrive, you find what you need, you leave.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ანგარიშის გახსნა არ არის საჭირო. გადახდა — არა. ცარიელი popup-ები — არა. მოდიხარ, პოულობ რაც გჭირდება, მიდიხარ.</p>
     </div>
-    <div class="team-grid">
 
-      <div class="team-card">
-        <div class="team-avatar">
-          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=70" alt="Nino Beridze" loading="lazy" />
-        </div>
-        <div class="team-name">Nino Beridze</div>
-        <div class="team-role">Founder &amp; Editor</div>
-        <p class="team-bio">Moved from Tbilisi to Brussels in 2016. Works in EU affairs and runs geosin.be in her spare time.</p>
-      </div>
+    <!-- 2. PROBLEM → SOLUTION -->
+    <h2 style="margin-bottom:8px" data-lang-block="en">Why this exists</h2>
+    <h2 style="margin-bottom:8px" data-lang-block="ka" class="ka">რატომ არსებობს ეს</h2>
 
-      <div class="team-card">
-        <div class="team-avatar">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=70" alt="Giorgi Kapanadze" loading="lazy" />
-        </div>
-        <div class="team-name">Giorgi Kapanadze</div>
-        <div class="team-role">Tech &amp; Development</div>
-        <p class="team-bio">Software engineer based in Ghent. Built and maintains the geosin.be platform.</p>
+    <div class="ps-grid">
+      <div class="ps-card problem">
+        <h3 data-lang-block="en">The problem</h3>
+        <h3 data-lang-block="ka" class="ka">პრობლემა</h3>
+        <ul data-lang-block="en">
+          <li>Belgian bureaucracy is in Dutch and French — almost never Georgian.</li>
+          <li>Information is scattered across PDFs, Facebook threads, and outdated blog posts.</li>
+          <li>Scams target newcomers the hardest — fake landlords, fake job offers, fake "fast-track" officials.</li>
+          <li>Finding work without speaking Dutch or French feels impossible at first.</li>
+          <li>You don't know who to trust.</li>
+        </ul>
+        <ul data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">
+          <li>ბელგიის ბიუროკრატია ჰოლანდიურ და ფრანგულ ენაზეა — თითქმის არასდროს ქართულად.</li>
+          <li>ინფორმაცია მიმოფანტულია PDF-ებში, Facebook-ის გრძელ თემებში და მოძველებულ ბლოგებში.</li>
+          <li>თაღლითები ახლადჩამოსულებს პირველებს ეცემიან — ცრუ მესაკუთრეები, ცრუ სამსახური, ცრუ „დაჩქარების" შემოთავაზებები.</li>
+          <li>სამუშაოს პოვნა ჰოლანდიური/ფრანგულის გარეშე თავიდან შეუძლებელი ჩანს.</li>
+          <li>არ იცი ვის ენდო.</li>
+        </ul>
       </div>
+      <div class="ps-card solution">
+        <h3 data-lang-block="en">What we do about it</h3>
+        <h3 data-lang-block="ka" class="ka">რა ვაკეთებთ</h3>
+        <ul data-lang-block="en">
+          <li>One platform with the answers in Georgian and English.</li>
+          <li>Step-by-step checklists for arrival, jobs, and starting a business.</li>
+          <li>A scam-pattern library and a confidential reporting form.</li>
+          <li>A directory of Georgian-speaking service providers — verified before going live.</li>
+          <li>Practical tools, not feel-good copy.</li>
+        </ul>
+        <ul data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">
+          <li>ერთი პლატფორმა ქართულ და ინგლისურ პასუხებით.</li>
+          <li>ნაბიჯ-ნაბიჯ ჩამონათვალები ჩამოსვლისთვის, სამუშაოსთვის, ბიზნესისთვის.</li>
+          <li>თაღლითობის ნიმუშების ბიბლიოთეკა და კონფიდენციალური რეპორტის ფორმა.</li>
+          <li>ქართულენოვანი სპეციალისტების კატალოგი — გადამოწმებული გამოქვეყნებამდე.</li>
+          <li>პრაქტიკული ხელსაწყოები, არა ცარიელი ტექსტები.</li>
+        </ul>
+      </div>
+    </div>
 
-      <div class="team-card">
-        <div class="team-avatar">
-          <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=70" alt="Tamar Jikia" loading="lazy" />
-        </div>
-        <div class="team-name">Tamar Jikia</div>
-        <div class="team-role">Community Outreach</div>
-        <p class="team-bio">Connects the community in Antwerp and Bruges. Organises monthly meetups and events.</p>
-      </div>
+    <!-- 3. WHAT YOU CAN DO HERE -->
+    <h2 style="margin-bottom:8px" data-lang-block="en">What you can do here</h2>
+    <h2 style="margin-bottom:8px" data-lang-block="ka" class="ka">რა შეგიძლია აქ გააკეთო</h2>
+
+    <div class="can-do-grid">
+
+      <a href="index.html#faq" class="can-do-card">
+        <div class="icon">i</div>
+        <h4><span class="en">Get key info fast</span><span class="ka">საჭირო ინფორმაცია სწრაფად</span></h4>
+        <p><span class="en">Visa, commune registration, healthcare, schools, driving licence — all answered in plain language.</span><span class="ka">ვიზა, რეგისტრაცია, ჯანდაცვა, სკოლა — გასაგებად.</span></p>
+        <span class="arrow">→ <span class="en">Read the FAQ</span><span class="ka">წაიკითხე</span></span>
+      </a>
+
+      <a href="services.html" class="can-do-card">
+        <div class="icon">★</div>
+        <h4><span class="en">Find a Georgian-speaking pro</span><span class="ka">იპოვე სპეციალისტი</span></h4>
+        <p><span class="en">Translators, lawyers, doctors, hairdressers, drivers — all reviewed before publishing.</span><span class="ka">მთარგმნელები, ექიმები, იურისტები — გადამოწმებული.</span></p>
+        <span class="arrow">→ <span class="en">Browse services</span><span class="ka">დაათვალიერე</span></span>
+      </a>
+
+      <a href="checklists.html" class="can-do-card">
+        <div class="icon">✓</div>
+        <h4><span class="en">Track your progress</span><span class="ka">თვალი ადევნე ნაბიჯებს</span></h4>
+        <p><span class="en">Step-by-step lists for "Just arrived", "Find a job", and "Open a business". Saved automatically.</span><span class="ka">სამი ჩამონათვალი — ჩამოსვლა, სამუშაო, ბიზნესი.</span></p>
+        <span class="arrow">→ <span class="en">Open checklists</span><span class="ka">გახსენი</span></span>
+      </a>
+
+      <a href="scams.html" class="can-do-card">
+        <div class="icon">!</div>
+        <h4><span class="en">Avoid scams</span><span class="ka">თავიდან აიცილე თაღლითობა</span></h4>
+        <p><span class="en">Patterns that target newcomers, red flags, helplines, and a confidential reporting form.</span><span class="ka">ნიმუშები, სიგნალები, საკონტაქტო ნომრები.</span></p>
+        <span class="arrow">→ <span class="en">See the patterns</span><span class="ka">იხილე</span></span>
+      </a>
+
+      <a href="services.html#register" class="can-do-card">
+        <div class="icon">+</div>
+        <h4><span class="en">List your service</span><span class="ka">დაარეგისტრირე სერვისი</span></h4>
+        <p><span class="en">Provide a service to the community? List it for free. Reviewed within 48 hours.</span><span class="ka">გთავაზობთ სერვისს? დაარეგისტრირე უფასოდ.</span></p>
+        <span class="arrow">→ <span class="en">Register a service</span><span class="ka">დარეგისტრირდი</span></span>
+      </a>
+
+      <a href="forum.html" class="can-do-card">
+        <div class="icon">💬</div>
+        <h4><span class="en">Forum (coming soon)</span><span class="ka">ფორუმი (მალე)</span></h4>
+        <p><span class="en">A space to ask the community things that don't fit a checklist. Sign up to be notified at launch.</span><span class="ka">ადგილი, სადაც სხვა საკითხებზე ვისაუბროთ — მალე.</span></p>
+        <span class="arrow">→ <span class="en">Get notified</span><span class="ka">შემატყობინე</span></span>
+      </a>
 
     </div>
-    <p style="margin-top:28px;font-size:14px;color:var(--muted)">
-      <span data-lang-block="en">Want to help? <a href="mailto:hello@geosin.be" style="color:var(--rausch);font-size:14px">Get in touch</a> — we welcome Georgian speakers who can help moderate, translate, or organise.</span>
-      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გსურთ დახმარება? <a href="mailto:hello@geosin.be" style="color:var(--rausch);font-size:14px">დაგვიკავშირდით</a> — ვეძებთ ქართულენოვნებს, ვინც დაეხმარება მოდერაციაში, თარგმანში ან ორგანიზებაში.</span>
-    </p>
+
+    <!-- 4. HOW IT WORKS -->
+    <h2 style="margin-bottom:8px" data-lang-block="en">How it works</h2>
+    <h2 style="margin-bottom:8px" data-lang-block="ka" class="ka">როგორ მუშაობს</h2>
+
+    <div class="steps-3">
+      <div class="step-3">
+        <span class="num">1</span>
+        <h4><span class="en">Pick your goal</span><span class="ka">აირჩიე მიზანი</span></h4>
+        <p><span class="en">Just arrived? Looking for a job? Renting an apartment? Starting a business? Each goal has its own dedicated path.</span><span class="ka">ახლად ჩამოსული? სამუშაო? ბინა? ბიზნესი? თითოეულს თავისი გზა აქვს.</span></p>
+      </div>
+      <div class="step-3">
+        <span class="num">2</span>
+        <h4><span class="en">Follow the steps</span><span class="ka">გაიარე ნაბიჯები</span></h4>
+        <p><span class="en">Each goal opens a checklist with concrete actions, what to bring, and how long it takes. Tick off as you go — your progress is saved.</span><span class="ka">თითო მიზანი — ნაბიჯ-ნაბიჯ ჩამონათვალი. შენი პროგრესი ინახება.</span></p>
+      </div>
+      <div class="step-3">
+        <span class="num">3</span>
+        <h4><span class="en">Use community tools</span><span class="ka">გამოიყენე ხელსაწყოები</span></h4>
+        <p><span class="en">Need a translator? A doctor? Want to know if an "offer" is a scam? Search the directory, check the patterns, ask the community.</span><span class="ka">გჭირდება მთარგმნელი? ექიმი? გადაამოწმე საეჭვო შეთავაზება? — ყველაფერი აქვეა.</span></p>
+      </div>
+    </div>
+
+    <!-- 5. TRUST / WHY THIS EXISTS -->
+    <div class="trust-box">
+      <h2 data-lang-block="en">Why you can trust this</h2>
+      <h2 data-lang-block="ka" class="ka">რატომ შეგიძლიათ ენდოთ</h2>
+      <p data-lang-block="en" style="color:rgba(255,255,255,0.78);max-width:640px">No corporate sponsor. No advertising. No data brokering. Built by someone who has been through the same process — and is publicly accountable for what's written here.</p>
+      <p data-lang-block="ka" class="ka" style="color:rgba(255,255,255,0.78);max-width:640px;font-family:var(--font-georgian)">აქ არ არის რეკლამა, კორპორატიული სპონსორი ან მონაცემთა გაყიდვა. იქმნება ადამიანის მიერ, რომელიც თავად გავიდა იმავე გზაზე — და პასუხს აგებს იმაზე რაც ეწერება.</p>
+      <div class="pillars">
+        <div class="pillar">
+          <h4 data-lang-block="en">Built by Georgians in Belgium</h4>
+          <h4 data-lang-block="ka" class="ka">შექმნილია ქართველის მიერ</h4>
+          <p data-lang-block="en">Not a big NGO with a press team. One person, real experience, public source code on GitHub.</p>
+          <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">არც NGO, არც კომპანია. ერთი ადამიანი, რეალური გამოცდილება, ღია კოდი GitHub-ზე.</p>
+        </div>
+        <div class="pillar">
+          <h4 data-lang-block="en">Based on real experience</h4>
+          <h4 data-lang-block="ka" class="ka">რეალურ გამოცდილებაზე დაფუძნებული</h4>
+          <p data-lang-block="en">Every checklist step has been done. Every scam pattern has been seen. No theoretical advice.</p>
+          <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">თითოეული ნაბიჯი გავლილია. თითოეული თაღლითობის ნიმუში — დანახული. თეორია — არა.</p>
+        </div>
+        <div class="pillar">
+          <h4 data-lang-block="en">Practical, not preachy</h4>
+          <h4 data-lang-block="ka" class="ka">პრაქტიკული, არა ცარიელი</h4>
+          <p data-lang-block="en">If something doesn't help you find a job, fix paperwork, save money, or stay safe — it doesn't belong here.</p>
+          <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">თუ კონკრეტულ პრობლემას არ ჭრის — ამ საიტზე არ არის.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CALL TO ACTION -->
+    <div class="cta-box">
+      <h2 data-lang-block="en">Where do you want to start?</h2>
+      <h2 data-lang-block="ka" class="ka">საიდან დავიწყოთ?</h2>
+      <p data-lang-block="en">Pick the path that matches where you are right now.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">აირჩიე გზა, რომელიც შენს მდგომარეობას შეესაბამება.</p>
+      <div class="cta-row">
+        <a href="checklists.html" class="btn btn-primary"><span class="en">Just arrived → Start here</span><span class="ka">ახლად ჩამოსული → დაიწყე აქ</span></a>
+        <a href="services.html" class="btn btn-ghost"><span class="en">Find a service</span><span class="ka">იპოვე სერვისი</span></a>
+        <a href="scams.html" class="btn btn-ghost"><span class="en">Avoid scams</span><span class="ka">თაღლითობა</span></a>
+      </div>
+    </div>
+
+    <!-- 7. TEAM (small) -->
+    <div class="team-mini">
+      <p class="eyebrow"><span class="en">Who runs this</span><span class="ka">ვინ აშენებს</span></p>
+      <h3 data-lang-block="en">Built by Nikoloz</h3>
+      <h3 data-lang-block="ka" class="ka">აშენებს ნიკოლოზი</h3>
+      <p data-lang-block="en">A Georgian who's been through the same process — first website ever, built openly, with the source on <a href="https://github.com/Nikolozng/geosin-be" target="_blank" rel="noopener" style="color:var(--rausch)">GitHub</a>. If you want to help, suggest a correction, or report something missing: <a href="mailto:hello@geosin.be" style="color:var(--rausch)">hello@geosin.be</a>.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ქართველი, რომელმაც იგივე გზა გაიარა — პირველი საიტი ცხოვრებაში, ღია კოდით <a href="https://github.com/Nikolozng/geosin-be" target="_blank" rel="noopener" style="color:var(--rausch)">GitHub</a>-ზე. შესწორება ან წინადადება: <a href="mailto:hello@geosin.be" style="color:var(--rausch)">hello@geosin.be</a>.</p>
+    </div>
+
   </div>
 </section>
-
-<!-- PARTNERS -->
-<section class="section" style="background:var(--surface);border-top:1px solid var(--hairline)">
-  <div class="container">
-    <div class="section-heading">
-      <p class="section-eyebrow">Partners &amp; supporters</p>
-      <h2>
-        <span data-lang-block="en">Who supports us</span>
-        <span data-lang-block="ka" class="ka">ვინ გვიჭერს მხარს</span>
-      </h2>
-    </div>
-    <div class="partners-grid">
-      <div class="partner-card">
-        <div class="partner-logo">🇬🇪</div>
-        <div class="partner-name">Georgian Embassy Brussels</div>
-        <p class="partner-desc">Information partner</p>
-      </div>
-      <div class="partner-card">
-        <div class="partner-logo" style="background:#e8f4f8;color:#2d6fa3;font-size:13px;font-weight:700">BE</div>
-        <div class="partner-name">Fedasil</div>
-        <p class="partner-desc">Housing &amp; reception support</p>
-      </div>
-      <div class="partner-card">
-        <div class="partner-logo" style="background:#f5e6ff;color:#7c3aed;font-size:13px">EU</div>
-        <div class="partner-name">Euralia Brussels</div>
-        <p class="partner-desc">EU affairs &amp; advocacy</p>
-      </div>
-      <div class="partner-card">
-        <div class="partner-logo" style="background:#e6f9ee;color:#1a7f37;font-size:12px;font-weight:700">IOM</div>
-        <div class="partner-name">IOM Belgium</div>
-        <p class="partner-desc">Integration resources</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta-strip">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
-    <div>
-      <h2 data-lang-block="en">Get involved</h2>
-      <h2 data-lang-block="ka" class="ka">ჩართეთ</h2>
-      <p data-lang-block="en">List your service, share resources, or just say hello at hello@geosin.be</p>
-      <p data-lang-block="ka" class="ka" style="margin-top:4px">დაარეგისტრირეთ სერვისი, გაუზიარეთ რესურსები, ან უბრალოდ მოგვწერეთ hello@geosin.be</p>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <a href="services.html#register" class="btn btn-primary">List a service</a>
-      <a href="mailto:hello@geosin.be" class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.3)">Say hello</a>
-    </div>
-  </div>
-</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -268,14 +439,15 @@
           <div class="nav-logo-mark">G</div>
           <span class="nav-logo-text">geosin<span>.be</span></span>
         </a>
-        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
-        <p class="ka" style="font-family:var(--font-georgian);color:rgba(255,255,255,0.35);font-size:12px;margin-top:6px">ბელგიაში მცხოვრები ქართველების საზოგადოება</p>
+        <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
       </div>
       <div class="footer-col">
         <h5>Site</h5>
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="services.html">Services</a></li>
+          <li><a href="checklists.html">Checklists</a></li>
+          <li><a href="scams.html">Avoid Scams</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="forum.html">Forum</a></li>
         </ul>
@@ -285,27 +457,20 @@
         <ul>
           <li><a href="services.html">Browse all</a></li>
           <li><a href="services.html#register">List a service</a></li>
-          <li><a href="services.html">Legal help</a></li>
-          <li><a href="services.html">Translation</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h5>Community</h5>
         <ul>
           <li><a href="about.html">About us</a></li>
-          <li><a href="forum.html">Forum</a></li>
           <li><a href="mailto:hello@geosin.be">Contact</a></li>
           <li><a href="index.html#faq">FAQ</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
-      <span style="display:flex;gap:16px">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
-      </span>
+      <span>&copy; 2026 geosin.be — made by and for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px"><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
 </footer>
