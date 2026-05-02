@@ -21,3 +21,31 @@ create policy "Anyone can view approved services"
 -- Cards that have no rating set yet show a "New" badge instead.
 
 alter table services add column if not exists rating numeric check (rating >= 0 and rating <= 5);
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 3: scam reports table (added 2026-04-30)
+-- ──────────────────────────────────────────────────────────────────────
+-- Stores user-submitted scam reports. Admin reviews them in the Supabase
+-- dashboard and only shares anonymized warnings on the public site —
+-- never publishes accused parties' names directly (defamation risk).
+
+create table if not exists scam_reports (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  scam_type text not null,
+  description text not null,
+  region text,
+  reporter_email text,
+  approved boolean default false not null
+);
+
+alter table scam_reports enable row level security;
+
+create policy "Anyone can submit a scam report"
+  on scam_reports for insert
+  to anon, authenticated
+  with check (true);
+
+-- No SELECT policy = reports are only readable via the Supabase dashboard.
+-- This is intentional. Do NOT add a public SELECT — the data has names
+-- that could expose you to defamation claims.

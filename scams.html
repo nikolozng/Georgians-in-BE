@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avoid Scams — geosin.be</title>
+  <meta name="description" content="Common scams targeting Georgians in Belgium — patterns, red flags, and how to report them." />
+  <meta property="og:title" content="Avoid Scams — geosin.be" />
+  <meta property="og:description" content="Common scams targeting Georgians in Belgium and how to recognise them." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/scams.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .warn-banner {
+      background: linear-gradient(135deg, #fff5f7 0%, #fff 60%);
+      border: 1px solid var(--rausch-light);
+      border-left: 4px solid var(--rausch);
+      border-radius: var(--r-md);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .warn-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--rausch);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+    .warn-banner p { color: var(--body-text); line-height: 1.6; margin: 0; }
+    .warn-banner strong { color: var(--ink); }
+
+    .scam-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0 40px;
+    }
+    @media (max-width: 720px) { .scam-grid { grid-template-columns: 1fr; } }
+
+    .scam-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 22px 24px;
+    }
+    .scam-card .pattern-num {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: var(--r-full);
+      margin-bottom: 12px;
+    }
+    .scam-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .scam-card p {
+      font-size: 14px;
+      color: var(--body-text);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .scam-card .what-to-do {
+      font-size: 13px;
+      color: var(--rausch);
+      font-weight: 600;
+      padding-top: 10px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .red-flags {
+      background: var(--surface);
+      border-radius: var(--r-md);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .red-flags h3 { font-size: 17px; margin-bottom: 14px; color: var(--ink); }
+    .red-flags ul { padding-left: 20px; list-style: disc; }
+    .red-flags ul li { font-size: 14px; color: var(--body-text); line-height: 1.7; margin-bottom: 6px; }
+    .red-flags ul li strong { color: var(--rausch); }
+
+    .helpline-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 16px 0 40px;
+    }
+    @media (max-width: 600px) { .helpline-grid { grid-template-columns: 1fr; } }
+    .helpline-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 18px 22px;
+    }
+    .helpline-card h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .helpline-card p { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .helpline-card .tel {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--rausch);
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .report-section {
+      background: var(--surface);
+      border-top: 3px solid var(--rausch);
+    }
+    .report-intro { max-width: 580px; margin-bottom: 28px; }
+    .report-intro h2 { margin-bottom: 10px; }
+    .report-intro p { color: var(--body-text); font-size: 14px; line-height: 1.6; }
+    .report-success {
+      display: none;
+      background: #e6f4ea;
+      border: 1px solid #c3e6cb;
+      border-radius: var(--r-md);
+      padding: 20px 24px;
+      color: #1a7f37;
+      font-size: 14px;
+      max-width: 720px;
+    }
+    .report-error {
+      display: none;
+      background: #fde7e9;
+      border: 1px solid #f5b5bc;
+      border-radius: var(--r-md);
+      padding: 14px 20px;
+      color: var(--error);
+      font-size: 14px;
+      margin-bottom: 16px;
+      max-width: 720px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="checklists.html">Checklists</a>
+      <a href="scams.html" class="active">Avoid Scams</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">Stay safe</p>
+    <h1>
+      <span data-lang-block="en">Avoid Scams</span>
+      <span data-lang-block="ka" class="ka">თაღლითობის თავიდან აცილება</span>
+    </h1>
+    <p class="sub">თაღლითობის თავიდან აცილება · Éviter les arnaques</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container" style="max-width:880px">
+
+    <div class="warn-banner">
+      <div class="warn-icon">!</div>
+      <div>
+        <p data-lang-block="en"><strong>Newcomers are the #1 target.</strong> Scammers know you don't fully understand Belgian rules yet, that you trust other Georgians automatically, and that you may be desperate for housing or work. The patterns below repeat every year. Recognising them costs nothing.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)"><strong>ახლადჩამოსულები ყველაზე ხშირი სამიზნეა.</strong> თაღლითებმა იციან, რომ თქვენ ჯერ არ გესმით ბელგიის წესები და სასწრაფოდ გჭირდებათ საცხოვრებელი ან სამუშაო. ქვემოთ ჩამოთვლილი ნიმუშები ყოველწლიურად მეორდება.</p>
+      </div>
+    </div>
+
+    <h2 data-lang-block="en">Common scam patterns</h2>
+    <h2 data-lang-block="ka" class="ka">თაღლითობის გავრცელებული ნიმუშები</h2>
+
+    <div class="scam-grid">
+
+      <div class="scam-card">
+        <span class="pattern-num">#1</span>
+        <h3>Apartment "deposit" before viewing</h3>
+        <p>"Send €1,500 deposit to secure the flat — I'm in another city, my cousin will give you keys." Photos are real (stolen from Immoweb). Once you transfer, the "landlord" disappears.</p>
+        <p class="what-to-do">→ Never pay before viewing in person. Demand the blocked-account procedure (huurwaarborg / garantie locative). Cash to a stranger = gone.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#2</span>
+        <h3>"Fast track" residence permit</h3>
+        <p>Someone claiming connections at the commune offers to "speed up" your residence card for €500–€2000 cash. The commune doesn't take cash and doesn't have a fast track. You lose the money.</p>
+        <p class="what-to-do">→ All commune processes are free or have published fees. If someone asks for cash off-the-books, they're lying.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#3</span>
+        <h3>Fake job offer with "registration fee"</h3>
+        <p>"Construction job, €15/hour, but you need to pay €200 registration first." Real employers never charge candidates. Some demand a passport copy first, then sell the data.</p>
+        <p class="what-to-do">→ No real job costs you money to start. Never send your full passport scan unless you've signed a contract.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#4</span>
+        <h3>"I'll lend you money — sign here"</h3>
+        <p>An "older Georgian" offers an informal loan with a contract you can't read in Dutch/French. The contract often hides 30–50% interest, or transfers your future wages directly to them.</p>
+        <p class="what-to-do">→ Never sign a contract you can't read. Use a Belgian bank, a credit union, or licensed microcredit (e.g. Microstart). Get the contract translated by a sworn translator.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#5</span>
+        <h3>Cash-paid work without contract</h3>
+        <p>Worker arrives, does the job, employer pays in cash, no contract, no payslip. Then refuses to pay the last weeks. With no contract, you can't prove you ever worked there.</p>
+        <p class="what-to-do">→ Always require a signed contract before starting. Cash-only is illegal beyond €3,000/month and leaves you with zero protection.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#6</span>
+        <h3>Money transfer "for a friend"</h3>
+        <p>Someone you barely know asks you to receive a payment in your bank account "because their card has issues" — and to forward it to a third party. This is money laundering. <em>You</em> are the criminal record.</p>
+        <p class="what-to-do">→ Never let your bank account be used to receive and forward money for someone else, even a fellow Georgian. Belgian banks flag this within days.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#7</span>
+        <h3>Fake police / tax office calls</h3>
+        <p>"This is the Federal Police — pay this fine in vouchers immediately or you'll be deported." Real Belgian police never ask for payments by phone, never use crypto/vouchers, and never threaten deportation by phone.</p>
+        <p class="what-to-do">→ Hang up. Call 101 (police) directly to verify. Real notices come by registered mail, never by phone or WhatsApp.</p>
+      </div>
+
+      <div class="scam-card">
+        <span class="pattern-num">#8</span>
+        <h3>Fake mutuality / utilities at the door</h3>
+        <p>Someone in a uniform-looking jacket says they're from your mutuality / energy company and need your eID + bank card "to update your file." Sometimes followed by withdrawals from your account.</p>
+        <p class="what-to-do">→ Never give your eID PIN or bank card to anyone at your door. Real institutions don't do door-to-door verification.</p>
+      </div>
+
+    </div>
+
+    <div class="red-flags">
+      <h3 data-lang-block="en">Red flags to watch for</h3>
+      <h3 data-lang-block="ka" class="ka">სიფრთხილე! სიგნალები</h3>
+      <ul>
+        <li data-lang-block="en"><strong>Urgency.</strong> "You must decide today" or "transfer the deposit now." Scammers create artificial pressure.</li>
+        <li data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)"><strong>დროის ზეწოლა.</strong> „გადაწყვიტე დღესვე" — თაღლითები ყოველთვის ხელოვნურ ზეწოლას ქმნიან.</li>
+        <li data-lang-block="en"><strong>Cash-only or crypto.</strong> Real Belgian institutions take SEPA bank transfers and provide written invoices.</li>
+        <li data-lang-block="en"><strong>Refuses to meet in person.</strong> "I'm out of the country, my friend will give you keys/contract."</li>
+        <li data-lang-block="en"><strong>Contract you can't read.</strong> Always have it translated before signing. A sworn translator costs ~€30–80 and saves €1000s.</li>
+        <li data-lang-block="en"><strong>Asks for full ID copies upfront.</strong> Especially for jobs that haven't been confirmed in writing.</li>
+        <li data-lang-block="en"><strong>"I'm Georgian too, trust me."</strong> Same nationality is not a guarantee. Verify everyone.</li>
+        <li data-lang-block="en"><strong>Deal too good to be true.</strong> Brussels apartment for €450/month? Job paying €30/hour with no qualifications? Scam.</li>
+      </ul>
+    </div>
+
+    <h2 data-lang-block="en">If you've been scammed</h2>
+    <h2 data-lang-block="ka" class="ka">თუ უკვე მოგატყუეს</h2>
+
+    <ol style="padding-left:20px;margin-bottom:24px">
+      <li style="margin-bottom:8px;line-height:1.7"><strong>File a police report</strong> at your local police station. Bring all evidence — bank transfers, messages, contracts. Belgian police take fraud reports seriously and a record is needed for any insurance claim.</li>
+      <li style="margin-bottom:8px;line-height:1.7"><strong>Contact your bank</strong> immediately if money was transferred. Some transfers can be reversed within 24–48 hours.</li>
+      <li style="margin-bottom:8px;line-height:1.7"><strong>Report to the FPS Economy</strong> at <a href="https://meldpunt.belgie.be" target="_blank" rel="noopener" style="color:var(--rausch)">meldpunt.belgie.be</a> — Belgium's official scam reporting portal. Free, multilingual.</li>
+      <li style="margin-bottom:8px;line-height:1.7"><strong>If your eID was stolen</strong>, call 116 116 immediately to block it.</li>
+      <li style="margin-bottom:8px;line-height:1.7"><strong>Tell the community.</strong> Submit a report below so we can warn others about the pattern (we never publish names without legal review).</li>
+    </ol>
+
+    <h3 data-lang-block="en" style="margin-top:32px">Helplines</h3>
+    <h3 data-lang-block="ka" class="ka" style="margin-top:32px">დახმარების ნომრები</h3>
+    <div class="helpline-grid">
+      <div class="helpline-card">
+        <h4>Police (emergency)</h4>
+        <p>Active crime, threat, or accident</p>
+        <a href="tel:101" class="tel">101</a>
+      </div>
+      <div class="helpline-card">
+        <h4>EU emergency</h4>
+        <p>All emergencies, English-speaking</p>
+        <a href="tel:112" class="tel">112</a>
+      </div>
+      <div class="helpline-card">
+        <h4>Stolen eID / bank card</h4>
+        <p>Card-Stop — block immediately</p>
+        <a href="tel:078170170" class="tel">078 170 170</a>
+      </div>
+      <div class="helpline-card">
+        <h4>FPS Economy fraud hotline</h4>
+        <p>Belgian consumer-protection authority</p>
+        <a href="tel:080012033" class="tel">0800 120 33</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- REPORT SECTION -->
+<section class="section report-section" id="report">
+  <div class="container" style="max-width:720px">
+    <div class="report-intro">
+      <p class="section-eyebrow">Report a scam</p>
+      <h2>
+        <span data-lang-block="en">Help warn others</span>
+        <span data-lang-block="ka" class="ka">დაეხმარე სხვებს</span>
+      </h2>
+      <p data-lang-block="en">Your report goes to the admin only — we review every submission and only publish anonymised warnings (never accused parties' names without verification). Reports are confidential.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">თქვენი რეპორტი მიდის მხოლოდ ადმინისტრატორთან. ვაქვეყნებთ მხოლოდ ანონიმურ გაფრთხილებებს, არასოდეს — ბრალდებულის სახელს გადამოწმების გარეშე.</p>
+    </div>
+
+    <div class="report-success" id="report-success">
+      <strong>Thanks for the report.</strong> We'll review and add the pattern to the warnings list if confirmed. If you provided your email, we may follow up for clarification.
+      <br /><span class="ka" style="font-family:var(--font-georgian)">მადლობა! განვიხილავთ რეპორტს და დადასტურების შემთხვევაში დავამატებთ გაფრთხილებებში.</span>
+    </div>
+
+    <div class="report-error" id="report-error"></div>
+
+    <div class="form-card" id="report-form-card">
+      <form id="report-form" novalidate onsubmit="submitReport(event)">
+        <div class="form-grid">
+
+          <div class="form-group span-2">
+            <label class="form-label" for="r-type">
+              Type of scam <span class="ka">· თაღლითობის ტიპი</span>
+            </label>
+            <select class="form-select" id="r-type" required>
+              <option value="">Select type…</option>
+              <option>Housing / rental scam</option>
+              <option>Job / employer scam</option>
+              <option>Fake "fast-track" official</option>
+              <option>Loan / financial scam</option>
+              <option>Money transfer / mule recruitment</option>
+              <option>Fake police / tax / authority</option>
+              <option>Door-to-door scam</option>
+              <option>Service provider fraud</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group span-2">
+            <label class="form-label" for="r-desc">
+              What happened? <span class="ka">· რა მოხდა?</span>
+            </label>
+            <textarea class="form-textarea" id="r-desc" required maxlength="1500" placeholder="Describe the scam in detail. What did they ask for? How did they contact you? What red flags did you notice (in hindsight)? Don't include your full ID details."></textarea>
+            <span class="form-hint">Max 1500 characters. Don't include eID numbers, bank details, or full names of accused parties — refer to them by role (e.g. "the landlord").</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="r-region">
+              Region (optional) <span class="ka">· რეგიონი</span>
+            </label>
+            <input class="form-input" id="r-region" type="text" placeholder="e.g. Brussels, Antwerp" maxlength="80" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="r-email">
+              Your email (optional) <span class="ka">· თქვენი ელ-ფოსტა</span>
+            </label>
+            <input class="form-input" id="r-email" type="email" placeholder="So we can follow up" maxlength="120" />
+          </div>
+
+        </div>
+
+        <div style="margin-top:24px">
+          <button type="submit" class="btn btn-primary" id="r-submit">
+            <span data-lang-block="en">Submit report</span>
+            <span data-lang-block="ka" class="ka">რეპორტის გაგზავნა</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="checklists.html">Checklists</a></li>
+          <li><a href="scams.html">Avoid Scams</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="services.html#register">List a service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 geosin.be — made by and for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px"><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
+
+  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+    document.getElementById('report-error').textContent = 'Could not load the Supabase library. The form is temporarily unavailable.';
+    document.getElementById('report-error').style.display = 'block';
+  }
+
+  const sb = (window.supabase && window.supabase.createClient)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    : null;
+
+  async function submitReport(e) {
+    e.preventDefault();
+    const form = document.getElementById('report-form');
+    const errBox = document.getElementById('report-error');
+    const submitBtn = document.getElementById('r-submit');
+    errBox.style.display = 'none';
+
+    const required = form.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(el => {
+      if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; }
+      else { el.style.borderColor = ''; }
+    });
+    if (!valid) {
+      errBox.textContent = 'Please fill in the required fields.';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    if (!sb) {
+      errBox.textContent = 'Could not load the database connection. Please try again later.';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    const originalLabel = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Submitting…';
+
+    const row = {
+      scam_type: document.getElementById('r-type').value.trim(),
+      description: document.getElementById('r-desc').value.trim(),
+      region: document.getElementById('r-region').value.trim() || null,
+      reporter_email: document.getElementById('r-email').value.trim() || null
+    };
+
+    const { error } = await sb.from('scam_reports').insert(row);
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalLabel;
+
+    if (error) {
+      console.error('Supabase insert error:', error);
+      errBox.textContent = 'Sorry — something went wrong. Please try again.';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    document.getElementById('report-form-card').style.display = 'none';
+    document.getElementById('report-success').style.display = 'block';
+    document.getElementById('report-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  (function() { setLang(localStorage.getItem('geosin-lang') || 'en'); })();
+</script>
+</body>
+</html>
