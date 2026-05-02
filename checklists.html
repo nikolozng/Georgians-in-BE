@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checklists — geosin.be</title>
+  <meta name="description" content="Step-by-step checklists for Georgians arriving in Belgium, finding a job, or starting a business." />
+  <meta property="og:title" content="Checklists — geosin.be" />
+  <meta property="og:description" content="Step-by-step checklists for Georgians in Belgium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/checklists.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .cl-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 16px 0 32px;
+    }
+    .cl-tab {
+      padding: 10px 18px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-full);
+      background: var(--canvas);
+      color: var(--body-text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .cl-tab:hover { border-color: var(--ink); color: var(--ink); }
+    .cl-tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .cl-progress {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border-radius: var(--r-md);
+    }
+    .cl-progress-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--hairline);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .cl-progress-fill {
+      height: 100%;
+      background: var(--rausch);
+      transition: width 0.3s ease;
+    }
+    .cl-progress-num {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .cl-panel { display: none; }
+    .cl-panel.active { display: block; }
+
+    .cl-list { max-width: 780px; }
+    .cl-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      margin-bottom: 8px;
+      background: var(--canvas);
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .cl-item:hover { border-color: var(--ink); }
+    .cl-item input[type="checkbox"] {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--rausch);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .cl-item-body { flex: 1; }
+    .cl-item-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .cl-item-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.55;
+    }
+    .cl-item-desc a { color: var(--rausch); text-decoration: underline; }
+    .cl-item.done .cl-item-title { text-decoration: line-through; color: var(--muted); }
+    .cl-item.done { background: var(--surface); }
+
+    .cl-reset {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      text-decoration: underline;
+    }
+    .cl-reset:hover { color: var(--rausch); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="checklists.html" class="active">Checklists</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">Step-by-step</p>
+    <h1>
+      <span data-lang-block="en">Checklists</span>
+      <span data-lang-block="ka" class="ka">ჩამონათვალები</span>
+    </h1>
+    <p class="sub">ნაბიჯ-ნაბიჯ სახელმძღვანელო · Step-by-step guide</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <p data-lang-block="en" style="color:var(--muted);max-width:680px">Tick off each step as you complete it. Your progress is saved locally in this browser — no account needed.</p>
+    <p data-lang-block="ka" class="ka" style="color:var(--muted);max-width:680px;font-family:var(--font-georgian)">აღნიშნეთ თითოეული ნაბიჯი, როცა შეასრულებთ. თქვენი პროგრესი ინახება ლოკალურად, ანგარიში არ არის საჭირო.</p>
+
+    <div class="cl-tabs" role="tablist">
+      <button class="cl-tab active" data-tab="arrived" onclick="setTab('arrived')">
+        <span class="en">Just arrived</span><span class="ka">ახლად ჩამოსული</span>
+      </button>
+      <button class="cl-tab" data-tab="job" onclick="setTab('job')">
+        <span class="en">Find a job</span><span class="ka">სამუშაოს ძიება</span>
+      </button>
+      <button class="cl-tab" data-tab="business" onclick="setTab('business')">
+        <span class="en">Open a business</span><span class="ka">ბიზნესის გახსნა</span>
+      </button>
+    </div>
+
+    <div class="cl-progress">
+      <span class="cl-progress-num" id="cl-progress-num">0 / 0</span>
+      <div class="cl-progress-bar"><div class="cl-progress-fill" id="cl-progress-fill" style="width:0%"></div></div>
+      <button class="cl-reset" onclick="resetCurrent()">
+        <span class="en">Reset</span><span class="ka">გასუფთავება</span>
+      </button>
+    </div>
+
+    <!-- ============ JUST ARRIVED ============ -->
+    <div class="cl-panel active" id="panel-arrived">
+      <div class="cl-list">
+        <label class="cl-item"><input type="checkbox" id="ck-arr-1" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Register at your commune within 8 days</div>
+            <div class="cl-item-desc">Bring passport, rental contract or host declaration, and a few passport photos. The commune is <em>gemeentehuis</em> (Flanders) or <em>maison communale</em> (Wallonia/Brussels).</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-2" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Receive your "Annex 3" temporary certificate</div>
+            <div class="cl-item-desc">Issued by the commune at registration. Keep it safe — it's your provisional ID.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-3" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Pass the police home visit</div>
+            <div class="cl-item-desc">An officer will come to verify you actually live at the registered address. Be reachable in the first weeks. If you miss them, leave a note with your phone number on the door.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-4" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Collect your electronic residence card (eID)</div>
+            <div class="cl-item-desc">Once police verifies, the commune issues your physical card. You'll set PIN/PUK codes — keep them.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-5" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Open a starter bank account</div>
+            <div class="cl-item-desc">Online banks (Wise, Revolut, N26) accept just a passport. Switch to a Belgian bank (KBC, ING, BNP, Belfius) once you have your eID and address.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-6" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Register with a health insurance fund (mutualité / ziekenfonds)</div>
+            <div class="cl-item-desc">Mandatory once you have a national registration number. Pick CM, Mutualité Neutre, or another fund. Bring eID and proof of registration.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-7" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Get a Belgian SIM card</div>
+            <div class="cl-item-desc">Cheapest options: Mobile Vikings, Hey!, Scarlet. Prepaid is fine to start. Belgian phone numbers needed for many services.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-8" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Buy a MOBIB transport card</div>
+            <div class="cl-item-desc">For STIB (Brussels), De Lijn (Flanders), or TEC (Wallonia). One card, multiple operators. Top up online or at stations.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-9" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Pick a GP (huisarts / médecin généraliste)</div>
+            <div class="cl-item-desc">Belgium uses a GP-first system. Your GP issues referrals to specialists. Some Georgian-speaking GPs are listed on our Services page.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-10" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Sign up for free Dutch or French classes</div>
+            <div class="cl-item-desc"><em>Het Huis van het Nederlands</em> for Dutch (Flanders/Brussels). <em>Lire et Écrire</em> and your commune for French (Wallonia/Brussels). Heavily subsidised — €30–€100/semester.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-11" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Enrol kids in school (if applicable)</div>
+            <div class="cl-item-desc">Brussels: <em>Service d'Inscription</em>. Flanders: <em>Inschrijven</em> online. Apply early — popular schools fill up fast. Ask about <em>OKAN</em> / <em>DASPA</em> classes for non-Dutch/French speakers.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-arr-12" data-cl="arrived" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Exchange your Georgian driving licence within 2 years</div>
+            <div class="cl-item-desc">Belgium and Georgia have a bilateral agreement. Apply at your commune with your Georgian licence, eID, and a small fee. After 2 years you have to redo theory + practical exams from scratch.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ============ FIND A JOB ============ -->
+    <div class="cl-panel" id="panel-job">
+      <div class="cl-list">
+        <label class="cl-item"><input type="checkbox" id="ck-job-1" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Update your CV in Europass format</div>
+            <div class="cl-item-desc">The standard EU CV format. Free generator at <a href="https://europa.eu/europass/" target="_blank" rel="noopener">europa.eu/europass</a>. Belgian recruiters expect this layout.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-2" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Get your Georgian qualifications recognized (NARIC)</div>
+            <div class="cl-item-desc">Required for regulated professions (medicine, law, engineering, teaching). Process takes 2–4 months. Start early.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-3" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Register with your regional employment office</div>
+            <div class="cl-item-desc">VDAB (Flanders), Le Forem (Wallonia), Actiris (Brussels). Free coaching, job matching, and access to subsidised training.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-4" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Optimise your LinkedIn profile</div>
+            <div class="cl-item-desc">Set location to Belgium, language to English, and turn on "Open to work". Belgian recruiters check LinkedIn first.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-5" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Target English-friendly sectors</div>
+            <div class="cl-item-desc">Tech, EU institutions, finance/consulting, hospitality, logistics. These don't always require Dutch or French.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-6" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Browse the main job boards</div>
+            <div class="cl-item-desc">StepStone.be, LinkedIn, Indeed.be, BrusselsJobs.com, EU Careers (epso.europa.eu), Glassdoor.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-7" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Confirm work permit path (if non-EU)</div>
+            <div class="cl-item-desc">Belgium uses a "single permit" system: the employer applies on your behalf for a combined work + residence permit. Highly-qualified workers and researchers have faster tracks.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-8" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Submit Single Permit application once hired</div>
+            <div class="cl-item-desc">Your employer initiates this. Processing typically 2–4 months. While you wait, your eID stays valid.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-9" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Prepare for Belgian-style interviews</div>
+            <div class="cl-item-desc">Research salary range on StepStone or Glassdoor. Interviews are formal but not rigid. Belgians are direct — be specific and concrete.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-job-10" data-cl="job" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Set up SEPA direct deposit</div>
+            <div class="cl-item-desc">Once hired, give your employer your Belgian IBAN. Salary is paid monthly, end of month, into your account.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ============ OPEN A BUSINESS ============ -->
+    <div class="cl-panel" id="panel-business">
+      <div class="cl-list">
+        <label class="cl-item"><input type="checkbox" id="ck-biz-1" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Decide your legal structure</div>
+            <div class="cl-item-desc">Self-employed (<em>zelfstandige</em>): cheapest, full personal liability. SRL/BV: limited liability, ~€18,500 minimum capital effectively, more admin. Talk to a Belgian accountant before choosing.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-2" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Find your NACE code</div>
+            <div class="cl-item-desc">Official activity classification (e.g. 62.01 for software dev). Look up at <a href="https://statbel.fgov.be/" target="_blank" rel="noopener">statbel.fgov.be</a>. You'll need this for every official form.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-3" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Apply for "Carte Professionnelle" (non-EU only)</div>
+            <div class="cl-item-desc">Required for non-EU citizens running their own business. Apply at the Belgian embassy before arrival, or at the regional office after registration.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-4" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Register at a Business Counter</div>
+            <div class="cl-item-desc">Pick one: Liantis, Acerta, Securex, Partena, or Xerius. Costs ~€100. They register you in the Crossroads Bank for Enterprises (BCE/KBO) and assign your company number.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-5" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Apply for VAT number</div>
+            <div class="cl-item-desc">Through the Business Counter or directly at FOD Financiën / SPF Finances. Mandatory if turnover &gt; €25,000/year. Below that you can opt for the small-business VAT exemption.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-6" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Affiliate with a social insurance fund</div>
+            <div class="cl-item-desc">Mandatory for the self-employed. Same providers as Business Counters. Contributions are ~20% of your net taxable income, with quarterly payments.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-7" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Open a separate business bank account</div>
+            <div class="cl-item-desc">Required for SRL/BV, strongly recommended for self-employed (cleaner accounting). Most Belgian banks have a "Pro" tier; online options like Qonto also work.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-8" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Get business liability insurance</div>
+            <div class="cl-item-desc">Required by law for many activities (consulting, healthcare, construction, etc.). Cheap basic policies start ~€200/year.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-9" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">Set up bookkeeping</div>
+            <div class="cl-item-desc">Hire a Belgian accountant (~€80–150/month for self-employed) or use software like Yuki, Octopus, or Accountable. Invoices, expenses, and VAT all flow through here.</div>
+          </div>
+        </label>
+        <label class="cl-item"><input type="checkbox" id="ck-biz-10" data-cl="business" />
+          <div class="cl-item-body">
+            <div class="cl-item-title">File quarterly VAT and annual income tax</div>
+            <div class="cl-item-desc">VAT returns: 4× per year. Income tax: once a year, usually June–July. An accountant handles deadlines for you.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="checklists.html">Checklists</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="forum.html">Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="services.html">Browse all</a></li>
+          <li><a href="services.html#register">List a service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 geosin.be — made by and for the Georgian community in Belgium</span>
+      <span style="display:flex;gap:16px"><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Language toggle (shared) ── */
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() {
+    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  }
+
+  /* ── Tab switching ── */
+  let currentTab = 'arrived';
+  function setTab(name) {
+    currentTab = name;
+    document.querySelectorAll('.cl-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.cl-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+    updateProgress();
+  }
+
+  /* ── Persistent checkbox state via localStorage ── */
+  const STORAGE_KEY = 'geosin-checklists';
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function applyState() {
+    const state = loadState();
+    document.querySelectorAll('.cl-item input[type="checkbox"]').forEach(cb => {
+      cb.checked = !!state[cb.id];
+      cb.closest('.cl-item').classList.toggle('done', cb.checked);
+    });
+  }
+  function updateProgress() {
+    const items = document.querySelectorAll('#panel-' + currentTab + ' .cl-item input[type="checkbox"]');
+    const total = items.length;
+    let done = 0;
+    items.forEach(cb => { if (cb.checked) done++; });
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    document.getElementById('cl-progress-num').textContent = done + ' / ' + total;
+    document.getElementById('cl-progress-fill').style.width = pct + '%';
+  }
+  function resetCurrent() {
+    const state = loadState();
+    document.querySelectorAll('#panel-' + currentTab + ' .cl-item input[type="checkbox"]').forEach(cb => {
+      delete state[cb.id];
+      cb.checked = false;
+      cb.closest('.cl-item').classList.remove('done');
+    });
+    saveState(state);
+    updateProgress();
+  }
+
+  /* ── Wire up checkboxes ── */
+  document.addEventListener('change', function(e) {
+    if (e.target.matches('.cl-item input[type="checkbox"]')) {
+      const state = loadState();
+      state[e.target.id] = e.target.checked;
+      saveState(state);
+      e.target.closest('.cl-item').classList.toggle('done', e.target.checked);
+      updateProgress();
+    }
+  });
+
+  /* ── Init ── */
+  (function() {
+    setLang(localStorage.getItem('geosin-lang') || 'en');
+    applyState();
+    updateProgress();
+  })();
+</script>
+</body>
+</html>
