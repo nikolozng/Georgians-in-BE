@@ -114,3 +114,60 @@ create policy "Anyone can view approved housing"
   on housing for select
   to anon, authenticated
   using (approved = true);
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 6: forum (added 2026-04-30)
+-- ──────────────────────────────────────────────────────────────────────
+-- Two tables: forum_threads (top-level posts) + forum_replies.
+-- Threads default to approved=false (you review each new thread before it goes live).
+-- Replies default to approved=true (faster UX; you can hide spam reactively).
+
+create table if not exists forum_threads (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  category text not null,
+  title text not null,
+  author_name text not null,
+  author_email text,
+  body text not null,
+  pinned boolean default false not null,
+  locked boolean default false not null,
+  approved boolean default false not null
+);
+
+alter table forum_threads enable row level security;
+
+create policy "Anyone can post a thread"
+  on forum_threads for insert
+  to anon, authenticated
+  with check (true);
+
+create policy "Anyone can view approved threads"
+  on forum_threads for select
+  to anon, authenticated
+  using (approved = true);
+
+create table if not exists forum_replies (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  thread_id bigint not null references forum_threads(id) on delete cascade,
+  author_name text not null,
+  author_email text,
+  body text not null,
+  approved boolean default true not null
+);
+
+alter table forum_replies enable row level security;
+
+create policy "Anyone can post a reply"
+  on forum_replies for insert
+  to anon, authenticated
+  with check (true);
+
+create policy "Anyone can view approved replies"
+  on forum_replies for select
+  to anon, authenticated
+  using (approved = true);
+
+create index if not exists forum_replies_thread_idx on forum_replies(thread_id);
+create index if not exists forum_threads_created_idx on forum_threads(created_at desc);

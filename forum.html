@@ -4,241 +4,123 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Forum — geosin.be</title>
-  <meta name="description" content="The geosin.be Georgian community forum is coming soon. Sign up to be notified." />
+  <meta name="description" content="Community forum for Georgians in Belgium — ask questions, share answers, help each other." />
+  <meta property="og:title" content="Forum — geosin.be" />
+  <meta property="og:description" content="Community forum for Georgians in Belgium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/forum.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
     body { background: var(--surface); }
 
-    .forum-page {
-      min-height: calc(100vh - var(--nav-h));
-      display: grid;
-      place-items: center;
-      padding: 48px 24px;
-    }
-    .forum-inner { max-width: 580px; width: 100%; text-align: center; }
+    .forum-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 900px) { .forum-layout { grid-template-columns: 1fr; } .forum-sidebar { position: static !important; } }
 
-    /* Animated icon */
-    .forum-icon-wrap {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 36px;
+    .forum-sidebar {
+      position: sticky; top: calc(var(--nav-h) + 24px);
+      background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 18px;
     }
-    .forum-icon-bg {
-      width: 96px;
-      height: 96px;
-      border-radius: 24px;
-      background: var(--rausch-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: icon-pulse 3s ease-in-out infinite;
+    .forum-sidebar h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; }
+    .cat-list { display: flex; flex-direction: column; gap: 2px; }
+    .cat-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; border-radius: var(--r-sm); font-size: 14px; color: var(--body-text);
+      cursor: pointer; transition: background 0.12s, color 0.12s; border: none; background: none; width: 100%; text-align: left;
     }
-    @keyframes icon-pulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,56,92,0.15); }
-      50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(255,56,92,0); }
-    }
-    .forum-icon-dot {
-      position: absolute;
-      top: -4px; right: -4px;
-      width: 20px; height: 20px;
-      background: var(--rausch);
-      border-radius: 50%;
-      border: 3px solid var(--surface);
-      animation: dot-bounce 2s ease-in-out infinite;
-    }
-    @keyframes dot-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
+    .cat-btn:hover { background: var(--surface); color: var(--ink); }
+    .cat-btn.active { background: var(--ink); color: #fff; }
+    .cat-btn .num { font-size: 11px; background: var(--hairline); color: var(--muted); padding: 2px 7px; border-radius: var(--r-full); }
+    .cat-btn.active .num { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+    .sidebar-divider { border: none; border-top: 1px solid var(--hairline); margin: 14px 0; }
 
-    .forum-label {
-      display: inline-block;
-      background: var(--ink);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: var(--r-full);
-      margin-bottom: 20px;
-    }
-    .forum-inner h1 {
-      font-size: clamp(28px, 5vw, 40px);
-      font-weight: 700;
-      margin-bottom: 8px;
-      line-height: 1.2;
-    }
-    .forum-inner .ka-title {
-      display: block;
-      font-family: var(--font-georgian);
-      font-size: clamp(18px, 3vw, 26px);
-      font-weight: 400;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    .forum-inner p {
-      color: var(--body-text);
-      font-size: 16px;
-      line-height: 1.7;
-      margin-bottom: 6px;
-    }
-    .forum-inner .ka-p {
-      font-family: var(--font-georgian);
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 36px;
-    }
+    /* Header bar with new-thread button */
+    .forum-header-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+    .forum-header-bar h2 { font-size: 22px; font-weight: 700; color: var(--ink); margin: 0; }
+    .forum-header-bar .meta { font-size: 13px; color: var(--muted); }
 
-    /* Email form */
-    .notify-form {
-      display: flex;
-      gap: 8px;
-      max-width: 420px;
-      margin: 0 auto 12px;
+    /* Thread list */
+    .thread-list { display: flex; flex-direction: column; gap: 8px; }
+    .thread-row {
+      background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md);
+      padding: 16px 20px; cursor: pointer; transition: border-color 0.12s, box-shadow 0.12s;
+      display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start;
     }
-    .notify-form input {
-      flex: 1;
-      padding: 13px 18px;
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-full);
-      font-size: 15px;
-      color: var(--ink);
-      background: var(--canvas);
-      outline: none;
-      transition: border-color 0.15s;
+    .thread-row:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.06); }
+    .thread-row.pinned { border-left: 3px solid var(--rausch); }
+    .thread-row .meta-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-size: 12px; }
+    .thread-cat-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+      background: rgba(0,53,102,0.08); color: var(--be-blue, #0066cc);
+      padding: 2px 9px; border-radius: var(--r-full);
     }
-    .notify-form input:focus { border-color: var(--ink); border-width: 2px; }
-    .notify-form button {
-      padding: 13px 24px;
-      background: var(--rausch);
-      color: #fff;
-      border-radius: var(--r-full);
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      transition: background 0.15s;
-      border: none;
-      cursor: pointer;
-    }
-    .notify-form button:hover { background: var(--rausch-active); }
-    .notify-note {
-      font-size: 12px;
-      color: var(--muted-soft);
-      margin-bottom: 40px;
-    }
-    .notify-success {
-      display: none;
-      background: #e6f4ea;
-      border: 1px solid #c3e6cb;
-      border-radius: var(--r-md);
-      padding: 16px 22px;
-      color: #1a7f37;
-      font-size: 14px;
-      margin-bottom: 40px;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-    }
+    .pinned-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--rausch); color: #fff; padding: 2px 8px; border-radius: var(--r-full); }
+    .locked-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--muted-soft); color: #fff; padding: 2px 8px; border-radius: var(--r-full); }
+    .thread-title { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.4; margin-bottom: 4px; }
+    .thread-snippet { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .thread-author { font-size: 12px; color: var(--muted-soft); margin-top: 8px; }
+    .thread-stats { text-align: right; min-width: 70px; font-size: 12px; color: var(--muted); }
+    .thread-stats .replies { font-size: 16px; font-weight: 700; color: var(--ink); display: block; }
 
-    /* Preview topics */
-    .topics-preview {
-      background: var(--canvas);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-md);
-      overflow: hidden;
-      text-align: left;
-      margin-bottom: 36px;
-    }
-    .topics-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .topics-header span {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-    .topics-header .badge { font-size: 10px; }
-    .topic-row {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--hairline);
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      opacity: 0.55;
-      filter: blur(0px);
-      position: relative;
-    }
-    .topic-row::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        90deg, transparent 0, transparent 8px,
-        rgba(255,255,255,0.7) 8px, rgba(255,255,255,0.7) 10px
-      );
-      pointer-events: none;
-    }
-    .topic-row:last-child { border-bottom: none; }
-    .topic-cat-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--rausch);
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-    .topic-row-body { flex: 1; }
-    .topic-row h5 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-    .topic-row p  { font-size: 12px; color: var(--muted); }
-    .topic-meta   { font-size: 11px; color: var(--muted-soft); white-space: nowrap; }
-    .blur-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 0%, rgba(247,247,247,0.95) 100%);
-      pointer-events: none;
-      border-radius: 0 0 var(--r-md) var(--r-md);
-    }
-    .topics-wrapper { position: relative; }
+    /* Empty / loading */
+    .empty, .loading-state { text-align: center; padding: 60px 20px; color: var(--muted); background: var(--canvas); border: 1px dashed var(--hairline); border-radius: var(--r-md); }
 
-    /* Planned features */
-    .features-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .feature-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-full);
-      font-size: 13px;
-      color: var(--body-text);
-      background: var(--canvas);
-    }
-    .feature-pill svg { color: var(--rausch); }
+    /* Single thread view */
+    .thread-detail { background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 28px 32px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .thread-detail { padding: 22px 20px; } }
+    .thread-detail h1 { font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; color: var(--ink); }
+    .thread-detail .header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .thread-detail .header-meta .author { font-size: 13px; color: var(--body-text); }
+    .thread-detail .header-meta .author strong { color: var(--ink); }
+    .thread-detail .header-meta .date { font-size: 12px; color: var(--muted); }
+    .thread-detail .body-text { font-size: 15px; line-height: 1.7; color: var(--body-text); white-space: pre-wrap; }
+
+    .replies-header { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 24px 0 14px; }
+    .reply-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 18px 22px; margin-bottom: 10px; }
+    .reply-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+    .reply-meta .author { font-weight: 600; color: var(--ink); }
+    .reply-meta .date { color: var(--muted-soft); }
+    .reply-body { font-size: 14px; line-height: 1.65; color: var(--body-text); white-space: pre-wrap; }
+
+    .reply-form-card { background: var(--canvas); border: 2px solid var(--hairline); border-radius: var(--r-md); padding: 22px 24px; margin-top: 16px; transition: border-color 0.15s; }
+    .reply-form-card:focus-within { border-color: var(--ink); }
+    .reply-form-card textarea { width: 100%; min-height: 100px; padding: 10px 12px; border: 1px solid var(--hairline); border-radius: var(--r-sm); font-family: inherit; font-size: 14px; resize: vertical; outline: none; }
+    .reply-form-card textarea:focus { border-color: var(--ink); }
+    .reply-form-card .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    @media (max-width: 600px) { .reply-form-card .row { grid-template-columns: 1fr; } }
+    .reply-form-card input { padding: 10px 12px; border: 1px solid var(--hairline); border-radius: var(--r-sm); font-size: 14px; outline: none; }
+    .reply-form-card input:focus { border-color: var(--ink); }
+    .reply-form-card .actions { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .reply-form-card .hint { font-size: 12px; color: var(--muted); }
+
+    .locked-banner { background: rgba(0,0,0,0.04); border: 1px dashed var(--hairline); padding: 14px 18px; border-radius: var(--r-md); font-size: 13px; color: var(--muted); text-align: center; }
+
+    /* New thread form */
+    .new-thread-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 28px 32px; max-width: 760px; }
+    @media (max-width: 600px) { .new-thread-card { padding: 22px 20px; } }
+    .new-thread-card h2 { font-size: 22px; margin-bottom: 6px; }
+    .new-thread-card .lead { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+    .form-success { display: none; background: #e6f4ea; border: 1px solid #c3e6cb; border-radius: var(--r-md); padding: 18px 22px; color: #1a7f37; max-width: 760px; }
+    .form-error-banner { display: none; background: #fde7e9; border: 1px solid #f5b5bc; border-radius: var(--r-md); padding: 14px 20px; color: var(--error); font-size: 14px; margin-bottom: 16px; max-width: 760px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; margin-bottom: 16px; background: none; border: none; padding: 0; }
+    .back-link:hover { color: var(--ink); }
+
+    /* Hide mark for view switching */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Code-rule guidelines block */
+    .rules-mini { font-size: 12px; color: var(--muted); background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-sm); padding: 12px 14px; margin-bottom: 16px; line-height: 1.55; }
+    .rules-mini strong { color: var(--ink); }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="site-nav" id="site-nav">
   <div class="container nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="nav-logo-mark">G</div>
-      <span class="nav-logo-text">geosin<span>.be</span></span>
-    </a>
+    <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
     <div class="nav-links" id="nav-links">
       <a href="index.html">Home</a>
       <a href="jobs.html">Jobs</a>
@@ -255,190 +137,455 @@
         <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
       </div>
     </div>
-    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu"><span></span><span></span><span></span></div>
   </div>
 </nav>
 
-<!-- FORUM COMING SOON -->
-<main class="forum-page">
-  <div class="forum-inner">
-
-    <div class="forum-icon-wrap">
-      <div class="forum-icon-bg">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ff385c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-      </div>
-      <div class="forum-icon-dot"></div>
-    </div>
-
-    <span class="forum-label">Coming soon</span>
-
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">Community</p>
     <h1>
-      <span data-lang-block="en">The Georgian community forum</span>
-      <span data-lang-block="ka" class="ka-title">ქართული საზოგადოების ფორუმი</span>
+      <span data-lang-block="en">Forum</span>
+      <span data-lang-block="ka" class="ka">ფორუმი</span>
     </h1>
+    <p class="sub">დისკუსიების სივრცე · Discussion space</p>
+  </div>
+</div>
 
-    <p data-lang-block="en">
-      A dedicated space for Georgians in Belgium — ask questions, share news from home, find flatmates, discuss Belgian life, all in Georgian.
-    </p>
-    <p data-lang-block="ka" class="ka-p" style="font-family:var(--font-georgian)">
-      სპეციალური სივრცე ბელგიაში მყოფი ქართველებისთვის — დასვით კითხვები, გაუზიარეთ სახლიდან სიახლეები, იპოვეთ ოთახის პარტნიორები, განიხილეთ ბელგიაში ცხოვრება — ქართულ ენაზე.
-    </p>
+<section class="section">
+  <div class="container">
 
-    <!-- email capture -->
-    <form class="notify-form" id="notify-form" onsubmit="notifySubmit(event)" novalidate>
-      <input type="email" id="notify-email" placeholder="your@email.com" required />
-      <button type="submit">
-        <span data-lang-block="en">Notify me</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">შეატყობინე</span>
-      </button>
-    </form>
-    <div class="notify-success" id="notify-success">
-      <strong>You're on the list!</strong> We'll email you as soon as the forum opens.<br />
-      <span class="ka" style="font-family:var(--font-georgian);font-size:13px">თქვენ სიაში ხართ! გამოგიგზავნით შეტყობინებას ფორუმის გახსნისთანავე.</span>
-    </div>
-    <p class="notify-note">No spam, one email when it launches.</p>
+    <!-- =========== LIST VIEW =========== -->
+    <div class="view active" id="view-list">
+      <div class="forum-layout">
+        <aside class="forum-sidebar">
+          <h5>Category</h5>
+          <div class="cat-list" id="cat-list">
+            <button class="cat-btn active" data-cat="all" onclick="setCat('all')">All <span class="num" data-count="all">0</span></button>
+            <button class="cat-btn" data-cat="General" onclick="setCat('General')">General <span class="num" data-count="General">0</span></button>
+            <button class="cat-btn" data-cat="Arrival & paperwork" onclick="setCat('Arrival & paperwork')">Arrival &amp; paperwork <span class="num" data-count="Arrival & paperwork">0</span></button>
+            <button class="cat-btn" data-cat="Housing" onclick="setCat('Housing')">Housing <span class="num" data-count="Housing">0</span></button>
+            <button class="cat-btn" data-cat="Jobs & work" onclick="setCat('Jobs & work')">Jobs &amp; work <span class="num" data-count="Jobs & work">0</span></button>
+            <button class="cat-btn" data-cat="Healthcare" onclick="setCat('Healthcare')">Healthcare <span class="num" data-count="Healthcare">0</span></button>
+            <button class="cat-btn" data-cat="Schools & kids" onclick="setCat('Schools & kids')">Schools &amp; kids <span class="num" data-count="Schools & kids">0</span></button>
+            <button class="cat-btn" data-cat="Language learning" onclick="setCat('Language learning')">Language learning <span class="num" data-count="Language learning">0</span></button>
+            <button class="cat-btn" data-cat="Recommendations" onclick="setCat('Recommendations')">Recommendations <span class="num" data-count="Recommendations">0</span></button>
+            <button class="cat-btn" data-cat="Lost & found" onclick="setCat('Lost & found')">Lost &amp; found <span class="num" data-count="Lost & found">0</span></button>
+            <button class="cat-btn" data-cat="Events" onclick="setCat('Events')">Events <span class="num" data-count="Events">0</span></button>
+          </div>
+          <hr class="sidebar-divider" />
+          <a href="?new=1" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ Start a thread</a>
+        </aside>
 
-    <!-- blurred preview -->
-    <div class="topics-preview">
-      <div class="topics-header">
-        <span>Upcoming topics · სავარაუდო თემები</span>
-        <span class="badge badge-primary">Preview</span>
-      </div>
-      <div class="topics-wrapper">
-        <div class="topic-row">
-          <div class="topic-cat-dot"></div>
-          <div class="topic-row-body">
-            <h5>როგორ ავხსნი ჩემს ბელგიელ კოლეგებს ხინკალი?</h5>
-            <p>How do I explain khinkali to my Belgian colleagues?</p>
+        <div>
+          <div class="forum-header-bar">
+            <h2 id="list-title">All threads</h2>
+            <span class="meta" id="list-count">Loading…</span>
           </div>
-          <span class="topic-meta">General · 24 replies</span>
-        </div>
-        <div class="topic-row">
-          <div class="topic-cat-dot" style="background:#6a6a6a"></div>
-          <div class="topic-row-body">
-            <h5>ვეძებ ოთახს ბრიუსელში — ვინ მიდგება?</h5>
-            <p>Looking for a room in Brussels — any leads?</p>
+          <div class="rules-mini">
+            <strong>Quick rules:</strong> stay on topic, no doxxing, no scam promotion, no political fights. Be helpful — newcomers are reading. Threads are reviewed before going live (~24h).
           </div>
-          <span class="topic-meta">Housing · 8 replies</span>
-        </div>
-        <div class="topic-row">
-          <div class="topic-cat-dot" style="background:#1a7f37"></div>
-          <div class="topic-row-body">
-            <h5>საბელგიური ID ბარათი — გამოცდილება?</h5>
-            <p>Belgian ID card experience — tips welcome</p>
+          <div class="thread-list" id="thread-list">
+            <div class="loading-state">Loading threads…</div>
           </div>
-          <span class="topic-meta">Admin · 15 replies</span>
         </div>
-        <div class="topic-row">
-          <div class="topic-cat-dot" style="background:#7c3aed"></div>
-          <div class="topic-row-body">
-            <h5>ქართული სკოლა ბრიუსელში — ვინ ატარებს?</h5>
-            <p>Georgian school in Brussels — who's running one?</p>
-          </div>
-          <span class="topic-meta">Education · 6 replies</span>
-        </div>
-        <div class="blur-overlay"></div>
       </div>
     </div>
 
-    <!-- Planned features -->
-    <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.6px">Planned features</p>
-    <div class="features-row">
-      <div class="feature-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span data-lang-block="en">Georgian-language threads</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ქართული თემები</span>
+    <!-- =========== THREAD DETAIL VIEW =========== -->
+    <div class="view" id="view-thread">
+      <button class="back-link" onclick="showList()">← Back to all threads</button>
+      <div id="thread-detail-container"></div>
+    </div>
+
+    <!-- =========== NEW THREAD VIEW =========== -->
+    <div class="view" id="view-new">
+      <button class="back-link" onclick="showList()">← Back to all threads</button>
+
+      <div class="form-error-banner" id="new-error"></div>
+      <div class="form-success" id="new-success">
+        <strong>Thanks!</strong> Your thread has been submitted and will appear here once reviewed (usually within 24 hours).
       </div>
-      <div class="feature-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        <span data-lang-block="en">Verified members</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გადამოწმებული წევრები</span>
-      </div>
-      <div class="feature-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span data-lang-block="en">Events board</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ღონისძიებების დაფა</span>
-      </div>
-      <div class="feature-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <span data-lang-block="en">Private messages</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">პირადი შეტყობინებები</span>
+
+      <div class="new-thread-card" id="new-thread-card">
+        <h2>Start a thread</h2>
+        <p class="lead">Ask the community something. Be specific — "How do I do X in Brussels?" works better than "help me".</p>
+
+        <form id="new-thread-form" novalidate>
+          <div class="form-group" style="margin-bottom:16px">
+            <label class="form-label" for="t-cat">Category</label>
+            <select class="form-select" id="t-cat" required>
+              <option value="">Select…</option>
+              <option>General</option>
+              <option>Arrival &amp; paperwork</option>
+              <option>Housing</option>
+              <option>Jobs &amp; work</option>
+              <option>Healthcare</option>
+              <option>Schools &amp; kids</option>
+              <option>Language learning</option>
+              <option>Recommendations</option>
+              <option>Lost &amp; found</option>
+              <option>Events</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px">
+            <label class="form-label" for="t-title">Title</label>
+            <input class="form-input" id="t-title" type="text" required maxlength="140" placeholder="One sentence — keep it specific" />
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px">
+            <label class="form-label" for="t-body">Body</label>
+            <textarea class="form-textarea" id="t-body" required maxlength="3000" placeholder="What's the situation? What have you already tried? Any details that matter (city, deadline, etc.)?" style="min-height:160px"></textarea>
+            <span class="form-hint">Max 3000 characters. Plain text — no HTML.</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px">
+            <label class="form-label" for="t-name">Your display name</label>
+            <input class="form-input" id="t-name" type="text" required maxlength="40" placeholder="What people will see — first name or alias is fine" />
+          </div>
+
+          <div class="form-group" style="margin-bottom:24px">
+            <label class="form-label" for="t-email">Email (private — only seen by admin for moderation)</label>
+            <input class="form-input" id="t-email" type="email" maxlength="120" placeholder="Optional, used only if we need to follow up" />
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="t-submit">Post thread</button>
+        </form>
       </div>
     </div>
 
   </div>
-</main>
+</section>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="nav-logo">
-          <div class="nav-logo-mark">G</div>
-          <span class="nav-logo-text">geosin<span>.be</span></span>
-        </a>
-        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
+        <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
+        <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
       </div>
-      <div class="footer-col">
-        <h5>Site</h5>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="forum.html">Forum</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Services</h5>
-        <ul>
-          <li><a href="services.html">Browse all</a></li>
-          <li><a href="services.html#register">List a service</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Community</h5>
-        <ul>
-          <li><a href="about.html">About us</a></li>
-          <li><a href="mailto:hello@geosin.be">Contact</a></li>
-          <li><a href="index.html#faq">FAQ</a></li>
-        </ul>
-      </div>
+      <div class="footer-col"><h5>Site</h5><ul>
+        <li><a href="index.html">Home</a></li><li><a href="jobs.html">Jobs</a></li><li><a href="housing.html">Housing</a></li>
+        <li><a href="services.html">Services</a></li><li><a href="checklists.html">Checklists</a></li>
+        <li><a href="scams.html">Avoid Scams</a></li><li><a href="about.html">About</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Post</h5><ul>
+        <li><a href="forum.html?new=1">Start a thread</a></li>
+        <li><a href="jobs.html#post">Post a job</a></li>
+        <li><a href="housing.html#post">Post housing</a></li>
+        <li><a href="services.html#register">List a service</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Community</h5><ul>
+        <li><a href="about.html">About us</a></li><li><a href="mailto:hello@geosin.be">Contact</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul></div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
-      <span style="display:flex;gap:16px">
-        <a href="#">Privacy</a>
-        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
-      </span>
-    </div>
+    <div class="footer-bottom"><span>&copy; 2026 geosin.be</span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-    document.querySelectorAll('[data-lang-block]').forEach(el => {
-      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
-    });
+    document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
-  function toggleMobileNav() {
-    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+
+  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]); }
+  function timeAgo(iso) {
+    const d = new Date(iso); const now = new Date();
+    const sec = Math.floor((now - d) / 1000);
+    if (sec < 60) return 'just now';
+    if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+    if (sec < 86400) return Math.floor(sec/3600) + 'h ago';
+    if (sec < 2592000) return Math.floor(sec/86400) + 'd ago';
+    return d.toLocaleDateString();
   }
-  function notifySubmit(e) {
+
+  /* ================ STATE ================ */
+  let allThreads = [];
+  let replyCounts = {}; // thread_id -> count
+  let currentCat = 'all';
+
+  function showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+  }
+
+  /* ================ LIST VIEW ================ */
+  function renderThreadRow(t) {
+    const replies = replyCounts[t.id] || 0;
+    const snippet = t.body.length > 200 ? t.body.slice(0, 200) + '…' : t.body;
+    return `
+      <div class="thread-row${t.pinned ? ' pinned' : ''}" data-id="${t.id}" onclick="showThread(${t.id})">
+        <div>
+          <div class="meta-top">
+            <span class="thread-cat-tag">${escapeHtml(t.category)}</span>
+            ${t.pinned ? '<span class="pinned-badge">Pinned</span>' : ''}
+            ${t.locked ? '<span class="locked-badge">Locked</span>' : ''}
+          </div>
+          <div class="thread-title">${escapeHtml(t.title)}</div>
+          <div class="thread-snippet">${escapeHtml(snippet)}</div>
+          <div class="thread-author">${escapeHtml(t.author_name)} · ${timeAgo(t.created_at)}</div>
+        </div>
+        <div class="thread-stats">
+          <span class="replies">${replies}</span>
+          ${replies === 1 ? 'reply' : 'replies'}
+        </div>
+      </div>
+    `;
+  }
+
+  function applyCategoryFilter() {
+    const list = document.getElementById('thread-list');
+    const countEl = document.getElementById('list-count');
+    const titleEl = document.getElementById('list-title');
+
+    titleEl.textContent = currentCat === 'all' ? 'All threads' : currentCat;
+
+    const filtered = currentCat === 'all'
+      ? allThreads
+      : allThreads.filter(t => t.category === currentCat);
+
+    // Sort: pinned first, then newest
+    filtered.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="empty">No threads in this category yet. <a href="?new=1">Be the first to post →</a></div>';
+    } else {
+      list.innerHTML = filtered.map(renderThreadRow).join('');
+    }
+    countEl.textContent = `${filtered.length} thread${filtered.length === 1 ? '' : 's'}`;
+  }
+
+  function setCat(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    applyCategoryFilter();
+  }
+
+  function updateCategoryCounts() {
+    const counts = { all: allThreads.length };
+    allThreads.forEach(t => { counts[t.category] = (counts[t.category] || 0) + 1; });
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const k = el.dataset.count;
+      el.textContent = counts[k] || 0;
+    });
+  }
+
+  async function loadThreads() {
+    if (!sb) {
+      document.getElementById('thread-list').innerHTML = '<div class="empty">Could not load threads.</div>';
+      return;
+    }
+    const { data: threads, error: tErr } = await sb.from('forum_threads').select('*').eq('approved', true).order('created_at', { ascending: false });
+    if (tErr) {
+      console.error('threads err', tErr);
+      document.getElementById('thread-list').innerHTML = '<div class="empty">Could not load threads. Has the SQL been run? See SETUP.sql.</div>';
+      return;
+    }
+    allThreads = threads || [];
+
+    // Get reply counts in one query
+    const { data: replies, error: rErr } = await sb.from('forum_replies').select('thread_id').eq('approved', true);
+    if (!rErr && replies) {
+      replyCounts = {};
+      replies.forEach(r => { replyCounts[r.thread_id] = (replyCounts[r.thread_id] || 0) + 1; });
+    }
+
+    updateCategoryCounts();
+    applyCategoryFilter();
+  }
+
+  /* ================ THREAD DETAIL VIEW ================ */
+  async function showThread(id) {
+    history.pushState({}, '', '?thread=' + id);
+    showView('thread');
+    const container = document.getElementById('thread-detail-container');
+    container.innerHTML = '<div class="loading-state">Loading…</div>';
+
+    if (!sb) { container.innerHTML = '<div class="empty">Database unavailable.</div>'; return; }
+
+    const { data: thread, error: tErr } = await sb.from('forum_threads').select('*').eq('id', id).eq('approved', true).single();
+    if (tErr || !thread) {
+      container.innerHTML = '<div class="empty">Thread not found or not yet approved.</div>';
+      return;
+    }
+    const { data: replies } = await sb.from('forum_replies').select('*').eq('thread_id', id).eq('approved', true).order('created_at', { ascending: true });
+
+    const repliesHtml = (replies || []).map(r => `
+      <div class="reply-card">
+        <div class="reply-meta">
+          <span class="author">${escapeHtml(r.author_name)}</span>
+          <span class="date">${timeAgo(r.created_at)}</span>
+        </div>
+        <div class="reply-body">${escapeHtml(r.body)}</div>
+      </div>
+    `).join('');
+
+    const replyForm = thread.locked
+      ? `<div class="locked-banner">This thread is locked. No new replies can be posted.</div>`
+      : `
+        <div class="reply-form-card">
+          <div class="form-error-banner" id="reply-error" style="margin-bottom:12px"></div>
+          <textarea id="reply-body" placeholder="Write your reply… Be specific and helpful." maxlength="2000"></textarea>
+          <div class="row">
+            <input type="text" id="reply-name" placeholder="Your display name" maxlength="40" />
+            <input type="email" id="reply-email" placeholder="Email (private, optional)" maxlength="120" />
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">Post reply</button>
+            <span class="hint">Replies appear immediately. Spam gets removed.</span>
+          </div>
+        </div>
+      `;
+
+    container.innerHTML = `
+      <div class="thread-detail">
+        <div class="header-meta">
+          <span class="thread-cat-tag">${escapeHtml(thread.category)}</span>
+          ${thread.pinned ? '<span class="pinned-badge">Pinned</span>' : ''}
+          ${thread.locked ? '<span class="locked-badge">Locked</span>' : ''}
+          <span class="date">${timeAgo(thread.created_at)}</span>
+        </div>
+        <h1>${escapeHtml(thread.title)}</h1>
+        <div class="header-meta"><span class="author"><strong>${escapeHtml(thread.author_name)}</strong> wrote:</span></div>
+        <div class="body-text">${escapeHtml(thread.body)}</div>
+      </div>
+
+      <div class="replies-header">${(replies || []).length} ${(replies || []).length === 1 ? 'reply' : 'replies'}</div>
+      ${repliesHtml || '<div class="empty" style="padding:40px 20px">No replies yet. Be the first.</div>'}
+      ${replyForm}
+    `;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function postReply(threadId) {
+    const errBox = document.getElementById('reply-error');
+    const submitBtn = document.getElementById('reply-submit');
+    errBox.style.display = 'none';
+
+    const body = document.getElementById('reply-body').value.trim();
+    const name = document.getElementById('reply-name').value.trim();
+    const email = document.getElementById('reply-email').value.trim();
+
+    if (!body || !name) {
+      errBox.textContent = 'Body and display name are required.';
+      errBox.style.display = 'block';
+      return;
+    }
+    if (body.length < 5) {
+      errBox.textContent = 'Reply too short. Add a bit more context.';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true; submitBtn.textContent = 'Posting…';
+    const { error } = await sb.from('forum_replies').insert({
+      thread_id: threadId,
+      author_name: name,
+      author_email: email || null,
+      body
+    });
+    submitBtn.disabled = false; submitBtn.textContent = 'Post reply';
+
+    if (error) {
+      console.error(error);
+      errBox.textContent = 'Could not post reply. ' + (error.message || '');
+      errBox.style.display = 'block';
+      return;
+    }
+    showThread(threadId);
+  }
+
+  /* ================ NEW THREAD VIEW ================ */
+  function showNewThread() {
+    history.pushState({}, '', '?new=1');
+    showView('new');
+    document.getElementById('new-success').style.display = 'none';
+    document.getElementById('new-thread-card').style.display = '';
+  }
+
+  async function submitNewThread(e) {
     e.preventDefault();
-    const email = document.getElementById('notify-email').value;
-    if (!email) return;
-    document.getElementById('notify-form').style.display = 'none';
-    document.getElementById('notify-success').style.display = 'block';
+    const errBox = document.getElementById('new-error');
+    const submitBtn = document.getElementById('t-submit');
+    errBox.style.display = 'none';
+
+    const cat = document.getElementById('t-cat').value;
+    const title = document.getElementById('t-title').value.trim();
+    const body = document.getElementById('t-body').value.trim();
+    const name = document.getElementById('t-name').value.trim();
+    const email = document.getElementById('t-email').value.trim();
+
+    if (!cat || !title || !body || !name) {
+      errBox.textContent = 'Please fill category, title, body, and your name.';
+      errBox.style.display = 'block';
+      return;
+    }
+    if (body.length < 20) {
+      errBox.textContent = 'Body too short. Add some detail (min 20 characters).';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true; submitBtn.textContent = 'Posting…';
+    const { error } = await sb.from('forum_threads').insert({
+      category: cat,
+      title,
+      body,
+      author_name: name,
+      author_email: email || null
+    });
+    submitBtn.disabled = false; submitBtn.textContent = 'Post thread';
+
+    if (error) {
+      console.error(error);
+      errBox.textContent = 'Could not post. ' + (error.message || '');
+      errBox.style.display = 'block';
+      return;
+    }
+    document.getElementById('new-thread-card').style.display = 'none';
+    document.getElementById('new-success').style.display = 'block';
+    document.getElementById('new-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-  (function() { setLang(localStorage.getItem('geosin-lang') || 'en'); })();
+
+  function showList() {
+    history.pushState({}, '', 'forum.html');
+    showView('list');
+  }
+
+  /* ================ ROUTING ================ */
+  function route() {
+    const params = new URLSearchParams(location.search);
+    const tid = params.get('thread');
+    const isNew = params.get('new');
+    if (tid) { showThread(parseInt(tid, 10)); }
+    else if (isNew) { showView('new'); }
+    else { showView('list'); }
+  }
+
+  window.addEventListener('popstate', route);
+
+  /* ================ INIT ================ */
+  (function() {
+    setLang(localStorage.getItem('geosin-lang') || 'en');
+    document.getElementById('new-thread-form').addEventListener('submit', submitNewThread);
+    loadThreads().then(route);
+  })();
 </script>
 </body>
 </html>
