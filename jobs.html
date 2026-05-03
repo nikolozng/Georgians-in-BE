@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jobs — geosin.be</title>
+  <meta name="description" content="English-friendly jobs in Belgium for the Georgian community — browse listings or post yours." />
+  <meta property="og:title" content="Jobs — geosin.be" />
+  <meta property="og:description" content="English-friendly jobs in Belgium for the Georgian community." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/jobs.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .listing-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px; }
+    .sidebar h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; }
+    .sidebar-divider { border: none; border-top: 1px solid var(--hairline); margin: 14px 0; }
+    .check-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .check-list label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--body-text); cursor: pointer; }
+    .check-list input { accent-color: var(--rausch); width: 15px; height: 15px; cursor: pointer; }
+    .search-bar-sm { display: flex; align-items: center; gap: 8px; border: 1px solid var(--hairline); border-radius: var(--r-sm); padding: 10px 14px; margin-bottom: 18px; transition: border-color 0.15s; }
+    .search-bar-sm:focus-within { border-color: var(--ink); }
+    .search-bar-sm input { border: none; outline: none; font-size: 14px; color: var(--ink); width: 100%; background: none; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .results-count { font-size: 14px; color: var(--muted); }
+    .urgent-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--rausch); font-weight: 600; cursor: pointer; }
+    .urgent-toggle input { accent-color: var(--rausch); width: 15px; height: 15px; }
+
+    .job-list { display: grid; gap: 12px; }
+    .job-card { border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px 22px; background: var(--canvas); transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; }
+    .job-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
+    .job-card.urgent { border-left: 4px solid var(--rausch); }
+    .job-meta-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .job-company { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .urgent-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--rausch); color: #fff; padding: 2px 8px; border-radius: var(--r-full); }
+    .job-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+    .job-card p { font-size: 14px; color: var(--body-text); line-height: 1.55; margin-bottom: 12px; }
+    .job-tags { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px solid var(--hairline); }
+    .job-tag { font-size: 12px; color: var(--muted); background: var(--surface); padding: 3px 10px; border-radius: var(--r-full); }
+    .job-tag.lang { background: rgba(0,53,102,0.08); color: var(--be-blue, #0066cc); font-weight: 600; }
+
+    .no-results, .loading-state { text-align: center; padding: 60px 0; color: var(--muted); }
+
+    .post-section { background: var(--surface); border-top: 3px solid var(--rausch); }
+    .post-intro { max-width: 560px; margin-bottom: 32px; }
+    .post-intro h2 { margin-bottom: 8px; }
+    .post-intro p { color: var(--body-text); font-size: 14px; line-height: 1.6; }
+    .form-success { display: none; background: #e6f4ea; border: 1px solid #c3e6cb; border-radius: var(--r-md); padding: 20px 24px; color: #1a7f37; max-width: 720px; }
+    .form-error-banner { display: none; background: #fde7e9; border: 1px solid #f5b5bc; border-radius: var(--r-md); padding: 14px 20px; color: var(--error); font-size: 14px; margin-bottom: 16px; max-width: 720px; }
+
+    @media (max-width: 900px) { .listing-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="jobs.html" class="active">Jobs</a>
+      <a href="housing.html">Housing</a>
+      <a href="services.html">Services</a>
+      <a href="checklists.html">Checklists</a>
+      <a href="scams.html">Avoid Scams</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">Job board</p>
+    <h1>
+      <span data-lang-block="en">English-friendly jobs in Belgium</span>
+      <span data-lang-block="ka" class="ka">სამუშაოები ბელგიაში</span>
+    </h1>
+    <p class="sub">სამსახურები · Offres d'emploi</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="listing-layout">
+
+      <aside class="sidebar">
+        <div class="search-bar-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#929292" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="job-search" placeholder="Search jobs…" oninput="applyFilter()" />
+        </div>
+
+        <label class="urgent-toggle" style="margin-bottom:14px">
+          <input type="checkbox" id="urgent-only" onchange="applyFilter()" />
+          <span>Show urgent only</span>
+        </label>
+
+        <hr class="sidebar-divider" />
+        <h5>City</h5>
+        <div class="check-list" id="city-filter">
+          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> Brussels</label>
+          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> Antwerp</label>
+          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> Ghent</label>
+          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> Liège</label>
+          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> Bruges</label>
+          <label><input type="checkbox" value="Remote" onchange="applyFilter()" checked /> Remote</label>
+          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> Other</label>
+        </div>
+
+        <hr class="sidebar-divider" />
+        <h5>Language required</h5>
+        <div class="check-list" id="lang-filter">
+          <label><input type="checkbox" value="English only" onchange="applyFilter()" checked /> English only</label>
+          <label><input type="checkbox" value="Georgian" onchange="applyFilter()" checked /> Georgian</label>
+          <label><input type="checkbox" value="Dutch" onchange="applyFilter()" checked /> Dutch</label>
+          <label><input type="checkbox" value="French" onchange="applyFilter()" checked /> French</label>
+          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> Other</label>
+        </div>
+
+        <hr class="sidebar-divider" />
+        <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ Post a job</a>
+      </aside>
+
+      <div>
+        <div class="results-header">
+          <p class="results-count" id="results-count">Loading jobs…</p>
+        </div>
+        <div class="job-list" id="job-list"><p class="loading-state">Loading jobs…</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section post-section" id="post">
+  <div class="container" style="max-width:720px">
+    <div class="post-intro">
+      <p class="section-eyebrow">For employers</p>
+      <h2>
+        <span data-lang-block="en">Post a job — free, reviewed in 48h</span>
+        <span data-lang-block="ka" class="ka">გამოაქვეყნეთ ვაკანსია — უფასო</span>
+      </h2>
+      <p data-lang-block="en">Hiring? Post your opening here. Reviewed before going live to keep scams off the board.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გჭირდებათ თანამშრომელი? გამოაქვეყნეთ აქ. ყველა განცხადება მოწმდება გამოქვეყნებამდე.</p>
+    </div>
+
+    <div class="form-success" id="form-success">
+      <strong>Thanks!</strong> Your job has been submitted and will be reviewed within 48 hours.
+    </div>
+    <div class="form-error-banner" id="form-error"></div>
+
+    <div class="form-card" id="form-card">
+      <form id="job-form" onsubmit="submitJob(event)" novalidate>
+        <div class="form-grid">
+          <div class="form-group span-2">
+            <label class="form-label" for="j-title">Job title</label>
+            <input class="form-input" id="j-title" type="text" placeholder="e.g. Junior Software Developer" required maxlength="120" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-company">Company / Employer</label>
+            <input class="form-input" id="j-company" type="text" required maxlength="80" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-city">City</label>
+            <select class="form-select" id="j-city" required>
+              <option value="">Select…</option>
+              <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Remote</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-lang">Language required</label>
+            <select class="form-select" id="j-lang" required>
+              <option value="">Select…</option>
+              <option>English only</option><option>Georgian</option><option>Dutch</option><option>French</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-contract">Contract type</label>
+            <select class="form-select" id="j-contract">
+              <option value="">— Optional —</option>
+              <option>Full-time</option><option>Part-time</option><option>Contract / Freelance</option><option>Internship</option><option>Temporary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-salary">Salary range (optional)</label>
+            <input class="form-input" id="j-salary" type="text" placeholder="e.g. €2,500–€3,500/month" maxlength="80" />
+          </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="j-desc">Description</label>
+            <textarea class="form-textarea" id="j-desc" required maxlength="1500" placeholder="What does the role involve? Required experience? Key benefits?"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-email">Contact email</label>
+            <input class="form-input" id="j-email" type="email" required maxlength="120" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="j-link">Application link (optional)</label>
+            <input class="form-input" id="j-link" type="url" placeholder="https://..." maxlength="200" />
+          </div>
+          <div class="form-group span-2" style="display:flex;align-items:center;gap:10px">
+            <input type="checkbox" id="j-urgent" style="accent-color:var(--rausch);width:16px;height:16px" />
+            <label for="j-urgent" style="font-size:14px;color:var(--body-text);cursor:pointer">Mark as urgent (fast hiring needed)</label>
+          </div>
+        </div>
+        <div style="margin-top:24px"><button type="submit" class="btn btn-primary" id="j-submit">Submit job</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
+        <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
+      </div>
+      <div class="footer-col"><h5>Site</h5><ul>
+        <li><a href="index.html">Home</a></li><li><a href="jobs.html">Jobs</a></li><li><a href="housing.html">Housing</a></li>
+        <li><a href="services.html">Services</a></li><li><a href="checklists.html">Checklists</a></li>
+        <li><a href="scams.html">Avoid Scams</a></li><li><a href="about.html">About</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Post</h5><ul>
+        <li><a href="jobs.html#post">Post a job</a></li><li><a href="housing.html#post">Post housing</a></li>
+        <li><a href="services.html#register">List a service</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Community</h5><ul>
+        <li><a href="about.html">About us</a></li><li><a href="mailto:hello@geosin.be">Contact</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><span>&copy; 2026 geosin.be</span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
+
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+
+  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+    document.getElementById('job-list').innerHTML = '<p class="no-results">Could not load. Please refresh.</p>';
+  }
+  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+  let allJobs = [];
+
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]); }
+  function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
+
+  function renderJob(j) {
+    const cleanLink = j.application_link || ('mailto:' + j.contact_email);
+    const target = j.application_link ? '_blank' : '_self';
+    return `
+      <article class="job-card${j.urgent ? ' urgent' : ''}" data-href="${escapeAttr(cleanLink)}" data-target="${target}">
+        <div class="job-meta-top">
+          <span class="job-company">${escapeHtml(j.company)}</span>
+          ${j.urgent ? '<span class="urgent-badge">Urgent</span>' : ''}
+        </div>
+        <h3>${escapeHtml(j.title)}</h3>
+        <p>${escapeHtml(j.description.length > 220 ? j.description.slice(0, 220) + '…' : j.description)}</p>
+        <div class="job-tags">
+          <span class="job-tag">${escapeHtml(j.city)}</span>
+          <span class="job-tag lang">${escapeHtml(j.language_required)}</span>
+          ${j.contract_type ? `<span class="job-tag">${escapeHtml(j.contract_type)}</span>` : ''}
+          ${j.salary_range ? `<span class="job-tag">${escapeHtml(j.salary_range)}</span>` : ''}
+        </div>
+      </article>
+    `;
+  }
+
+  function getChecked(id) {
+    return [...document.querySelectorAll('#' + id + ' input:checked')].map(i => i.value);
+  }
+
+  function applyFilter() {
+    const q = (document.getElementById('job-search').value || '').toLowerCase().trim();
+    const cities = getChecked('city-filter');
+    const langs = getChecked('lang-filter');
+    const urgentOnly = document.getElementById('urgent-only').checked;
+    const list = document.getElementById('job-list');
+    const countEl = document.getElementById('results-count');
+
+    const filtered = allJobs.filter(j => {
+      if (cities.length === 0 || !cities.includes(j.city)) return false;
+      if (langs.length === 0 || !langs.includes(j.language_required)) return false;
+      if (urgentOnly && !j.urgent) return false;
+      if (q) {
+        const hay = [j.title, j.company, j.description, j.city, j.language_required].join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) { list.innerHTML = '<p class="no-results">No jobs match your filters.</p>'; }
+    else { list.innerHTML = filtered.map(renderJob).join(''); }
+    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> of ${allJobs.length} job${allJobs.length === 1 ? '' : 's'}`;
+  }
+
+  async function loadJobs() {
+    if (!sb) return;
+    const { data, error } = await sb.from('jobs').select('*').eq('approved', true).order('urgent', { ascending: false }).order('created_at', { ascending: false });
+    if (error) {
+      document.getElementById('job-list').innerHTML = '<p class="no-results">Could not load jobs.</p>';
+      console.error(error); return;
+    }
+    allJobs = data || [];
+    if (allJobs.length === 0) {
+      document.getElementById('job-list').innerHTML = '<p class="no-results">No jobs posted yet. Be the first — post one below.</p>';
+      document.getElementById('results-count').innerHTML = '<strong>0</strong> jobs yet';
+      return;
+    }
+    applyFilter();
+  }
+
+  // Card click navigation
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('a, button, input, label')) return;
+    const card = e.target.closest('.job-card');
+    if (!card || !card.dataset.href) return;
+    const t = card.dataset.target || '_self';
+    if (t === '_blank') window.open(card.dataset.href, '_blank', 'noopener');
+    else window.location.href = card.dataset.href;
+  });
+
+  async function submitJob(e) {
+    e.preventDefault();
+    const form = document.getElementById('job-form');
+    const errBox = document.getElementById('form-error');
+    const submitBtn = document.getElementById('j-submit');
+    errBox.style.display = 'none';
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(el => {
+      if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
+    });
+    if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; return; }
+    if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; return; }
+
+    submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';
+    const row = {
+      title: document.getElementById('j-title').value.trim(),
+      company: document.getElementById('j-company').value.trim(),
+      description: document.getElementById('j-desc').value.trim(),
+      city: document.getElementById('j-city').value,
+      language_required: document.getElementById('j-lang').value,
+      contract_type: document.getElementById('j-contract').value || null,
+      salary_range: document.getElementById('j-salary').value.trim() || null,
+      contact_email: document.getElementById('j-email').value.trim(),
+      application_link: document.getElementById('j-link').value.trim() || null,
+      urgent: document.getElementById('j-urgent').checked
+    };
+    const { error } = await sb.from('jobs').insert(row);
+    submitBtn.disabled = false; submitBtn.textContent = 'Submit job';
+    if (error) {
+      console.error(error);
+      errBox.textContent = 'Submission failed. Try again.'; errBox.style.display = 'block'; return;
+    }
+    document.getElementById('form-card').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  (function() {
+    setLang(localStorage.getItem('geosin-lang') || 'en');
+    loadJobs();
+    if (location.hash === '#post') setTimeout(() => document.getElementById('post').scrollIntoView({ behavior: 'smooth' }), 200);
+  })();
+</script>
+</body>
+</html>

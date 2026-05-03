@@ -49,3 +49,68 @@ create policy "Anyone can submit a scam report"
 -- No SELECT policy = reports are only readable via the Supabase dashboard.
 -- This is intentional. Do NOT add a public SELECT — the data has names
 -- that could expose you to defamation claims.
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 4: jobs table (added 2026-04-30)
+-- ──────────────────────────────────────────────────────────────────────
+
+create table if not exists jobs (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  title text not null,
+  company text not null,
+  description text not null,
+  city text not null,
+  language_required text not null,
+  salary_range text,
+  contract_type text,
+  urgent boolean default false not null,
+  contact_email text not null,
+  application_link text,
+  approved boolean default false not null
+);
+
+alter table jobs enable row level security;
+
+create policy "Anyone can post a job"
+  on jobs for insert
+  to anon, authenticated
+  with check (true);
+
+create policy "Anyone can view approved jobs"
+  on jobs for select
+  to anon, authenticated
+  using (approved = true);
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 5: housing table (added 2026-04-30)
+-- ──────────────────────────────────────────────────────────────────────
+
+create table if not exists housing (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  listing_type text not null,
+  city text not null,
+  neighborhood text,
+  monthly_rent numeric not null,
+  description text not null,
+  bedrooms integer,
+  available_from date,
+  furnished boolean default false,
+  contact_name text not null,
+  contact_email text not null,
+  contact_phone text,
+  approved boolean default false not null
+);
+
+alter table housing enable row level security;
+
+create policy "Anyone can post a listing"
+  on housing for insert
+  to anon, authenticated
+  with check (true);
+
+create policy "Anyone can view approved housing"
+  on housing for select
+  to anon, authenticated
+  using (approved = true);
