@@ -22,21 +22,52 @@
       position: relative;
       padding: clamp(64px, 11vw, 128px) 0 clamp(96px, 14vw, 160px);
       overflow: hidden;
-      background:
-        radial-gradient(1100px 540px at 12% 10%, rgba(255,56,92,0.10), transparent 60%),
-        radial-gradient(900px 480px at 95% 0%, rgba(0,102,204,0.08), transparent 60%),
-        linear-gradient(180deg, #fff 0%, #fff8f9 100%);
+      background: #0a1014;
     }
-    /* Subtle noise texture */
+    /* Background image — Caucasus mountains / Gergeti area (Georgia, not Tbilisi) */
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url("https://images.unsplash.com/photo-1567010883916-58cffe23222d?auto=format&fit=crop&w=1800&q=80");
+      background-size: cover;
+      background-position: center 40%;
+      z-index: 0;
+    }
+    /* Dark gradient overlay so white text stays readable */
+    .hero-bg::after {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(115deg, rgba(10,16,20,0.78) 0%, rgba(10,16,20,0.55) 45%, rgba(10,16,20,0.30) 100%),
+        radial-gradient(900px 480px at 95% 0%, rgba(255,56,92,0.20), transparent 60%);
+    }
+    /* Subtle noise on top */
     .hero-v2::after {
       content: "";
       position: absolute; inset: 0;
       pointer-events: none;
-      opacity: 0.4;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      opacity: 0.25;
+      mix-blend-mode: overlay;
+      z-index: 1;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
     }
-    .hero-v2 .container { position: relative; z-index: 1; }
+    .hero-v2 .container { position: relative; z-index: 2; }
+    /* On dark hero, text becomes white */
+    .hero-v2 h1 { color: #fff; }
+    .hero-v2 h1 .accent { color: #ff8aa3; }
+    .hero-v2 .lead { color: rgba(255,255,255,0.85); }
+    .hero-v2-eyebrow-on-dark {
+      background: rgba(255,255,255,0.14) !important;
+      color: #fff !important;
+      backdrop-filter: blur(8px);
+    }
+    .hero-v2-eyebrow-on-dark .dot { background: #ff8aa3 !important; }
+    .btn-outline-v2 {
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.55);
+      color: #fff;
+      backdrop-filter: blur(6px);
+    }
+    .btn-outline-v2:hover { background: #fff; color: var(--ink); border-color: #fff; }
     .hero-v2-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 6px 14px;
@@ -84,13 +115,14 @@
     .hero-search {
       max-width: 600px;
       background: #fff;
-      border: 1px solid var(--hairline);
+      border: 1px solid rgba(255,255,255,0.4);
       border-radius: var(--r-full);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
       padding: 6px 6px 6px 22px;
-      transition: box-shadow 0.2s, border-color 0.2s;
+      margin: 6px 0 28px;
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
     }
     .hero-search:focus-within {
       border-color: var(--rausch);
@@ -511,13 +543,24 @@
      1. HERO
 ════════════════════════════════════════════════════════════ -->
 <section class="hero-v2">
+  <div class="hero-bg" aria-hidden="true"></div>
+
   <div class="container">
-    <span class="hero-v2-eyebrow"><span class="dot"></span><span data-lang-block="en">Made by Georgians, for Georgians in Belgium</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ქართველებისთვის ბელგიაში</span></span>
+    <span class="hero-v2-eyebrow hero-v2-eyebrow-on-dark"><span class="dot"></span><span data-lang-block="en">Made by Georgians, for Georgians in Belgium</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ქართველებისთვის ბელგიაში</span></span>
 
     <h1>
       <span data-lang-block="en">Living in Belgium, <span class="accent">made simpler.</span></span>
       <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ცხოვრება ბელგიაში, <span class="accent">გამარტივებულია.</span></span>
     </h1>
+
+    <form class="hero-search" id="hero-search-form" role="search" onsubmit="return doHeroSearch(event)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="hero-search" type="search" placeholder="Search services, jobs, housing…" autocomplete="off" />
+      <button type="submit">
+        <span data-lang-block="en">Search</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ძებნა</span>
+      </button>
+    </form>
 
     <p class="lead" data-lang-block="en">
       Trusted services, jobs, housing, step-by-step checklists and a community forum — everything a Georgian needs to land softly and live well in Belgium.
@@ -536,15 +579,6 @@
         <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჩამონათვალის დაწყება</span>
       </a>
     </div>
-
-    <form class="hero-search" id="hero-search-form" role="search" onsubmit="return doHeroSearch(event)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="hero-search" type="search" placeholder="Search services, jobs, housing…" autocomplete="off" />
-      <button type="submit">
-        <span data-lang-block="en">Search</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ძებნა</span>
-      </button>
-    </form>
   </div>
 </section>
 
