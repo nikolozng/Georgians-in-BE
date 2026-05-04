@@ -12,6 +12,9 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    /* Override style.css default that hides all [data-lang-block] until JS adds .active */
+    [data-lang-block] { display: revert; }
+
     /* ────────────────────────────────────────
        HERO — bold headline, gradient + noise, CTAs, floating search
     ──────────────────────────────────────── */
@@ -519,7 +522,7 @@
     <p class="lead" data-lang-block="en">
       Trusted services, jobs, housing, step-by-step checklists and a community forum — everything a Georgian needs to land softly and live well in Belgium.
     </p>
-    <p class="lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">
+    <p class="lead ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">
       სანდო სერვისები, სამუშაო, საცხოვრებელი, ნაბიჯ-ნაბიჯ სახელმძღვანელო და საზოგადოების ფორუმი — ყველაფერი, რაც ქართველს ბელგიაში სჭირდება.
     </p>
 
@@ -622,7 +625,7 @@
         <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საქმე გავაკეთოთ ნაბიჯ-ნაბიჯ</span>
       </h2>
       <p class="section-sub" data-lang-block="en">Pick a checklist and tick off each step. Progress saves locally — no account needed.</p>
-      <p class="section-sub" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">აირჩიეთ ჩამონათვალი და მონიშნეთ ნაბიჯები. პროგრესი ლოკალურად ინახება.</p>
+      <p class="section-sub ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">აირჩიეთ ჩამონათვალი და მონიშნეთ ნაბიჯები. პროგრესი ლოკალურად ინახება.</p>
     </div>
 
     <div class="journey-grid">
@@ -738,7 +741,7 @@
         <p class="trust-lead" data-lang-block="en">
           Apartment deposits before viewing, "cousin who'll bring you the keys", fake job offers — the same scams repeat every year. Read the patterns, share warnings, and report what you see.
         </p>
-        <p class="trust-lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">
+        <p class="trust-lead ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">
           ბინის წინასწარი ანაბარი ჩვენების გარეშე, ყალბი სამუშაო შეთავაზებები — იგივე სქემები ყოველწლიურად მეორდება.
         </p>
         <div class="trust-actions">
@@ -822,7 +825,7 @@
       <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ცხოვრება ბელგიაში — სწრაფი პასუხები</span>
     </h2>
     <p class="lead" data-lang-block="en">The questions newcomers ask most — visas, communes, healthcare, schools, driving licences.</p>
-    <p class="lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">კითხვები, რომელსაც ახლადჩამოსულები ხშირად სვამენ.</p>
+    <p class="lead ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">კითხვები, რომელსაც ახლადჩამოსულები ხშირად სვამენ.</p>
 
     <div class="faq-list" style="max-width:780px">
 
