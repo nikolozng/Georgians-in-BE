@@ -4,52 +4,478 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>geosin.be — Georgians in Belgium</title>
-  <meta name="description" content="A community hub for Georgians living in Belgium. Find services, share resources, and connect." />
+  <meta name="description" content="The practical hub for Georgians living in Belgium — jobs, housing, services, checklists, scam protection and a community forum." />
   <meta property="og:title" content="geosin.be — Georgians in Belgium" />
-  <meta property="og:description" content="A community hub for Georgians living in Belgium. Find services, share resources, and connect." />
+  <meta property="og:description" content="The practical hub for Georgians living in Belgium." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Home-specific overrides */
-    .hero { min-height: 580px; }
-    .steps-grid {
+    /* ────────────────────────────────────────
+       HERO — bold headline, gradient + noise, CTAs, floating search
+    ──────────────────────────────────────── */
+    .hero-v2 {
+      position: relative;
+      padding: clamp(64px, 11vw, 128px) 0 clamp(96px, 14vw, 160px);
+      overflow: hidden;
+      background:
+        radial-gradient(1100px 540px at 12% 10%, rgba(255,56,92,0.10), transparent 60%),
+        radial-gradient(900px 480px at 95% 0%, rgba(0,102,204,0.08), transparent 60%),
+        linear-gradient(180deg, #fff 0%, #fff8f9 100%);
+    }
+    /* Subtle noise texture */
+    .hero-v2::after {
+      content: "";
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+    .hero-v2 .container { position: relative; z-index: 1; }
+    .hero-v2-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255,56,92,0.08);
+      color: var(--rausch);
+      border-radius: var(--r-full);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+    }
+    .hero-v2-eyebrow .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--rausch);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+    .hero-v2 h1 {
+      font-size: clamp(38px, 6.4vw, 76px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      margin-bottom: 18px;
+      max-width: 14ch;
+    }
+    .hero-v2 h1 .accent { color: var(--rausch); }
+    .hero-v2 .lead {
+      font-size: clamp(15px, 1.55vw, 18px);
+      color: var(--body-text);
+      line-height: 1.6;
+      max-width: 540px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions-v2 { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
+    .hero-actions-v2 .btn { padding: 13px 22px; font-size: 14px; font-weight: 600; }
+    .btn-outline-v2 {
+      background: transparent;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+    }
+    .btn-outline-v2:hover { background: var(--ink); color: #fff; }
+
+    /* Floating search bar */
+    .hero-search {
+      max-width: 600px;
+      background: #fff;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-full);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      padding: 6px 6px 6px 22px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .hero-search:focus-within {
+      border-color: var(--rausch);
+      box-shadow: 0 14px 36px rgba(255,56,92,0.18), 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hero-search svg { color: var(--muted); flex-shrink: 0; }
+    .hero-search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font: inherit;
+      font-size: 15px;
+      padding: 14px 16px;
+      background: transparent;
+      color: var(--ink);
+    }
+    .hero-search button {
+      background: var(--rausch);
+      color: #fff;
+      border: none;
+      border-radius: var(--r-full);
+      padding: 11px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .hero-search button:hover { background: #e21d4d; }
+    .hero-search button:active { transform: scale(0.97); }
+
+    /* ────────────────────────────────────────
+       BENTO GRID — 4 interactive cards
+    ──────────────────────────────────────── */
+    .bento {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 980px) { .bento { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .bento { grid-template-columns: 1fr; } }
+
+    .bento-card {
+      position: relative;
+      background: var(--canvas);
       border: 1px solid var(--hairline);
       border-radius: var(--r-md);
+      padding: 28px 24px;
+      text-decoration: none;
+      color: inherit;
       overflow: hidden;
+      transition: transform 0.18s ease, border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      min-height: 200px;
+      display: flex; flex-direction: column;
+      isolation: isolate;
     }
-    .step-item {
-      padding: 32px 28px;
-      border-right: 1px solid var(--hairline);
+    .bento-card:hover {
+      transform: scale(1.03);
+      border-color: transparent;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+      z-index: 2;
     }
-    .step-item:last-child { border-right: none; }
-    .step-num {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--rausch);
+    .bento-card.tone-rausch:hover  { background: linear-gradient(135deg, #fff 0%, #fff0f3 100%); }
+    .bento-card.tone-blue:hover    { background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%); }
+    .bento-card.tone-amber:hover   { background: linear-gradient(135deg, #fff 0%, #fff7ed 100%); }
+    .bento-card.tone-green:hover   { background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%); }
+
+    .bento-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .tone-rausch .bento-icon { background: rgba(255,56,92,0.10); color: var(--rausch); }
+    .tone-blue   .bento-icon { background: rgba(0,102,204,0.10); color: #0066cc; }
+    .tone-amber  .bento-icon { background: rgba(217,119,6,0.10); color: #c2410c; }
+    .tone-green  .bento-icon { background: rgba(21,128,61,0.10); color: #15803d; }
+
+    .bento-card h3 {
+      font-size: 17px; font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .bento-card p {
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .bento-card .arrow {
+      margin-top: auto;
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: gap 0.15s;
+    }
+    .bento-card:hover .arrow { gap: 10px; }
+
+    /* ────────────────────────────────────────
+       JOURNEY — horizontal scroll on mobile, 3 cards
+    ──────────────────────────────────────── */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 760px) {
+      .journey-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 14px;
+        scroll-snap-type: x mandatory;
+        padding: 4px 4px 18px;
+        margin: 0 -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .journey-grid::-webkit-scrollbar { height: 6px; }
+      .journey-grid::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 3px; }
+      .journey-card { min-width: 76%; scroll-snap-align: start; }
+    }
+
+    .journey-card {
+      display: flex; flex-direction: column;
+      padding: 24px 24px 22px;
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .journey-card:hover { border-color: var(--rausch); box-shadow: 0 6px 18px rgba(255,56,92,0.08); transform: translateY(-2px); }
+
+    .journey-card .step-pill {
+      display: inline-block; align-self: flex-start;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    .journey-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .journey-card p  { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 18px; flex: 1; }
+
+    .progress-graphic { margin-top: auto; }
+    .progress-graphic .label {
+      display: flex; justify-content: space-between; font-size: 11px;
+      color: var(--muted); font-weight: 600; margin-bottom: 6px;
+    }
+    .progress-graphic .bar {
+      height: 6px; background: var(--hairline);
+      border-radius: 999px; overflow: hidden;
+    }
+    .progress-graphic .fill {
+      height: 100%; background: linear-gradient(90deg, var(--rausch), #ff6b8a);
+      border-radius: 999px; transition: width 0.6s ease;
+    }
+
+    /* ────────────────────────────────────────
+       SERVICE SPOTLIGHT
+    ──────────────────────────────────────── */
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .spotlight-grid { grid-template-columns: 1fr; } }
+    .spot-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 22px 24px;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: flex; flex-direction: column;
+    }
+    .spot-card:hover { border-color: var(--rausch); box-shadow: 0 6px 18px rgba(255,56,92,0.08); transform: translateY(-2px); }
+    .spot-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .spot-card .city { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .spot-card p { font-size: 13px; color: var(--body-text); line-height: 1.55; margin-bottom: 14px; flex: 1; }
+    .spot-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .spot-tag {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      background: var(--surface);
+      padding: 3px 9px; border-radius: var(--r-full);
+    }
+    .spot-tag.cat { color: var(--rausch); background: rgba(255,56,92,0.08); }
+
+    .spot-rating { display: flex; align-items: center; gap: 4px; font-size: 13px; }
+    .spot-rating .star { color: #ffc107; }
+    .spot-rating .num { color: var(--muted); font-weight: 600; margin-left: 4px; font-size: 12px; }
+
+    /* ────────────────────────────────────────
+       TRUST & SAFETY
+    ──────────────────────────────────────── */
+    .trust-section {
+      background: linear-gradient(135deg, #fff7ed 0%, #fffbf5 100%);
+      border-top: 1px solid #fed7aa;
+      border-bottom: 1px solid #fed7aa;
+    }
+    .trust-flex {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+    @media (max-width: 800px) { .trust-flex { grid-template-columns: 1fr; gap: 24px; } }
+    .trust-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 12px;
+      background: rgba(217,119,6,0.10);
+      color: #c2410c;
+      border-radius: var(--r-full);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+    .trust-flex h2 {
+      font-size: clamp(26px, 3.6vw, 38px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .trust-flex .trust-lead { color: var(--body-text); margin-bottom: 22px; line-height: 1.65; }
+    .trust-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-amber {
+      background: #c2410c; color: #fff;
+      border: none; padding: 12px 20px;
+      border-radius: var(--r-sm);
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-amber:hover { background: #9a3412; }
+    .btn-amber-outline {
+      background: transparent; color: #c2410c;
+      border: 1.5px solid #c2410c; padding: 12px 20px;
+      border-radius: var(--r-sm);
+      font-weight: 600; font-size: 14px;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background 0.15s;
+    }
+    .btn-amber-outline:hover { background: rgba(217,119,6,0.06); }
+
+    .trust-stats {
+      background: #fff;
+      border: 1px solid #fed7aa;
+      border-radius: var(--r-md);
+      padding: 26px 28px;
+    }
+    .trust-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #fff1e0; }
+    .trust-stat-row:last-child { border-bottom: none; }
+    .trust-stat-row .label { font-size: 13px; color: var(--body-text); }
+    .trust-stat-row .num   { font-size: 18px; font-weight: 800; color: #c2410c; }
+
+    /* ────────────────────────────────────────
+       COMMUNITY / FORUM — live stats
+    ──────────────────────────────────────── */
+    .comm-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+    @media (max-width: 900px) { .comm-grid { grid-template-columns: 1fr; } }
+
+    .comm-card {
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r-md);
+      padding: 36px 36px 32px;
+      position: relative; overflow: hidden;
+    }
+    .comm-card::before {
+      content: ""; position: absolute; right: -80px; top: -80px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,56,92,0.30), transparent 70%);
+      filter: blur(20px);
+    }
+    .comm-card > * { position: relative; z-index: 1; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 12px;
+      background: rgba(255,56,92,0.18);
+      color: #ffb6c4;
+      border-radius: var(--r-full);
+      font-size: 12px; font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .live-badge .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #ff385c;
+      box-shadow: 0 0 0 0 rgba(255,56,92,0.7);
+      animation: live-pulse 2s ease-out infinite;
+    }
+    @keyframes live-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,56,92,0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(255,56,92,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,56,92,0); }
+    }
+
+    .comm-card h2 {
+      color: #fff;
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
       margin-bottom: 12px;
+      line-height: 1.2;
     }
-    .step-item h4 { margin-bottom: 8px; }
-    .step-item p  { font-size: 14px; color: var(--body-text); }
-    .highlight-band {
-      background: linear-gradient(135deg, #fff5f7 0%, #fff 60%);
-      border-top: 1px solid var(--hairline);
-      border-bottom: 1px solid var(--hairline);
+    .comm-card p { color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 24px; }
+
+    .live-stats { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; }
+    .live-stat .n { font-size: 30px; font-weight: 800; color: #fff; line-height: 1; }
+    .live-stat .l { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    .comm-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-on-dark-primary {
+      background: var(--rausch); color: #fff; border: none;
+      padding: 12px 20px; border-radius: var(--r-sm);
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      text-decoration: none;
     }
-    @media (max-width: 768px) {
-      .steps-grid { grid-template-columns: 1fr; }
-      .step-item  { border-right: none; border-bottom: 1px solid var(--hairline); }
-      .step-item:last-child { border-bottom: none; }
+    .btn-on-dark-primary:hover { background: #e21d4d; }
+    .btn-on-dark-ghost {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 12px 20px; border-radius: var(--r-sm);
+      font-weight: 600; font-size: 14px; text-decoration: none;
+    }
+    .btn-on-dark-ghost:hover { background: rgba(255,255,255,0.14); }
+
+    .recent-threads {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 8px;
+      display: flex; flex-direction: column;
+    }
+    .recent-threads-header {
+      padding: 12px 18px 10px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+    }
+    .recent-thread {
+      padding: 12px 16px;
+      border-radius: var(--r-sm);
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      gap: 4px;
+      transition: background 0.12s;
+    }
+    .recent-thread:hover { background: var(--surface); }
+    .recent-thread .rt-title { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+    .recent-thread .rt-meta { font-size: 11px; color: var(--muted); }
+    .recent-thread .rt-meta .cat { color: #0066cc; font-weight: 600; }
+
+    /* ────────────────────────────────────────
+       FAQ — preserved at bottom (lighter prominence)
+    ──────────────────────────────────────── */
+    .home-faq {
+      background: var(--surface);
+      padding: 64px 0;
+    }
+    .home-faq h2 { font-size: 24px; margin-bottom: 6px; }
+    .home-faq .lead { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+    /* Sections */
+    .h-section { padding: clamp(56px, 8vw, 96px) 0; }
+    .h-section .section-head { margin-bottom: 32px; }
+    .h-section h2 {
+      font-size: clamp(26px, 3.6vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .h-section .section-sub { color: var(--muted); font-size: 14px; max-width: 600px; line-height: 1.6; }
+    .section-eyebrow-h {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--rausch);
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- NAV (sticky via CSS) -->
 <nav class="site-nav" id="site-nav">
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo">
@@ -78,219 +504,396 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <img
-    class="hero-img"
-    src="https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=1600&q=80"
-    alt="Tbilisi skyline"
-    loading="eager"
-  />
+<!-- ════════════════════════════════════════════════════════════
+     1. HERO
+════════════════════════════════════════════════════════════ -->
+<section class="hero-v2">
   <div class="container">
-    <div class="hero-content">
-      <span class="hero-eyebrow">Brussels · Antwerp · Ghent · Liège</span>
-      <h1>
-        <span class="en">Your Georgian community in Belgium</span>
-        <span class="ka">თქვენი ქართული საზოგადოება ბელგიაში</span>
-      </h1>
-      <p class="hero-lead" data-lang-block="en">
-        Find trusted Georgian service providers, connect with fellow expatriates, and navigate life in Belgium with confidence.
-      </p>
-      <p class="hero-lead" data-lang-block="ka" style="font-family:var(--font-georgian)">
-        იპოვეთ სანდო ქართული სერვის-მომწოდებლები, დაუკავშირდით თანამემამულეებს და თამამად იცხოვრეთ ბელგიაში.
-      </p>
-      <div class="hero-actions">
-        <a href="services.html" class="btn btn-primary">Browse services</a>
-        <a href="about.html" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.5)">About us</a>
+    <span class="hero-v2-eyebrow"><span class="dot"></span><span data-lang-block="en">Made by Georgians, for Georgians in Belgium</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">ქართველებისთვის ბელგიაში</span></span>
+
+    <h1>
+      <span data-lang-block="en">Living in Belgium, <span class="accent">made simpler.</span></span>
+      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ცხოვრება ბელგიაში, <span class="accent">გამარტივებულია.</span></span>
+    </h1>
+
+    <p class="lead" data-lang-block="en">
+      Trusted services, jobs, housing, step-by-step checklists and a community forum — everything a Georgian needs to land softly and live well in Belgium.
+    </p>
+    <p class="lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">
+      სანდო სერვისები, სამუშაო, საცხოვრებელი, ნაბიჯ-ნაბიჯ სახელმძღვანელო და საზოგადოების ფორუმი — ყველაფერი, რაც ქართველს ბელგიაში სჭირდება.
+    </p>
+
+    <div class="hero-actions-v2">
+      <a href="services.html" class="btn btn-primary">
+        <span data-lang-block="en">Browse services</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სერვისების ნახვა</span>
+      </a>
+      <a href="checklists.html" class="btn btn-outline-v2">
+        <span data-lang-block="en">Start a checklist</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჩამონათვალის დაწყება</span>
+      </a>
+    </div>
+
+    <form class="hero-search" id="hero-search-form" role="search" onsubmit="return doHeroSearch(event)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="hero-search" type="search" placeholder="Search services, jobs, housing…" autocomplete="off" />
+      <button type="submit">
+        <span data-lang-block="en">Search</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ძებნა</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     2. BENTO GRID — core navigation
+════════════════════════════════════════════════════════════ -->
+<section class="h-section" style="padding-top: clamp(40px, 6vw, 64px)">
+  <div class="container">
+    <div class="bento">
+
+      <a href="services.html" class="bento-card tone-rausch">
+        <div class="bento-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Services</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სერვისები</span>
+        </h3>
+        <p data-lang-block="en">80+ trusted Georgian professionals — translators, lawyers, doctors, tutors.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">80+ სანდო პროფესიონალი — თარჯიმნები, იურისტები, ექიმები, მასწავლებლები.</p>
+        <span class="arrow">Browse →</span>
+      </a>
+
+      <a href="checklists.html" class="bento-card tone-blue">
+        <div class="bento-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/><polyline points="20 12 13 19 11 17" opacity="0.4"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Checklists</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჩამონათვალები</span>
+        </h3>
+        <p data-lang-block="en">Step-by-step guides for arrival, jobs and starting a business.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ნაბიჯ-ნაბიჯ სახელმძღვანელო ჩამოსვლისთვის, სამუშაოსთვის და ბიზნესისთვის.</p>
+        <span class="arrow">Open →</span>
+      </a>
+
+      <a href="scams.html" class="bento-card tone-amber">
+        <div class="bento-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Avoid scams</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თაღლითობის თავიდან აცილება</span>
+        </h3>
+        <p data-lang-block="en">8 common patterns targeting newcomers — and how to spot them.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">8 გავრცელებული თაღლითური სქემა — და როგორ ვიცნოთ ისინი.</p>
+        <span class="arrow">Read →</span>
+      </a>
+
+      <a href="forum.html" class="bento-card tone-green">
+        <div class="bento-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <h3>
+          <span data-lang-block="en">Forum</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ფორუმი</span>
+        </h3>
+        <p data-lang-block="en">Ask the community. Get answers from people who've been there.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჰკითხეთ საზოგადოებას. მიიღეთ პასუხი მათგან, ვინც გაიარა.</p>
+        <span class="arrow">Join →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     3. JOURNEY PREVIEW — 3 checklists with progress bars
+════════════════════════════════════════════════════════════ -->
+<section class="h-section" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow-h">
+        <span data-lang-block="en">Your journey</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თქვენი გზა</span>
+      </span>
+      <h2>
+        <span data-lang-block="en">Get things done, one step at a time</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საქმე გავაკეთოთ ნაბიჯ-ნაბიჯ</span>
+      </h2>
+      <p class="section-sub" data-lang-block="en">Pick a checklist and tick off each step. Progress saves locally — no account needed.</p>
+      <p class="section-sub" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">აირჩიეთ ჩამონათვალი და მონიშნეთ ნაბიჯები. პროგრესი ლოკალურად ინახება.</p>
+    </div>
+
+    <div class="journey-grid">
+      <a href="checklists.html#arrived" class="journey-card" data-cl="arrived">
+        <span class="step-pill">
+          <span data-lang-block="en">First 30 days</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პირველი 30 დღე</span>
+        </span>
+        <h3>
+          <span data-lang-block="en">Just arrived</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ახლად ჩამოსული</span>
+        </h3>
+        <p data-lang-block="en">Commune registration, eID, banking, mutuelle, mobile contract.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">კომუნაში რეგისტრაცია, eID, ბანკი, mutuelle, მობილური.</p>
+        <div class="progress-graphic">
+          <div class="label"><span><span data-lang-block="en">Progress</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პროგრესი</span></span> <span class="pct" data-pct>0%</span></div>
+          <div class="bar"><div class="fill" data-fill style="width:0%"></div></div>
+        </div>
+      </a>
+
+      <a href="checklists.html#job" class="journey-card" data-cl="job">
+        <span class="step-pill">
+          <span data-lang-block="en">Looking for work</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სამუშაოს ძებნა</span>
+        </span>
+        <h3>
+          <span data-lang-block="en">Find a job</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სამუშაოს პოვნა</span>
+        </h3>
+        <p data-lang-block="en">CV in EU format, recognise Georgian diplomas, VDAB / Actiris / Forem.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">EU CV, ქართული დიპლომის აღიარება, VDAB / Actiris / Forem.</p>
+        <div class="progress-graphic">
+          <div class="label"><span><span data-lang-block="en">Progress</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პროგრესი</span></span> <span class="pct" data-pct>0%</span></div>
+          <div class="bar"><div class="fill" data-fill style="width:0%"></div></div>
+        </div>
+      </a>
+
+      <a href="checklists.html#business" class="journey-card" data-cl="business">
+        <span class="step-pill">
+          <span data-lang-block="en">Self-employed</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თვითდასაქმებული</span>
+        </span>
+        <h3>
+          <span data-lang-block="en">Open a business</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ბიზნესის გახსნა</span>
+        </h3>
+        <p data-lang-block="en">Guichet d'entreprises, BCE/KBO, social fund, accountant, VAT.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">Guichet d'entreprises, BCE/KBO, ბუღალტერი, VAT.</p>
+        <div class="progress-graphic">
+          <div class="label"><span><span data-lang-block="en">Progress</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პროგრესი</span></span> <span class="pct" data-pct>0%</span></div>
+          <div class="bar"><div class="fill" data-fill style="width:0%"></div></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     4. SERVICE SPOTLIGHT
+════════════════════════════════════════════════════════════ -->
+<section class="h-section">
+  <div class="container">
+    <div class="section-head" style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <span class="section-eyebrow-h">
+          <span data-lang-block="en">Featured</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">გამორჩეული</span>
+        </span>
+        <h2>
+          <span data-lang-block="en">Top-rated services this week</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ამ კვირის საუკეთესო სერვისები</span>
+        </h2>
+      </div>
+      <a href="services.html" class="btn btn-ghost btn-sm">
+        <span data-lang-block="en">See all 80+ →</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყველას ნახვა →</span>
+      </a>
+    </div>
+
+    <div class="spotlight-grid" id="spotlight-grid">
+      <div class="spot-card" style="opacity:0.5">
+        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
+        <p style="height:60px"></p>
+      </div>
+      <div class="spot-card" style="opacity:0.5">
+        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
+        <p style="height:60px"></p>
+      </div>
+      <div class="spot-card" style="opacity:0.5">
+        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
+        <p style="height:60px"></p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
+<!-- ════════════════════════════════════════════════════════════
+     5. TRUST & SAFETY
+════════════════════════════════════════════════════════════ -->
+<section class="trust-section h-section">
   <div class="container">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-num">1,200+</div>
-        <div class="stat-label">
-          <span class="en">Community members</span>
-          <span class="ka">საზოგადოების წევრი</span>
+    <div class="trust-flex">
+      <div>
+        <span class="trust-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span data-lang-block="en">Stay safe</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">დაიცავი თავი</span>
+        </span>
+        <h2>
+          <span data-lang-block="en">Newcomers are the #1 target. We help you spot the patterns.</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ახლადჩამოსულები — №1 სამიზნე. ვიცნოთ ნიმუშები.</span>
+        </h2>
+        <p class="trust-lead" data-lang-block="en">
+          Apartment deposits before viewing, "cousin who'll bring you the keys", fake job offers — the same scams repeat every year. Read the patterns, share warnings, and report what you see.
+        </p>
+        <p class="trust-lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">
+          ბინის წინასწარი ანაბარი ჩვენების გარეშე, ყალბი სამუშაო შეთავაზებები — იგივე სქემები ყოველწლიურად მეორდება.
+        </p>
+        <div class="trust-actions">
+          <a href="scams.html" class="btn-amber">
+            <span data-lang-block="en">Read warnings</span>
+            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">გაფრთხილებების ნახვა</span>
+          </a>
+          <a href="scams.html#report" class="btn-amber-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+            <span data-lang-block="en">Report a scam</span>
+            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">შეტყობინება</span>
+          </a>
         </div>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">80+</div>
-        <div class="stat-label">
-          <span class="en">Listed services</span>
-          <span class="ka">სერვისი</span>
+
+      <div class="trust-stats">
+        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Apartment deposit scams</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ბინის ანაბრის თაღლითობა</span></span><span class="num">#1</span></div>
+        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Fake job offers</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყალბი ვაკანსიები</span></span><span class="num">#2</span></div>
+        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">"Help with paperwork" fees</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">"საბუთების დახმარების" თანხა</span></span><span class="num">#3</span></div>
+        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Police emergency</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პოლიცია</span></span><a href="tel:101" class="num" style="text-decoration:none">101</a></div>
+        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Scam helpline</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თაღლითობის ცხელი ხაზი</span></span><a href="tel:080012033" class="num" style="text-decoration:none">0800 120 33</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     6. COMMUNITY / FORUM — live stats
+════════════════════════════════════════════════════════════ -->
+<section class="h-section">
+  <div class="container">
+    <div class="comm-grid">
+      <div class="comm-card">
+        <span class="live-badge"><span class="live-dot"></span><span id="live-text">Live</span></span>
+        <h2>
+          <span data-lang-block="en">The community is talking right now</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საზოგადოება ახლა ლაპარაკობს</span>
+        </h2>
+        <p data-lang-block="en">Real questions, real answers, from Georgians who already navigated what you're going through. Anonymous posting available.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">რეალური კითხვები — ქართველებისგან, ვინც უკვე გაიარა ის, რასაც თქვენ გადიხართ.</p>
+
+        <div class="live-stats">
+          <div class="live-stat"><div class="n" id="stat-threads">—</div><div class="l"><span data-lang-block="en">Threads</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თემა</span></div></div>
+          <div class="live-stat"><div class="n" id="stat-replies">—</div><div class="l"><span data-lang-block="en">Replies</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პასუხი</span></div></div>
+          <div class="live-stat"><div class="n" id="stat-week">—</div><div class="l"><span data-lang-block="en">This week</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ამ კვირას</span></div></div>
+        </div>
+
+        <div class="comm-actions">
+          <a href="forum.html?new=1" class="btn-on-dark-primary">
+            <span data-lang-block="en">Ask the community</span>
+            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჰკითხე საზოგადოებას</span>
+          </a>
+          <a href="forum.html" class="btn-on-dark-ghost">
+            <span data-lang-block="en">Browse threads</span>
+            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თემების ნახვა</span>
+          </a>
         </div>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">5</div>
-        <div class="stat-label">
-          <span class="en">Belgian cities covered</span>
-          <span class="ka">ქალაქი</span>
+
+      <div class="recent-threads">
+        <div class="recent-threads-header">
+          <span data-lang-block="en">Recent activity</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ახალი აქტივობა</span>
         </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">2019</div>
-        <div class="stat-label">
-          <span class="en">Founded</span>
-          <span class="ka">დაარსდა</span>
+        <div id="recent-threads-list">
+          <div class="recent-thread"><div class="rt-title" style="color:var(--muted)">Loading…</div></div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- FAQ -->
-<section class="section faq-section" id="faq">
+<!-- ════════════════════════════════════════════════════════════
+     7. FAQ — preserved at bottom
+════════════════════════════════════════════════════════════ -->
+<section class="home-faq" id="faq">
   <div class="container">
-    <div class="section-heading">
-      <p class="section-eyebrow"><span class="en">Important info</span><span class="ka">საჭირო ინფორმაცია</span></p>
-      <h2>
-        <span data-lang-block="en">Important Information For Immigrants</span>
-        <span data-lang-block="ka" class="ka">ემიგრანტებისთვის საჭირო ინფორმაცია</span>
-      </h2>
-      <p class="faq-lead" data-lang-block="en">Everything you need to know about living in Belgium as a Georgian citizen.</p>
-      <p class="faq-lead" data-lang-block="ka" style="font-family:var(--font-georgian)">ყველაფერი, რაც გჭირდებათ ბელგიაში ქართველ მოქალაქედ ცხოვრების შესახებ.</p>
-    </div>
+    <span class="section-eyebrow-h"><span data-lang-block="en">Common questions</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საერთო კითხვები</span></span>
+    <h2>
+      <span data-lang-block="en">Living in Belgium — quick answers</span>
+      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ცხოვრება ბელგიაში — სწრაფი პასუხები</span>
+    </h2>
+    <p class="lead" data-lang-block="en">The questions newcomers ask most — visas, communes, healthcare, schools, driving licences.</p>
+    <p class="lead" data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">კითხვები, რომელსაც ახლადჩამოსულები ხშირად სვამენ.</p>
 
     <div class="faq-list" style="max-width:780px">
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">Do I need a visa to live and work in Belgium?</span>
-            <span class="ka">მჭირდება ვიზა ბელგიაში საცხოვრებლად და სამუშაოდ?</span>
-          </span>
+          <span class="faq-question-text"><span class="en">Do I need a visa to live and work in Belgium?</span><span class="ka">მჭირდება ვიზა?</span></span>
           <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-answer">
-          <span class="en">Georgian citizens can enter the Schengen Area (including Belgium) visa-free for up to 90 days in any 180-day period. For longer stays or work, you must apply for a long-stay D visa at the Belgian Embassy in Tbilisi before travelling. Once in Belgium, you register at your local commune within 8 days of arrival.</span>
-          <span class="ka">ქართველ მოქალაქეებს შეუძლიათ შევიდნენ შენგენის ზონაში (მათ შორის ბელგიაში) ვიზის გარეშე — 180 დღეში 90 დღემდე. გრძელვადიანი ყოფნის ან სამუშაო ნებართვისთვის საჭიროა D ვიზის მოთხოვნა ბელგიის საელჩოში თბილისში, ჩამოსვლამდე. ბელგიაში ჩამოსვლის შემდეგ 8 დღის განმავლობაში უნდა დარეგისტრირდეთ ადგილობრივ კომუნაში.</span>
+          <span class="en">Georgian citizens can enter Schengen visa-free for 90 days in 180. For longer stays or work, apply for a long-stay D visa at the Belgian embassy in Tbilisi before travelling. Once in Belgium, register at your local commune within 8 days.</span>
+          <span class="ka">ქართველი მოქალაქეები შენგენში ვიზის გარეშე შედიან 180 დღეში 90 დღემდე. გრძელვადიანი ყოფნისთვის საჭიროა D ვიზა.</span>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">How do I register at my commune?</span>
-            <span class="ka">როგორ დავრეგისტრირდე კომუნაში?</span>
-          </span>
+          <span class="faq-question-text"><span class="en">How do I register at my commune?</span><span class="ka">როგორ დავრეგისტრირდე კომუნაში?</span></span>
           <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-answer">
-          <span class="en">Visit your local commune (gemeentehuis / maison communale) within 8 days of arriving. Bring your passport, valid visa or residence permit, proof of address (rental contract or host declaration), and passport photos. The commune will issue a "Annex 3" certificate and schedule a home visit from local police to verify your address before issuing a residence card.</span>
-          <span class="ka">ჩამოსვლიდან 8 დღის განმავლობაში ეწვიეთ ადგილობრივ კომუნას. წაიღეთ პასპორტი, ვიზა/ბინადრობის ნებართვა, საცხოვრებლის დამადასტურებელი დოკუმენტი და ფოტო. კომუნა გასცემს "Annex 3"-ს და მოაწყობს პოლიციის ვიზიტს მისამართის შესამოწმებლად.</span>
+          <span class="en">Within 8 days of arrival, go to your commune (gemeentehuis / maison communale) with passport, rental contract, and passport photos. They issue an Annex 3 temporary certificate. After a police home visit, you'll receive your eID.</span>
+          <span class="ka">8 დღის განმავლობაში მიდით კომუნაში პასპორტით, ქირის ხელშეკრულებით და ფოტოებით.</span>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">Can I use my Georgian driving licence in Belgium?</span>
-            <span class="ka">შემიძლია ბელგიაში ქართული მართვის მოწმობის გამოყენება?</span>
-          </span>
+          <span class="faq-question-text"><span class="en">How does Belgian healthcare work?</span><span class="ka">როგორ მუშაობს ჯანდაცვა?</span></span>
           <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-answer">
-          <span class="en">Georgian driving licences are not automatically recognised in Belgium. You may drive with your Georgian licence for the first year of residence, but you will need to exchange it for a Belgian one. This requires an official translation and sometimes a theory or practical test depending on the canton. Contact a local Georgian translator listed on our services page to help with the paperwork.</span>
-          <span class="ka">ქართული მართვის მოწმობა ბელგიაში ავტომატურად არ აღიარება. პირველი წლის განმავლობაში შეგიძლიათ ქართული მოწმობით მართვა, შემდეგ კი საჭიროა ბელგიურ მოწმობაზე გადასვლა. ეს მოითხოვს ოფიციალურ თარგმანს და ზოგჯერ გამოცდას.</span>
+          <span class="en">Health coverage is mandatory. Join a mutuelle (sickness fund) — the most popular are Mutualité Chrétienne, Solidaris, and Partenamut. You pay around €8–€15/month and they reimburse most of your medical costs.</span>
+          <span class="ka">ჯანდაცვის დაზღვევა სავალდებულოა. გაწევრიანდით mutuelle-ში.</span>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">How do I access healthcare in Belgium?</span>
-            <span class="ka">როგორ მივიღო ჯანდაცვის მომსახურება ბელგიაში?</span>
-          </span>
+          <span class="faq-question-text"><span class="en">Can I exchange my Georgian driving licence?</span><span class="ka">შემიძლია შევცვალო ქართული მართვის მოწმობა?</span></span>
           <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-answer">
-          <span class="en">Once you are registered at your commune and have a residence permit, you must register with a Belgian health insurance fund (mutualité / ziekenfonds). The main ones are CM, Mutualité Neutre, and FSMB. After affiliating, you receive a SIS card (now e-ID based) and can visit a GP (huisarts / médecin généraliste). Belgium operates a GP-first system: you generally need a referral to see a specialist.</span>
-          <span class="ka">კომუნაში რეგისტრაციის შემდეგ უნდა დარეგისტრირდეთ სავალდებულო ჯანმრთელობის სადაზღვევო ფონდში (mutualité). მთავარი ფონდებია CM, Mutualité Neutre. ამის შემდეგ შეგიძლიათ მიმართოთ ოჯახის ექიმს.</span>
+          <span class="en">Yes — Georgia has a driving licence agreement with Belgium. Within 6 months of arrival, take your Georgian licence + translation to your commune. They issue a Belgian one without a re-test.</span>
+          <span class="ka">დიახ. 6 თვის განმავლობაში მიგქონდეთ ქართული მოწმობა და თარგმანი კომუნაში.</span>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">Where can I find Georgian food in Belgium?</span>
-            <span class="ka">სად შევიძინო ქართული საკვები ბელგიაში?</span>
-          </span>
+          <span class="faq-question-text"><span class="en">How do I find Georgian-speaking doctors / lawyers?</span><span class="ka">სად ვიპოვო ქართულენოვანი ექიმი ან იურისტი?</span></span>
           <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="faq-answer">
-          <span class="en">Several Georgian and Eastern European grocery shops operate in Brussels, Antwerp, and Ghent. Check our services directory for up-to-date listings. Additionally, some community members offer home-delivery of Georgian products. Georgian restaurants have also opened in Brussels — see the Food &amp; Dining category on our services page.</span>
-          <span class="ka">ბრიუსელში, ანტვერპენსა და გენტში რამდენიმე ქართული და აღმოსავლეთ ევროპული საკვების მაღაზია მუშაობს. სრული სია იხილეთ ჩვენს სერვისების კატალოგში.</span>
+          <span class="en">Browse our <a href="services.html" style="color:var(--rausch);font-weight:600">services directory</a> — 80+ Georgian professionals listed across translation, legal, medical, tutoring, and more.</span>
+          <span class="ka">დაათვალიერეთ ჩვენი <a href="services.html" style="color:var(--rausch);font-weight:600">სერვისების კატალოგი</a>.</span>
         </div>
       </div>
 
-      <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">How do I enrol my children in school?</span>
-            <span class="ka">როგორ ჩავაწერო შვილი სკოლაში?</span>
-          </span>
-          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <span class="en">School enrolment in Belgium is managed by region. In Brussels, contact the Central Enrolment Service (Service d'Inscription); in Flanders, use the Inschrijven service online. Children have a right to education from age 2.5. Public schools are free and bilingual options exist. Community members on our platform can assist with translation during enrolment.</span>
-          <span class="ka">სკოლებში ჩარიცხვა ბელგიაში რეგიონების მიხედვით მართავს. ბრიუსელში დაუკავშირდით Central Enrolment Service-ს; ფლანდრიაში — Inschrijven ონლაინ სერვისს. სკოლა 2.5 წლიდანაა ხელმისაწვდომი.</span>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">Do I need to learn Dutch or French?</span>
-            <span class="ka">საჭიროა ნიდერლანდური ან ფრანგული ენის სწავლა?</span>
-          </span>
-          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <span class="en">It depends on where you live. Brussels is officially bilingual (French and Dutch), Flanders primarily Dutch, and Wallonia primarily French. For most administrative tasks, French or Dutch is required. Free language courses are available through VDAB (Flanders), Le Forem (Wallonia), and Actiris (Brussels). Several Georgian community members on geosin.be offer private language tutoring.</span>
-          <span class="ka">ეს დამოკიდებულია საცხოვრებელ ადგილზე. ბრიუსელი ოფიციალურად ორენოვანია, ფლანდრია — ნიდერლანდურენოვანი, ვალონია — ფრანგულენოვანი. უფასო ენის კურსები ხელმისაწვდომია VDAB, Le Forem და Actiris-ის მეშვეობით.</span>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
-          <span class="faq-question-text">
-            <span class="en">How can I send money back to Georgia from Belgium?</span>
-            <span class="ka">როგორ გადავგზავნო ფული საქართველოში ბელგიიდან?</span>
-          </span>
-          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="faq-answer">
-          <span class="en">Popular options include Wise (formerly TransferWise), Remitly, and Western Union — all available online. For larger transfers, your Belgian bank's international wire service may be cost-effective. Check current exchange rates before transferring. Some community members have also used informal peer-to-peer transfer networks, but these carry risks.</span>
-          <span class="ka">პოპულარული ვარიანტებია Wise, Remitly და Western Union — ყველა ონლაინ ხელმისაწვდომია. უფრო დიდი თანხებისთვის ბელგიური ბანკის საერთაშორისო გადარიცხვა შეიძლება ეფექტური იყოს.</span>
-        </div>
-      </div>
-
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <a href="about.html" class="btn btn-ghost btn-sm">
+        <span data-lang-block="en">More questions? Read about us →</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">მეტი კითხვა? ნახეთ ჩვენ შესახებ →</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- CTA STRIP -->
-<div class="cta-strip">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
-    <div>
-      <h2 data-lang-block="en">Are you a Georgian professional in Belgium?</h2>
-      <h2 data-lang-block="ka" class="ka">ხართ ქართველი პროფესიონალი ბელგიაში?</h2>
-      <p data-lang-block="en">List your service for free and connect with the community.</p>
-      <p data-lang-block="ka" class="ka" style="margin-top:4px">დაარეგისტრირეთ სერვისი უფასოდ და დაუკავშირდით საზოგადოებას.</p>
-    </div>
-    <a href="services.html#register" class="btn btn-primary" style="flex-shrink:0">
-      <span data-lang-block="en">List a service</span>
-      <span data-lang-block="ka" class="ka">სერვისის დამატება</span>
-    </a>
-  </div>
-</div>
-
-<!-- FOOTER -->
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
@@ -299,52 +902,56 @@
           <div class="nav-logo-mark">G</div>
           <span class="nav-logo-text">geosin<span>.be</span></span>
         </a>
-        <p>A community hub for Georgians living in Belgium. Run by volunteers, free for everyone.</p>
-        <p class="ka" style="font-family:var(--font-georgian);color:rgba(255,255,255,0.35);font-size:12px;margin-top:6px">ბელგიაში მცხოვრები ქართველების საზოგადოება</p>
+        <p>
+          <span data-lang-block="en">A practical hub for Georgians in Belgium. Free for everyone, run by volunteers.</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პრაქტიკული ცენტრი ქართველებისთვის ბელგიაში.</span>
+        </p>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <a href="https://www.facebook.com/groups/georgiansinbelgium" target="_blank" rel="noopener" aria-label="Facebook" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.5 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="mailto:hello@geosin.be" aria-label="Email" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>
+        </div>
       </div>
       <div class="footer-col">
         <h5>Site</h5>
         <ul>
-          <li><a href="index.html">Home</a></li>
           <li><a href="services.html">Services</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="jobs.html">Jobs</a></li>
+          <li><a href="housing.html">Housing</a></li>
           <li><a href="forum.html">Forum</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Services</h5>
+        <h5>Resources</h5>
         <ul>
-          <li><a href="services.html">Browse all</a></li>
-          <li><a href="services.html#register">List a service</a></li>
-          <li><a href="services.html?cat=legal">Legal help</a></li>
-          <li><a href="services.html?cat=translation">Translation</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Community</h5>
-        <ul>
-          <li><a href="about.html">About us</a></li>
-          <li><a href="forum.html">Forum</a></li>
-          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="checklists.html">Checklists</a></li>
+          <li><a href="scams.html">Avoid Scams</a></li>
           <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Account</h5>
+        <ul>
+          <li><a href="signup.html">Sign up</a></li>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="account.html">My account</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span>&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span>
-      <span style="display:flex;gap:16px">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="mailto:hello@geosin.be">hello@geosin.be</a>
-      </span>
+      <span style="display:flex;gap:16px"><a href="#">Privacy</a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
 </footer>
 
-<div class="toast" id="toast"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
+<script src="auth.js?v=2"></script>
 <script>
   /* ── Language toggle ── */
   function setLang(lang) {
@@ -353,27 +960,149 @@
     document.querySelectorAll('[data-lang-block]').forEach(el => {
       el.style.display = el.dataset.langBlock === lang ? '' : 'none';
     });
+    document.querySelectorAll('.en').forEach(el => { el.style.display = lang === 'en' ? '' : 'none'; });
+    document.querySelectorAll('.ka').forEach(el => { el.style.display = lang === 'ka' ? '' : 'none'; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  setLang(localStorage.getItem('geosin-lang') || 'en');
 
   /* ── FAQ accordion ── */
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
+    item.classList.toggle('open');
   }
 
-  /* ── Mobile nav ── */
-  function toggleMobileNav() {
-    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+  /* ── Hero search → routes to most relevant page ── */
+  function doHeroSearch(e) {
+    e.preventDefault();
+    const q = (document.getElementById('hero-search').value || '').trim();
+    if (!q) return false;
+    const lower = q.toLowerCase();
+    // Simple intent routing
+    if (/(job|work|hire|cv|vacancy|სამუშაო|ვაკანსია)/i.test(lower)) {
+      location.href = 'jobs.html?q=' + encodeURIComponent(q);
+    } else if (/(rent|room|apartment|flat|house|housing|ბინა|ოთახი)/i.test(lower)) {
+      location.href = 'housing.html?q=' + encodeURIComponent(q);
+    } else if (/(scam|fraud|თაღლითი)/i.test(lower)) {
+      location.href = 'scams.html';
+    } else if (/(forum|question|ask|ფორუმი|კითხვა)/i.test(lower)) {
+      location.href = 'forum.html';
+    } else {
+      location.href = 'services.html?q=' + encodeURIComponent(q);
+    }
+    return false;
   }
 
-  /* ── Init ── */
-  (function() {
-    const lang = localStorage.getItem('geosin-lang') || 'en';
-    setLang(lang);
-  })();
+  /* ── Journey progress (read from same localStorage keys checklists.html uses) ── */
+  function updateJourneyProgress() {
+    document.querySelectorAll('.journey-card[data-cl]').forEach(card => {
+      const cl = card.dataset.cl;
+      // checklists.html stores keys like cl-arrived-1, cl-arrived-2... in localStorage
+      // We try counts from 1..30; total checkbox count varies — so we sum done / max-known
+      let done = 0, total = 0;
+      // Read all keys that match prefix
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('cl-' + cl + '-')) {
+          total++;
+          if (localStorage.getItem(k) === 'true') done++;
+        }
+      }
+      // If we haven't seen the user touch it yet, leave at 0
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      card.querySelector('[data-pct]').textContent = pct + '%';
+      card.querySelector('[data-fill]').style.width = pct + '%';
+    });
+  }
+  updateJourneyProgress();
+
+  /* ── Service spotlight (top 3 by rating) ── */
+  async function loadSpotlight() {
+    if (!window.sb) return;
+    const { data, error } = await window.sb
+      .from('services')
+      .select('*')
+      .eq('approved', true)
+      .order('rating', { ascending: false, nullsFirst: false })
+      .limit(3);
+    if (error || !data) return;
+
+    const grid = document.getElementById('spotlight-grid');
+    if (!data.length) {
+      grid.innerHTML = '<div class="spot-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No services listed yet — <a href="services.html#register" style="color:var(--rausch)">be the first to add yours</a>.</div>';
+      return;
+    }
+
+    function escapeHtml(s) { return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]); }
+    function renderRating(r) {
+      if (r == null) return '<span class="spot-tag" style="background:#fff0f3;color:var(--rausch)">New</span>';
+      const stars = Math.round(r);
+      let s = '';
+      for (let i = 0; i < 5; i++) s += `<span class="star" style="color:${i < stars ? '#ffc107' : '#e0e0e0'}">★</span>`;
+      return `<span class="spot-rating">${s}<span class="num">${Number(r).toFixed(1)}</span></span>`;
+    }
+
+    grid.innerHTML = data.map(s => {
+      const href = s.website || (s.email ? 'mailto:' + s.email : 'services.html');
+      return `
+        <a href="${escapeHtml(href)}" class="spot-card" target="${s.website ? '_blank' : '_self'}" rel="noopener">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px">
+            <h4>${escapeHtml(s.name)}</h4>
+            ${renderRating(s.rating)}
+          </div>
+          <div class="city">${escapeHtml(s.city || '')}${s.city && s.region ? ' · ' : ''}${escapeHtml(s.region || '')}</div>
+          <p>${escapeHtml((s.description || '').slice(0, 140))}${(s.description || '').length > 140 ? '…' : ''}</p>
+          <div class="spot-tags">
+            ${s.category ? `<span class="spot-tag cat">#${escapeHtml(s.category)}</span>` : ''}
+            ${s.languages ? `<span class="spot-tag">${escapeHtml(s.languages)}</span>` : ''}
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+  loadSpotlight();
+
+  /* ── Forum live stats + recent threads ── */
+  async function loadForumStats() {
+    if (!window.sb) return;
+    const sb = window.sb;
+    const oneWeekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+
+    const [threadsRes, repliesRes, weekRes, recentRes] = await Promise.all([
+      sb.from('forum_threads').select('id', { count: 'exact', head: true }).eq('approved', true),
+      sb.from('forum_replies').select('id', { count: 'exact', head: true }).eq('approved', true),
+      sb.from('forum_threads').select('id', { count: 'exact', head: true }).eq('approved', true).gte('created_at', oneWeekAgo),
+      sb.from('forum_threads').select('id, title, category, created_at, author_name').eq('approved', true).order('created_at', { ascending: false }).limit(5)
+    ]);
+
+    document.getElementById('stat-threads').textContent = threadsRes.count ?? 0;
+    document.getElementById('stat-replies').textContent = repliesRes.count ?? 0;
+    document.getElementById('stat-week').textContent   = weekRes.count ?? 0;
+
+    const list = document.getElementById('recent-threads-list');
+    if (recentRes.error || !recentRes.data || recentRes.data.length === 0) {
+      list.innerHTML = '<div class="recent-thread"><div class="rt-title" style="color:var(--muted)">No threads yet — <a href="forum.html?new=1" style="color:var(--rausch)">be the first</a>.</div></div>';
+      return;
+    }
+    function timeAgo(iso) {
+      const s = (Date.now() - new Date(iso).getTime()) / 1000;
+      if (s < 60) return 'just now';
+      if (s < 3600) return Math.floor(s/60) + 'm ago';
+      if (s < 86400) return Math.floor(s/3600) + 'h ago';
+      if (s < 86400*7) return Math.floor(s/86400) + 'd ago';
+      return new Date(iso).toLocaleDateString();
+    }
+    function escapeHtml(s) { return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]); }
+    list.innerHTML = recentRes.data.map(t => `
+      <a href="forum.html?thread=${t.id}" class="recent-thread">
+        <div class="rt-title">${escapeHtml(t.title)}</div>
+        <div class="rt-meta"><span class="cat">#${escapeHtml(t.category)}</span> · ${escapeHtml(t.author_name || '')} · ${timeAgo(t.created_at)}</div>
+      </a>
+    `).join('');
+  }
+  loadForumStats();
 </script>
+
 </body>
 </html>
