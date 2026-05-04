@@ -442,10 +442,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
-  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
-
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
@@ -458,14 +456,12 @@
     document.getElementById('site-nav').classList.toggle('nav-mobile-open');
   }
 
-  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+  if (typeof window.sb === 'undefined' || !window.sb) {
     document.getElementById('report-error').textContent = 'Could not load the Supabase library. The form is temporarily unavailable.';
     document.getElementById('report-error').style.display = 'block';
   }
 
-  const sb = (window.supabase && window.supabase.createClient)
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-    : null;
+  const sb = window.sb || null;
 
   async function submitReport(e) {
     e.preventDefault();

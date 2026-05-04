@@ -160,12 +160,20 @@
         <span data-lang-block="en">Post a housing listing</span>
         <span data-lang-block="ka" class="ka">გამოაქვეყნეთ ბინა</span>
       </h2>
-      <p data-lang-block="en">Free, reviewed in 48 hours. Mention the blocked-account procedure for deposits — it builds trust with renters.</p>
-      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">უფასო, მოწმდება 48 საათში.</p>
+      <p data-lang-block="en">Free. You'll need a free account so you can edit or remove your listing later.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">უფასოა. დაგჭირდებათ უფასო ანგარიში, რათა მოგვიანებით შეცვალოთ ან წაშალოთ ბინის განცხადება.</p>
+    </div>
+
+    <div id="auth-gate" style="display:none; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md); margin-bottom:18px;">
+      <strong>Log in to post a listing.</strong> It takes 30 seconds and lets you delete the listing later.
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="login.html?next=housing.html%23post" class="btn btn-primary btn-sm">Log in</a>
+        <a href="signup.html?next=housing.html%23post" class="btn btn-ghost btn-sm">Sign up</a>
+      </div>
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thanks!</strong> Your listing has been submitted and will be reviewed within 48 hours.
+      <strong>Thanks!</strong> Your listing is now live. Edit or delete it from <a href="account.html">My account</a>.
     </div>
     <div class="form-error-banner" id="form-error"></div>
 
@@ -256,10 +264,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
-  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
-
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
@@ -268,10 +274,10 @@
   }
   function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
 
-  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+  if (typeof window.sb === 'undefined' || !window.sb) {
     document.getElementById('h-list').innerHTML = '<p class="no-results">Could not load. Please refresh.</p>';
   }
-  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+  const sb = window.sb || null;
 
   let allListings = [];
 
@@ -360,6 +366,12 @@
     if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; return; }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; return; }
 
+    const user = await AUTH.getUser();
+    if (!user) {
+      location.href = 'login.html?next=' + encodeURIComponent('housing.html#post');
+      return;
+    }
+
     submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';
     const bedroomsVal = document.getElementById('h-bedrooms').value;
     const fromVal = document.getElementById('h-from').value;
@@ -374,7 +386,8 @@
       description: document.getElementById('h-desc').value.trim(),
       contact_name: document.getElementById('h-name').value.trim(),
       contact_email: document.getElementById('h-email').value.trim(),
-      contact_phone: document.getElementById('h-phone').value.trim() || null
+      contact_phone: document.getElementById('h-phone').value.trim() || null,
+      user_id: user.id
     };
     const { error } = await sb.from('housing').insert(row);
     submitBtn.disabled = false; submitBtn.textContent = 'Submit listing';
@@ -387,9 +400,19 @@
     document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  async function refreshAuthGate() {
+    const u = await AUTH.getUser();
+    const gate = document.getElementById('auth-gate');
+    const card = document.getElementById('form-card');
+    if (u) { gate.style.display = 'none'; card.style.display = ''; }
+    else   { gate.style.display = 'block'; card.style.display = 'none'; }
+  }
+
   (function() {
     setLang(localStorage.getItem('geosin-lang') || 'en');
     loadListings();
+    refreshAuthGate();
+    sb && sb.auth.onAuthStateChange(() => refreshAuthGate());
     if (location.hash === '#post') setTimeout(() => document.getElementById('post').scrollIntoView({ behavior: 'smooth' }), 200);
   })();
 </script>

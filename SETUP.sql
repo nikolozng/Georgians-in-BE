@@ -171,3 +171,196 @@ create policy "Anyone can view approved replies"
 
 create index if not exists forum_replies_thread_idx on forum_replies(thread_id);
 create index if not exists forum_threads_created_idx on forum_threads(created_at desc);
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 7: user accounts + profiles (added 2026-05-04)
+-- ──────────────────────────────────────────────────────────────────────
+-- Supabase already has auth.users built in (filled automatically when
+-- people sign up). We just add a `profiles` table for our extra data:
+-- the chosen incognito name used on the forum.
+
+create table if not exists profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz default now(),
+  email text,
+  display_name text,        -- shown on forum when NOT incognito
+  incognito_name text not null
+);
+
+-- (If profiles already existed before display_name was added)
+alter table profiles add column if not exists display_name text;
+
+alter table profiles enable row level security;
+
+create policy "Profiles are public"
+  on profiles for select
+  to anon, authenticated
+  using (true);
+
+create policy "Users insert own profile"
+  on profiles for insert
+  to authenticated
+  with check (auth.uid() = id);
+
+create policy "Users update own profile"
+  on profiles for update
+  to authenticated
+  using (auth.uid() = id);
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 8: tie posts to user accounts + allow self-delete
+-- ──────────────────────────────────────────────────────────────────────
+
+alter table jobs              add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table housing           add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table forum_threads     add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table forum_replies     add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table forum_threads     add column if not exists incognito boolean default false not null;
+alter table forum_replies     add column if not exists incognito boolean default false not null;
+
+drop policy if exists "Anyone can post a job"           on jobs;
+drop policy if exists "Anyone can post a listing"       on housing;
+drop policy if exists "Anyone can post a thread"        on forum_threads;
+drop policy if exists "Anyone can post a reply"         on forum_replies;
+
+create policy "Logged-in users post jobs"
+  on jobs for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Logged-in users post housing"
+  on housing for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Logged-in users post threads"
+  on forum_threads for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Logged-in users post replies"
+  on forum_replies for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Users delete own jobs"
+  on jobs for delete to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users delete own housing"
+  on housing for delete to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users delete own threads"
+  on forum_threads for delete to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users delete own replies"
+  on forum_replies for delete to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists "Anyone can view approved jobs"     on jobs;
+drop policy if exists "Anyone can view approved housing"  on housing;
+drop policy if exists "Anyone can view approved threads"  on forum_threads;
+drop policy if exists "Anyone can view approved replies"  on forum_replies;
+
+create policy "View approved jobs or own jobs"
+  on jobs for select to anon, authenticated
+  using (approved = true or auth.uid() = user_id);
+
+create policy "View approved housing or own"
+  on housing for select to anon, authenticated
+  using (approved = true or auth.uid() = user_id);
+
+create policy "View approved threads or own"
+  on forum_threads for select to anon, authenticated
+  using (approved = true or auth.uid() = user_id);
+
+create policy "View approved replies or own"
+  on forum_replies for select to anon, authenticated
+  using (approved = true or auth.uid() = user_id);
+
+-- Auto-approve posts by authenticated users (skip the moderation queue).
+create or replace function auto_approve_authenticated()
+returns trigger language plpgsql as $$
+begin
+  if new.user_id is not null then
+    new.approved := true;
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists trg_auto_approve_jobs    on jobs;
+drop trigger if exists trg_auto_approve_housing on housing;
+drop trigger if exists trg_auto_approve_threads on forum_threads;
+drop trigger if exists trg_auto_approve_replies on forum_replies;
+
+create trigger trg_auto_approve_jobs    before insert on jobs           for each row execute function auto_approve_authenticated();
+create trigger trg_auto_approve_housing before insert on housing        for each row execute function auto_approve_authenticated();
+create trigger trg_auto_approve_threads before insert on forum_threads  for each row execute function auto_approve_authenticated();
+create trigger trg_auto_approve_replies before insert on forum_replies  for each row execute function auto_approve_authenticated();
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 9: notifications (added 2026-05-04)
+-- ──────────────────────────────────────────────────────────────────────
+-- In-app notifications. When someone replies to your thread, a row is
+-- created here. The dashboard shows unread ones with a badge in the nav.
+
+create table if not exists notifications (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  type text not null,
+  title text not null,
+  body text,
+  link text,
+  read boolean default false not null
+);
+
+create index if not exists notifications_user_idx on notifications(user_id, created_at desc);
+
+alter table notifications enable row level security;
+
+create policy "Users read own notifications"
+  on notifications for select to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users update own notifications"
+  on notifications for update to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users delete own notifications"
+  on notifications for delete to authenticated
+  using (auth.uid() = user_id);
+
+-- When someone posts a forum reply, notify the thread author.
+create or replace function notify_thread_author_on_reply()
+returns trigger language plpgsql security definer as $$
+declare
+  thread_owner uuid;
+  reply_author_name text;
+begin
+  select user_id into thread_owner from forum_threads where id = new.thread_id;
+
+  if thread_owner is null or thread_owner = new.user_id then
+    return new;
+  end if;
+
+  if new.incognito then
+    select incognito_name into reply_author_name from profiles where id = new.user_id;
+  else
+    reply_author_name := new.author_name;
+  end if;
+
+  insert into notifications (user_id, type, title, body, link)
+  values (
+    thread_owner,
+    'reply',
+    coalesce(reply_author_name, 'Someone') || ' replied to your thread',
+    left(new.body, 160),
+    '/forum.html?thread=' || new.thread_id
+  );
+
+  return new;
+end $$;
+
+drop trigger if exists trg_notify_reply on forum_replies;
+create trigger trg_notify_reply
+  after insert on forum_replies
+  for each row execute function notify_thread_author_on_reply();

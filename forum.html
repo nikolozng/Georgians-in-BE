@@ -183,7 +183,7 @@
             <span class="meta" id="list-count">Loading…</span>
           </div>
           <div class="rules-mini">
-            <strong>Quick rules:</strong> stay on topic, no doxxing, no scam promotion, no political fights. Be helpful — newcomers are reading. Threads are reviewed before going live (~24h).
+            <strong>Quick rules:</strong> stay on topic, no doxxing, no scam promotion, no political fights. Be helpful — newcomers are reading. Threads go live immediately. Spam will be removed.
           </div>
           <div class="thread-list" id="thread-list">
             <div class="loading-state">Loading threads…</div>
@@ -204,7 +204,7 @@
 
       <div class="form-error-banner" id="new-error"></div>
       <div class="form-success" id="new-success">
-        <strong>Thanks!</strong> Your thread has been submitted and will appear here once reviewed (usually within 24 hours).
+        <strong>Thanks!</strong> Your thread is live.
       </div>
 
       <div class="new-thread-card" id="new-thread-card">
@@ -240,18 +240,26 @@
             <span class="form-hint">Max 3000 characters. Plain text — no HTML.</span>
           </div>
 
-          <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-name">Your display name</label>
-            <input class="form-input" id="t-name" type="text" required maxlength="40" placeholder="What people will see — first name or alias is fine" />
-          </div>
-
           <div class="form-group" style="margin-bottom:24px">
-            <label class="form-label" for="t-email">Email (private — only seen by admin for moderation)</label>
-            <input class="form-input" id="t-email" type="email" maxlength="120" placeholder="Optional, used only if we need to follow up" />
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;background:var(--surface);padding:14px 16px;border-radius:var(--r-sm);border:1px solid var(--hairline)">
+              <input type="checkbox" id="t-incognito" style="margin-top:2px" />
+              <span>
+                <strong>Post anonymously</strong>
+                <span class="form-hint" style="display:block;margin-top:4px">Posts as your incognito name (<span id="t-incognito-name">…</span>) instead of your display name. Other people won't see your real name or email.</span>
+              </span>
+            </label>
           </div>
 
           <button type="submit" class="btn btn-primary" id="t-submit">Post thread</button>
         </form>
+
+        <div id="new-auth-gate" style="display:none; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md);">
+          <strong>Log in to start a thread.</strong>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="login.html?next=forum.html%3Fnew%3D1" class="btn btn-primary btn-sm">Log in</a>
+            <a href="signup.html?next=forum.html%3Fnew%3D1" class="btn btn-ghost btn-sm">Sign up</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -263,7 +271,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
-        <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
+        <p>A practical platform for Georgians in Belgium. Free for everyone.</p>
       </div>
       <div class="footer-col"><h5>Site</h5><ul>
         <li><a href="index.html">Home</a></li><li><a href="jobs.html">Jobs</a></li><li><a href="housing.html">Housing</a></li>
@@ -286,10 +294,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
-  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
-
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
@@ -298,7 +304,8 @@
   }
   function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
 
-  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+  const sb = window.sb || null;
+  let currentProfile = null;   // logged-in user's profile (for incognito name)
 
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]); }
   function timeAgo(iso) {
@@ -436,22 +443,39 @@
       </div>
     `).join('');
 
-    const replyForm = thread.locked
-      ? `<div class="locked-banner">This thread is locked. No new replies can be posted.</div>`
-      : `
-        <div class="reply-form-card">
-          <div class="form-error-banner" id="reply-error" style="margin-bottom:12px"></div>
-          <textarea id="reply-body" placeholder="Write your reply… Be specific and helpful." maxlength="2000"></textarea>
-          <div class="row">
-            <input type="text" id="reply-name" placeholder="Your display name" maxlength="40" />
-            <input type="email" id="reply-email" placeholder="Email (private, optional)" maxlength="120" />
-          </div>
-          <div class="actions">
-            <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">Post reply</button>
-            <span class="hint">Replies appear immediately. Spam gets removed.</span>
+    const user = await AUTH.getUser();
+    let replyForm;
+    if (thread.locked) {
+      replyForm = `<div class="locked-banner">This thread is locked. No new replies can be posted.</div>`;
+    } else if (!user) {
+      replyForm = `
+        <div class="locked-banner" style="text-align:left">
+          <strong>Log in to reply.</strong>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="login.html?next=${encodeURIComponent('forum.html?thread=' + id)}" class="btn btn-primary btn-sm">Log in</a>
+            <a href="signup.html?next=${encodeURIComponent('forum.html?thread=' + id)}" class="btn btn-ghost btn-sm">Sign up</a>
           </div>
         </div>
       `;
+    } else {
+      if (!currentProfile) currentProfile = await AUTH.getProfile();
+      const incogName = currentProfile?.incognito_name || '—';
+      const dispName  = currentProfile?.display_name || user.email.split('@')[0];
+      replyForm = `
+        <div class="reply-form-card">
+          <div class="form-error-banner" id="reply-error" style="margin-bottom:12px"></div>
+          <textarea id="reply-body" placeholder="Write your reply… Be specific and helpful." maxlength="2000"></textarea>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted-soft);cursor:pointer">
+            <input type="checkbox" id="reply-incognito" />
+            Post anonymously as <strong style="color:var(--ink)">${escapeHtml(incogName)}</strong>
+          </label>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">Post reply as ${escapeHtml(dispName)}</button>
+            <span class="hint">Replies appear immediately. You can delete them from <a href="account.html">My account</a>.</span>
+          </div>
+        </div>
+      `;
+    }
 
     container.innerHTML = `
       <div class="thread-detail">
@@ -478,29 +502,36 @@
     const submitBtn = document.getElementById('reply-submit');
     errBox.style.display = 'none';
 
-    const body = document.getElementById('reply-body').value.trim();
-    const name = document.getElementById('reply-name').value.trim();
-    const email = document.getElementById('reply-email').value.trim();
-
-    if (!body || !name) {
-      errBox.textContent = 'Body and display name are required.';
-      errBox.style.display = 'block';
+    const user = await AUTH.getUser();
+    if (!user) {
+      location.href = 'login.html?next=' + encodeURIComponent('forum.html?thread=' + threadId);
       return;
     }
-    if (body.length < 5) {
+    if (!currentProfile) currentProfile = await AUTH.getProfile();
+
+    const body = document.getElementById('reply-body').value.trim();
+    const incognito = document.getElementById('reply-incognito').checked;
+
+    if (!body || body.length < 5) {
       errBox.textContent = 'Reply too short. Add a bit more context.';
       errBox.style.display = 'block';
       return;
     }
 
+    const author_name = incognito
+      ? (currentProfile?.incognito_name || 'Anonymous')
+      : (currentProfile?.display_name || user.email.split('@')[0]);
+
     submitBtn.disabled = true; submitBtn.textContent = 'Posting…';
     const { error } = await sb.from('forum_replies').insert({
       thread_id: threadId,
-      author_name: name,
-      author_email: email || null,
-      body
+      user_id: user.id,
+      author_name,
+      author_email: incognito ? null : user.email,
+      body,
+      incognito
     });
-    submitBtn.disabled = false; submitBtn.textContent = 'Post reply';
+    submitBtn.disabled = false;
 
     if (error) {
       console.error(error);
@@ -525,14 +556,20 @@
     const submitBtn = document.getElementById('t-submit');
     errBox.style.display = 'none';
 
+    const user = await AUTH.getUser();
+    if (!user) {
+      location.href = 'login.html?next=' + encodeURIComponent('forum.html?new=1');
+      return;
+    }
+    if (!currentProfile) currentProfile = await AUTH.getProfile();
+
     const cat = document.getElementById('t-cat').value;
     const title = document.getElementById('t-title').value.trim();
     const body = document.getElementById('t-body').value.trim();
-    const name = document.getElementById('t-name').value.trim();
-    const email = document.getElementById('t-email').value.trim();
+    const incognito = document.getElementById('t-incognito').checked;
 
-    if (!cat || !title || !body || !name) {
-      errBox.textContent = 'Please fill category, title, body, and your name.';
+    if (!cat || !title || !body) {
+      errBox.textContent = 'Please fill category, title, and body.';
       errBox.style.display = 'block';
       return;
     }
@@ -542,14 +579,20 @@
       return;
     }
 
+    const author_name = incognito
+      ? (currentProfile?.incognito_name || 'Anonymous')
+      : (currentProfile?.display_name || user.email.split('@')[0]);
+
     submitBtn.disabled = true; submitBtn.textContent = 'Posting…';
-    const { error } = await sb.from('forum_threads').insert({
+    const { data, error } = await sb.from('forum_threads').insert({
       category: cat,
       title,
       body,
-      author_name: name,
-      author_email: email || null
-    });
+      user_id: user.id,
+      author_name,
+      author_email: incognito ? null : user.email,
+      incognito
+    }).select().single();
     submitBtn.disabled = false; submitBtn.textContent = 'Post thread';
 
     if (error) {
@@ -558,9 +601,14 @@
       errBox.style.display = 'block';
       return;
     }
-    document.getElementById('new-thread-card').style.display = 'none';
-    document.getElementById('new-success').style.display = 'block';
-    document.getElementById('new-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Auto-approved by trigger — bounce straight to it
+    if (data?.id) {
+      location.href = 'forum.html?thread=' + data.id;
+    } else {
+      document.getElementById('new-thread-card').style.display = 'none';
+      document.getElementById('new-success').style.display = 'block';
+      document.getElementById('new-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   function showList() {
@@ -580,11 +628,31 @@
 
   window.addEventListener('popstate', route);
 
+  async function refreshNewThreadGate() {
+    const u = await AUTH.getUser();
+    const card = document.getElementById('new-thread-card');
+    const form = document.getElementById('new-thread-form');
+    const gate = document.getElementById('new-auth-gate');
+    if (u) {
+      currentProfile = await AUTH.getProfile();
+      const inc = currentProfile?.incognito_name || '—';
+      const incEl = document.getElementById('t-incognito-name');
+      if (incEl) incEl.textContent = inc;
+      form.style.display = '';
+      gate.style.display = 'none';
+    } else {
+      form.style.display = 'none';
+      gate.style.display = 'block';
+    }
+  }
+
   /* ================ INIT ================ */
   (function() {
     setLang(localStorage.getItem('geosin-lang') || 'en');
     document.getElementById('new-thread-form').addEventListener('submit', submitNewThread);
     loadThreads().then(route);
+    refreshNewThreadGate();
+    sb && sb.auth.onAuthStateChange(() => refreshNewThreadGate());
   })();
 </script>
 </body>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My account — geosin.be</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .dash { padding: 32px 0 64px; background: var(--surface); min-height: calc(100vh - var(--nav-h)); }
+    .dash-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .dash-head h1 { font-size: 26px; }
+    .dash-head .me { color: var(--muted); font-size: 14px; }
+
+    .dash-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .dash-tab {
+      padding: 12px 18px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .dash-tab.active { color: var(--ink); border-bottom-color: var(--rausch); }
+    .dash-tab .count {
+      display: inline-block;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 6px;
+      font-weight: 700;
+    }
+    .dash-tab.active .count { background: #ffe7eb; color: var(--rausch); }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .post-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 18px;
+      align-items: start;
+    }
+    .post-card .body { flex: 1; min-width: 0; }
+    .post-card h4 { font-size: 15px; margin-bottom: 4px; }
+    .post-card .meta { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .post-card .excerpt { color: var(--body-text); font-size: 13px; line-height: 1.5; }
+    .post-card .actions { display: flex; flex-direction: column; gap: 6px; align-items: end; flex-shrink: 0; }
+    .post-card .badge {
+      display: inline-block; font-size: 11px; padding: 2px 8px;
+      border-radius: 10px; font-weight: 700;
+      background: var(--surface); color: var(--muted);
+    }
+    .post-card .badge.live { background: #f0fdf4; color: #15803d; }
+    .post-card .badge.pending { background: #fff7ed; color: #c2410c; }
+    .delete-btn {
+      background: transparent;
+      border: 1px solid var(--hairline);
+      color: var(--rausch);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+    }
+    .delete-btn:hover { background: #fff0f2; border-color: var(--rausch); }
+
+    .empty-state {
+      background: var(--canvas);
+      border: 1px dashed var(--hairline);
+      border-radius: var(--r-md);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .empty-state .btn { margin-top: 14px; }
+
+    /* Notifications */
+    .notif-row {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 14px;
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.12s;
+    }
+    .notif-row:hover { background: var(--surface); }
+    .notif-row.unread { border-left: 3px solid var(--rausch); }
+    .notif-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--rausch);
+    }
+    .notif-body { flex: 1; min-width: 0; }
+    .notif-body .nt { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+    .notif-body .nb { font-size: 13px; color: var(--muted); }
+    .notif-time { color: var(--muted-soft); font-size: 11px; flex-shrink: 0; }
+
+    /* Settings panel */
+    .settings-row {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 22px 24px;
+      margin-bottom: 14px;
+    }
+    .settings-row h4 { font-size: 15px; margin-bottom: 4px; }
+    .settings-row p  { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .settings-row form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .settings-row select,
+    .settings-row input {
+      padding: 9px 12px; border: 1px solid var(--hairline);
+      border-radius: var(--r-sm); font-size: 14px; font-family: inherit;
+      flex: 1; min-width: 200px;
+    }
+    .settings-row .btn-sm { padding: 9px 14px; font-size: 13px; }
+    .settings-row .danger {
+      background: transparent; border: 1px solid #ffd4dc; color: var(--rausch);
+    }
+    .auth-msg { margin-top: 10px; padding: 10px 12px; border-radius: var(--r-sm); font-size: 13px; }
+    .auth-msg.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .auth-msg.error   { background: #fff0f2; color: #c20030; border: 1px solid #ffd4dc; }
+
+    .skeleton { color: var(--muted); padding: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="housing.html">Housing</a>
+      <a href="services.html">Services</a>
+      <a href="checklists.html">Checklists</a>
+      <a href="scams.html">Avoid Scams</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="container">
+    <div class="dash-head">
+      <div>
+        <h1>My account</h1>
+        <div class="me" id="me"></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
+    </div>
+
+    <div class="dash-tabs" role="tablist">
+      <button class="dash-tab active" data-tab="notifications">Notifications <span class="count" id="count-notif">0</span></button>
+      <button class="dash-tab" data-tab="threads">Forum threads <span class="count" id="count-threads">0</span></button>
+      <button class="dash-tab" data-tab="replies">Forum replies <span class="count" id="count-replies">0</span></button>
+      <button class="dash-tab" data-tab="jobs">Jobs <span class="count" id="count-jobs">0</span></button>
+      <button class="dash-tab" data-tab="housing">Housing <span class="count" id="count-housing">0</span></button>
+      <button class="dash-tab" data-tab="settings">Settings</button>
+    </div>
+
+    <section class="panel active" id="panel-notifications">
+      <div id="notifications-list" class="skeleton">Loading notifications…</div>
+    </section>
+
+    <section class="panel" id="panel-threads">
+      <div id="threads-list" class="skeleton">Loading…</div>
+    </section>
+
+    <section class="panel" id="panel-replies">
+      <div id="replies-list" class="skeleton">Loading…</div>
+    </section>
+
+    <section class="panel" id="panel-jobs">
+      <div id="jobs-list" class="skeleton">Loading…</div>
+    </section>
+
+    <section class="panel" id="panel-housing">
+      <div id="housing-list" class="skeleton">Loading…</div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <h4>Display name</h4>
+        <p>Shown on your forum posts when you post publicly (not anonymously).</p>
+        <form id="display-form">
+          <input type="text" name="display_name" id="display-input" maxlength="40" placeholder="e.g. Niko" />
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        </form>
+        <div id="display-msg"></div>
+      </div>
+
+      <div class="settings-row">
+        <h4>Forum incognito name</h4>
+        <p>Used when you post anonymously on the forum. Pick anything you like — change it whenever.</p>
+        <form id="incognito-form">
+          <select name="incognito_name" id="incognito-select"></select>
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        </form>
+        <div id="incognito-msg"></div>
+      </div>
+
+      <div class="settings-row">
+        <h4>Email</h4>
+        <p>The address you signed up with.</p>
+        <div id="email-display" style="font-size:14px"></div>
+      </div>
+
+      <div class="settings-row">
+        <h4>Change password</h4>
+        <p>You'll get a reset link by email.</p>
+        <form id="pw-form">
+          <button type="submit" class="btn btn-ghost btn-sm">Send reset email</button>
+        </form>
+        <div id="pw-msg"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be</span>
+      <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  setLang(localStorage.getItem('geosin-lang') || 'en');
+
+  // Tabs
+  document.querySelectorAll('.dash-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+      history.replaceState(null, '', '#' + btn.dataset.tab);
+    });
+  });
+  // Open tab from URL hash
+  if (location.hash) {
+    const h = location.hash.replace('#', '');
+    const btn = document.querySelector(`.dash-tab[data-tab="${h}"]`);
+    if (btn) btn.click();
+  }
+
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', () => AUTH.signOut());
+
+  // Helpers
+  function timeAgo(iso) {
+    const s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s/60) + 'm ago';
+    if (s < 86400) return Math.floor(s/3600) + 'h ago';
+    if (s < 86400*30) return Math.floor(s/86400) + 'd ago';
+    return new Date(iso).toLocaleDateString();
+  }
+  const escapeHTML = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  async function deleteRow(table, id, refreshFn) {
+    if (!confirm('Delete this? This cannot be undone.')) return;
+    const { error } = await sb.from(table).delete().eq('id', id);
+    if (error) { alert('Delete failed: ' + error.message); return; }
+    refreshFn();
+  }
+
+  // ───── Boot ─────
+  (async () => {
+    const user = await AUTH.requireAuth();
+    if (!user) return;
+
+    document.getElementById('me').textContent = user.email;
+    document.getElementById('email-display').textContent = user.email;
+
+    // Populate incognito dropdown
+    const sel = document.getElementById('incognito-select');
+    AUTH.INCOGNITO_NAMES.slice().sort().forEach(n => {
+      const opt = document.createElement('option'); opt.value = n; opt.textContent = n;
+      sel.appendChild(opt);
+    });
+
+    // Make sure a profile row exists (defensive — for accounts created
+    // before profiles existed, or if signup somehow skipped the upsert)
+    let profile = await AUTH.getProfile();
+    if (!profile) {
+      const fallback = (user.user_metadata && user.user_metadata.incognito_name) || AUTH.pickRandomIncognito();
+      const { data } = await sb.from('profiles').upsert({
+        id: user.id,
+        email: user.email,
+        incognito_name: fallback
+      }).select().single();
+      profile = data;
+    }
+    if (profile) sel.value = profile.incognito_name;
+    document.getElementById('display-input').value = profile?.display_name || '';
+
+    // Save display name
+    document.getElementById('display-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const v = document.getElementById('display-input').value.trim();
+      const { error } = await sb.from('profiles').update({ display_name: v }).eq('id', user.id);
+      const msg = document.getElementById('display-msg');
+      if (error) msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      else      msg.innerHTML = `<div class="auth-msg success">Saved.</div>`;
+    });
+
+    // Save incognito
+    document.getElementById('incognito-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newName = sel.value;
+      const { error } = await sb.from('profiles').update({ incognito_name: newName }).eq('id', user.id);
+      const msg = document.getElementById('incognito-msg');
+      if (error) msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      else      msg.innerHTML = `<div class="auth-msg success">Saved.</div>`;
+    });
+
+    // Password reset email
+    document.getElementById('pw-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { error } = await sb.auth.resetPasswordForEmail(user.email, {
+        redirectTo: location.origin + '/reset-password.html'
+      });
+      const msg = document.getElementById('pw-msg');
+      if (error) msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      else      msg.innerHTML = `<div class="auth-msg success">Reset email sent to ${user.email}.</div>`;
+    });
+
+    loadNotifications();
+    loadThreads();
+    loadReplies();
+    loadJobs();
+    loadHousing();
+
+    // ─── Notifications ───
+    async function loadNotifications() {
+      const list = document.getElementById('notifications-list');
+      const { data, error } = await sb.from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load notifications.</div>`; return; }
+      document.getElementById('count-notif').textContent = (data || []).filter(n => !n.read).length;
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `<div class="empty-state">No notifications yet. When someone replies to your forum threads, you'll see them here.</div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(n => `
+        <a href="${escapeHTML(n.link || '#')}" class="notif-row ${n.read ? '' : 'unread'}" data-nid="${n.id}">
+          <div class="notif-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="notif-body">
+            <div class="nt">${escapeHTML(n.title)}</div>
+            ${n.body ? `<div class="nb">${escapeHTML(n.body)}</div>` : ''}
+          </div>
+          <div class="notif-time">${timeAgo(n.created_at)}</div>
+        </a>
+      `).join('');
+
+      // Mark as read on click
+      list.querySelectorAll('.notif-row').forEach(el => {
+        el.addEventListener('click', async () => {
+          const id = el.dataset.nid;
+          await sb.from('notifications').update({ read: true }).eq('id', id);
+        });
+      });
+
+      // Mark all as read button
+      const unread = data.filter(n => !n.read);
+      if (unread.length > 0) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-ghost btn-sm';
+        btn.style.marginBottom = '12px';
+        btn.textContent = `Mark all as read (${unread.length})`;
+        btn.addEventListener('click', async () => {
+          await sb.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+          loadNotifications();
+          if (window.renderNavAuth) window.renderNavAuth();
+        });
+        list.prepend(btn);
+      }
+    }
+
+    // ─── Forum threads ───
+    async function loadThreads() {
+      const list = document.getElementById('threads-list');
+      const { data, error } = await sb.from('forum_threads')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      document.getElementById('count-threads').textContent = (data || []).length;
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `<div class="empty-state">You haven't posted any threads yet.<br><a href="forum.html?new=1" class="btn btn-primary btn-sm">Start a thread</a></div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(t => `
+        <div class="post-card">
+          <div class="body">
+            <h4><a href="forum.html?thread=${t.id}" style="color:inherit;text-decoration:none">${escapeHTML(t.title)}</a></h4>
+            <div class="meta">${escapeHTML(t.category)} · ${timeAgo(t.created_at)} · ${t.incognito ? 'as incognito' : 'public'}</div>
+            <div class="excerpt">${escapeHTML(t.body.slice(0, 180))}${t.body.length > 180 ? '…' : ''}</div>
+          </div>
+          <div class="actions">
+            <span class="badge ${t.approved ? 'live' : 'pending'}">${t.approved ? 'live' : 'hidden'}</span>
+            <button class="delete-btn" data-id="${t.id}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.delete-btn').forEach(b => {
+        b.addEventListener('click', () => deleteRow('forum_threads', b.dataset.id, loadThreads));
+      });
+    }
+
+    // ─── Forum replies ───
+    async function loadReplies() {
+      const list = document.getElementById('replies-list');
+      const { data, error } = await sb.from('forum_replies')
+        .select('*, forum_threads(title, id)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      document.getElementById('count-replies').textContent = (data || []).length;
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `<div class="empty-state">You haven't replied to any threads yet.</div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(r => `
+        <div class="post-card">
+          <div class="body">
+            <h4>Reply on: <a href="forum.html?thread=${r.thread_id}" style="color:inherit;text-decoration:none">${escapeHTML(r.forum_threads?.title || 'thread')}</a></h4>
+            <div class="meta">${timeAgo(r.created_at)} · ${r.incognito ? 'as incognito' : 'public'}</div>
+            <div class="excerpt">${escapeHTML(r.body.slice(0, 180))}${r.body.length > 180 ? '…' : ''}</div>
+          </div>
+          <div class="actions">
+            <button class="delete-btn" data-id="${r.id}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.delete-btn').forEach(b => {
+        b.addEventListener('click', () => deleteRow('forum_replies', b.dataset.id, loadReplies));
+      });
+    }
+
+    // ─── Jobs ───
+    async function loadJobs() {
+      const list = document.getElementById('jobs-list');
+      const { data, error } = await sb.from('jobs')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      document.getElementById('count-jobs').textContent = (data || []).length;
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `<div class="empty-state">You haven't posted any jobs yet.<br><a href="jobs.html#post" class="btn btn-primary btn-sm">Post a job</a></div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(j => `
+        <div class="post-card">
+          <div class="body">
+            <h4>${escapeHTML(j.title)} <span style="color:var(--muted);font-weight:400">@ ${escapeHTML(j.company)}</span></h4>
+            <div class="meta">${escapeHTML(j.city)} · ${escapeHTML(j.contract_type || '—')} · ${timeAgo(j.created_at)}</div>
+            <div class="excerpt">${escapeHTML(j.description.slice(0, 180))}${j.description.length > 180 ? '…' : ''}</div>
+          </div>
+          <div class="actions">
+            <span class="badge ${j.approved ? 'live' : 'pending'}">${j.approved ? 'live' : 'hidden'}</span>
+            <button class="delete-btn" data-id="${j.id}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.delete-btn').forEach(b => {
+        b.addEventListener('click', () => deleteRow('jobs', b.dataset.id, loadJobs));
+      });
+    }
+
+    // ─── Housing ───
+    async function loadHousing() {
+      const list = document.getElementById('housing-list');
+      const { data, error } = await sb.from('housing')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      document.getElementById('count-housing').textContent = (data || []).length;
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `<div class="empty-state">You haven't posted any housing listings yet.<br><a href="housing.html#post" class="btn btn-primary btn-sm">Post a listing</a></div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(h => `
+        <div class="post-card">
+          <div class="body">
+            <h4>${escapeHTML(h.listing_type)} in ${escapeHTML(h.city)} — €${h.monthly_rent}/mo</h4>
+            <div class="meta">${escapeHTML(h.neighborhood || '')} · ${h.bedrooms ?? '?'} bed · ${timeAgo(h.created_at)}</div>
+            <div class="excerpt">${escapeHTML(h.description.slice(0, 180))}${h.description.length > 180 ? '…' : ''}</div>
+          </div>
+          <div class="actions">
+            <span class="badge ${h.approved ? 'live' : 'pending'}">${h.approved ? 'live' : 'hidden'}</span>
+            <button class="delete-btn" data-id="${h.id}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.delete-btn').forEach(b => {
+        b.addEventListener('click', () => deleteRow('housing', b.dataset.id, loadHousing));
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

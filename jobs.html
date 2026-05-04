@@ -147,12 +147,20 @@
         <span data-lang-block="en">Post a job — free, reviewed in 48h</span>
         <span data-lang-block="ka" class="ka">გამოაქვეყნეთ ვაკანსია — უფასო</span>
       </h2>
-      <p data-lang-block="en">Hiring? Post your opening here. Reviewed before going live to keep scams off the board.</p>
-      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გჭირდებათ თანამშრომელი? გამოაქვეყნეთ აქ. ყველა განცხადება მოწმდება გამოქვეყნებამდე.</p>
+      <p data-lang-block="en">Hiring? Post your opening here. You'll need a free account so you can edit or remove your post later.</p>
+      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გჭირდებათ თანამშრომელი? გამოაქვეყნეთ აქ. დაგჭირდებათ უფასო ანგარიში, რათა მოგვიანებით შეცვალოთ ან წაშალოთ პოსტი.</p>
+    </div>
+
+    <div id="auth-gate" style="display:none; max-width:720px; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md); margin-bottom:18px;">
+      <strong>Log in to post a job.</strong> It takes 30 seconds and lets you delete the listing later.
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="login.html?next=jobs.html%23post" class="btn btn-primary btn-sm">Log in</a>
+        <a href="signup.html?next=jobs.html%23post" class="btn btn-ghost btn-sm">Sign up</a>
+      </div>
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thanks!</strong> Your job has been submitted and will be reviewed within 48 hours.
+      <strong>Thanks!</strong> Your job is now live. You can edit or delete it from <a href="account.html">My account</a>.
     </div>
     <div class="form-error-banner" id="form-error"></div>
 
@@ -241,10 +249,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
-  const SUPABASE_URL = 'https://kikvckuaorpspxhtnpzd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW';
-
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
@@ -253,10 +259,10 @@
   }
   function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
 
-  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+  if (typeof window.sb === 'undefined' || !window.sb) {
     document.getElementById('job-list').innerHTML = '<p class="no-results">Could not load. Please refresh.</p>';
   }
-  const sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+  const sb = window.sb || null;
 
   let allJobs = [];
 
@@ -351,6 +357,12 @@
     if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; return; }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; return; }
 
+    const user = await AUTH.getUser();
+    if (!user) {
+      location.href = 'login.html?next=' + encodeURIComponent('jobs.html#post');
+      return;
+    }
+
     submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';
     const row = {
       title: document.getElementById('j-title').value.trim(),
@@ -362,7 +374,8 @@
       salary_range: document.getElementById('j-salary').value.trim() || null,
       contact_email: document.getElementById('j-email').value.trim(),
       application_link: document.getElementById('j-link').value.trim() || null,
-      urgent: document.getElementById('j-urgent').checked
+      urgent: document.getElementById('j-urgent').checked,
+      user_id: user.id
     };
     const { error } = await sb.from('jobs').insert(row);
     submitBtn.disabled = false; submitBtn.textContent = 'Submit job';
@@ -375,9 +388,24 @@
     document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  async function refreshAuthGate() {
+    const u = await AUTH.getUser();
+    const gate = document.getElementById('auth-gate');
+    const card = document.getElementById('form-card');
+    if (u) {
+      gate.style.display = 'none';
+      card.style.display = '';
+    } else {
+      gate.style.display = 'block';
+      card.style.display = 'none';
+    }
+  }
+
   (function() {
     setLang(localStorage.getItem('geosin-lang') || 'en');
     loadJobs();
+    refreshAuthGate();
+    sb && sb.auth.onAuthStateChange(() => refreshAuthGate());
     if (location.hash === '#post') setTimeout(() => document.getElementById('post').scrollIntoView({ behavior: 'smooth' }), 200);
   })();
 </script>

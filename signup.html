@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up — geosin.be</title>
+  <meta name="description" content="Create a free geosin.be account to post jobs, housing, and join the forum." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-page {
+      min-height: calc(100vh - var(--nav-h));
+      padding: 48px 24px;
+      background: var(--surface);
+    }
+    .auth-card {
+      max-width: 460px;
+      margin: 0 auto;
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 36px 32px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .auth-card h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+    .auth-card .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+    .auth-form { display: flex; flex-direction: column; gap: 14px; }
+    .auth-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .auth-form input,
+    .auth-form select {
+      padding: 11px 13px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--canvas);
+      color: var(--ink);
+    }
+    .auth-form input:focus,
+    .auth-form select:focus {
+      outline: none;
+      border-color: var(--rausch);
+      box-shadow: 0 0 0 3px rgba(255,56,92,0.15);
+    }
+    .field-hint {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    .auth-card .btn-primary { margin-top: 8px; padding: 12px 16px; font-size: 14px; }
+    .auth-foot {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .auth-foot a { color: var(--rausch); text-decoration: none; font-weight: 600; }
+    .auth-msg {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .auth-msg.error   { background: #fff0f2; color: #c20030; border: 1px solid #ffd4dc; }
+    .auth-msg.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .incognito-row { display: flex; gap: 8px; align-items: end; }
+    .incognito-row select { flex: 1; }
+    .incognito-row .reroll-btn {
+      padding: 11px 13px;
+      border: 1px solid var(--hairline);
+      background: var(--canvas);
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .incognito-row .reroll-btn:hover { background: var(--surface); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="housing.html">Housing</a>
+      <a href="services.html">Services</a>
+      <a href="checklists.html">Checklists</a>
+      <a href="scams.html">Avoid Scams</a>
+      <a href="about.html">About</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="auth-page">
+  <div class="auth-card">
+    <h1>
+      <span data-lang-block="en">Create your account</span>
+      <span data-lang-block="ka" class="ka" style="display:block;font-family:var(--font-georgian)">შექმენით ანგარიში</span>
+    </h1>
+    <p class="subtitle">
+      <span data-lang-block="en">Free, takes 30 seconds. Lets you post on the forum, jobs, and housing — and delete your posts later.</span>
+      <span data-lang-block="ka" class="ka" style="display:block;font-family:var(--font-georgian)">უფასოა, 30 წამში. შემდეგ შეგიძლიათ დაწეროთ ფორუმზე, განათავსოთ სამუშაო და საცხოვრებელი — და წაშალოთ თქვენი პოსტები.</span>
+    </p>
+
+    <form class="auth-form" id="signup-form">
+      <label>
+        Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" required minlength="8" autocomplete="new-password" />
+        <span class="field-hint">Minimum 8 characters.</span>
+      </label>
+
+      <label>
+        Display name
+        <input type="text" name="display_name" required maxlength="40" placeholder="e.g. Niko, or Niko G." autocomplete="nickname" />
+        <span class="field-hint">Shown on the forum when you post publicly. Can be a first name or alias.</span>
+      </label>
+
+      <label>
+        Forum incognito name
+        <div class="incognito-row">
+          <select name="incognito_name" id="incognito-select"></select>
+          <button type="button" class="reroll-btn" id="reroll-btn" title="Pick a random one">⟲</button>
+        </div>
+        <span class="field-hint">Used when you post anonymously on the forum. You can change it anytime.</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary">Create account</button>
+    </form>
+
+    <div id="msg"></div>
+
+    <div class="auth-foot">
+      Already have an account? <a href="login.html">Log in</a>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be</span>
+      <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => {
+      el.style.display = el.dataset.langBlock === lang ? '' : 'none';
+    });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  setLang(localStorage.getItem('geosin-lang') || 'en');
+
+  // Populate incognito name dropdown
+  const sel = document.getElementById('incognito-select');
+  AUTH.INCOGNITO_NAMES.slice().sort().forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    sel.appendChild(opt);
+  });
+  sel.value = AUTH.pickRandomIncognito();
+  document.getElementById('reroll-btn').addEventListener('click', () => {
+    sel.value = AUTH.pickRandomIncognito();
+  });
+
+  // If already logged in, bounce to account
+  AUTH.getUser().then(u => { if (u) location.href = 'account.html'; });
+
+  // Submit
+  const form = document.getElementById('signup-form');
+  const msg  = document.getElementById('msg');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.innerHTML = '';
+    const fd = new FormData(form);
+    const email = fd.get('email').trim();
+    const password = fd.get('password');
+    const display = fd.get('display_name').trim();
+    const incognito = fd.get('incognito_name');
+
+    const submitBtn = form.querySelector('button[type=submit]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating…';
+
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: { data: { display_name: display, incognito_name: incognito } }
+    });
+
+    if (error) {
+      msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create account';
+      return;
+    }
+
+    // Insert profile row (the user is logged in immediately if email confirmation is off)
+    if (data.user) {
+      await sb.from('profiles').upsert({
+        id: data.user.id,
+        email,
+        display_name: display,
+        incognito_name: incognito
+      });
+    }
+
+    if (!data.session) {
+      // Email confirmation required
+      msg.innerHTML = `<div class="auth-msg success">Check your email to confirm your account, then log in.</div>`;
+      submitBtn.textContent = 'Account created';
+      return;
+    }
+
+    // Logged in — bounce to wherever they wanted to go, or account
+    const next = new URLSearchParams(location.search).get('next') || 'account.html';
+    location.href = next;
+  });
+</script>
+
+</body>
+</html>
