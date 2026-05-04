@@ -364,3 +364,59 @@ drop trigger if exists trg_notify_reply on forum_replies;
 create trigger trg_notify_reply
   after insert on forum_replies
   for each row execute function notify_thread_author_on_reply();
+
+-- ──────────────────────────────────────────────────────────────────────
+-- Step 10: events (added 2026-05-05)
+-- ──────────────────────────────────────────────────────────────────────
+-- Community events: workshops, concerts, religious gatherings, networking.
+-- Logged-in users post; auto-approved by trigger from Step 8.
+-- City + category sit alongside scheduling info; map_url optional.
+
+create table if not exists events (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  user_id uuid references auth.users(id) on delete cascade,
+  title text not null,                    -- English title
+  title_ka text,                          -- Georgian title (optional but encouraged)
+  category text not null,                 -- Workshop / Concert / Religious / Networking / Other
+  description text not null,
+  event_date date not null,
+  event_time text,                        -- free-form, e.g. "19:00" or "All day"
+  city text not null,                     -- Brussels / Antwerp / Ghent / Liège / Bruges / Remote / Other
+  venue text,
+  address text,
+  map_url text,                           -- Google Maps or similar
+  price text,                             -- "Free", "€10", "Donation"
+  contact_email text not null,
+  image_url text,                         -- thumbnail (16:9)
+  urgent boolean default false not null,
+  sold_out boolean default false not null,
+  approved boolean default false not null
+);
+
+create index if not exists events_date_idx on events(event_date);
+create index if not exists events_city_idx on events(city);
+
+alter table events enable row level security;
+
+create policy "Logged-in users post events"
+  on events for insert to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "View approved events or own"
+  on events for select to anon, authenticated
+  using (approved = true or auth.uid() = user_id);
+
+create policy "Users delete own events"
+  on events for delete to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Users update own events"
+  on events for update to authenticated
+  using (auth.uid() = user_id);
+
+-- Re-use the auto-approve trigger from Step 8
+drop trigger if exists trg_auto_approve_events on events;
+create trigger trg_auto_approve_events
+  before insert on events
+  for each row execute function auto_approve_authenticated();

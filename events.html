@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — geosin.be</title>
+  <meta name="description" content="Community events for Georgians in Belgium — workshops, concerts, religious gatherings, networking." />
+  <meta property="og:title" content="Events — geosin.be" />
+  <meta property="og:description" content="Community events for Georgians in Belgium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/events.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    [data-lang-block] { display: revert; }
+
+    /* ── Layout: 25/75 sidebar+main ── */
+    .ev-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 3fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .ev-layout { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    /* ── Sidebar ── */
+    .ev-sidebar {
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 20px 22px;
+    }
+    @media (max-width: 900px) {
+      .ev-sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 86%; max-width: 340px;
+        z-index: 90;
+        border-radius: 0;
+        border: none;
+        border-right: 1px solid var(--hairline);
+        transform: translateX(-110%);
+        transition: transform 0.25s ease;
+        overflow-y: auto;
+        padding-top: 70px;
+      }
+      .ev-sidebar.open { transform: translateX(0); box-shadow: 0 0 50px rgba(0,0,0,0.2); }
+      .ev-sidebar-backdrop {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.4); z-index: 89;
+      }
+      .ev-sidebar-backdrop.open { display: block; }
+      .ev-sidebar-close {
+        position: absolute; top: 16px; right: 16px;
+        background: none; border: none; font-size: 26px; cursor: pointer;
+        color: var(--muted);
+      }
+    }
+    @media (min-width: 901px) {
+      .ev-sidebar-backdrop, .ev-sidebar-close, .ev-filter-toggle { display: none !important; }
+    }
+
+    .ev-filter-toggle {
+      display: none;
+      align-items: center; gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-sm);
+      background: var(--canvas);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 900px) { .ev-filter-toggle { display: inline-flex; } }
+
+    .ev-sidebar h5 {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px;
+    }
+    .ev-sidebar-divider { border: none; border-top: 1px solid var(--hairline); margin: 14px 0; }
+
+    .cat-list { display: flex; flex-direction: column; gap: 2px; }
+    .cat-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 12px; border-radius: var(--r-sm); font-size: 14px; color: var(--body-text);
+      cursor: pointer; transition: background 0.12s, color 0.12s;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .cat-btn:hover { background: var(--surface); color: var(--ink); }
+    .cat-btn.active { background: var(--ink); color: #fff; }
+    .cat-btn .num {
+      font-size: 11px; font-weight: 700;
+      background: var(--hairline); color: var(--muted);
+      padding: 2px 7px; border-radius: var(--r-full);
+    }
+    .cat-btn.active .num { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+
+    .check-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .check-list label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--body-text);
+      cursor: pointer;
+    }
+    .check-list input { accent-color: var(--rausch); width: 15px; height: 15px; cursor: pointer; }
+
+    .post-event-cta {
+      display: block; width: 100%;
+      padding: 12px 14px;
+      background: var(--rausch); color: #fff;
+      border: none;
+      border-radius: var(--r-sm);
+      font-weight: 700; font-size: 14px;
+      text-align: center; text-decoration: none;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .post-event-cta:hover { background: #e21d4d; }
+
+    /* ── Results header ── */
+    .ev-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px; gap: 12px; flex-wrap: wrap;
+    }
+    .ev-head h2 { font-size: 22px; font-weight: 700; margin: 0; }
+    .ev-count { font-size: 13px; color: var(--muted); }
+
+    /* ── Event grid ── */
+    .ev-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .ev-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .ev-card:hover {
+      border-color: var(--rausch);
+      box-shadow: 0 6px 18px rgba(255,56,92,0.10);
+      transform: translateY(-2px);
+    }
+
+    .ev-thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .ev-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .ev-card:hover .ev-thumb img { transform: scale(1.04); }
+    .ev-thumb-fallback {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 28px;
+      background: linear-gradient(135deg, #fff5f7 0%, #f0f7ff 100%);
+    }
+
+    .ev-badges {
+      position: absolute; top: 10px; left: 10px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .ev-badge {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: var(--r-full);
+      backdrop-filter: blur(6px);
+    }
+    .ev-badge.today    { background: #15803d; color: #fff; }
+    .ev-badge.urgent   { background: var(--rausch); color: #fff; }
+    .ev-badge.soldout  { background: rgba(0,0,0,0.7); color: #fff; }
+    .ev-badge.upcoming { background: rgba(255,255,255,0.85); color: var(--ink); }
+    .ev-badge.cat {
+      background: rgba(0,53,102,0.85); color: #fff;
+      position: absolute; top: 10px; right: 10px;
+    }
+
+    .ev-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+    .ev-title-ka {
+      font-family: var(--font-georgian);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .ev-title-en {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--body-text);
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+    .ev-title-en.solo {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .ev-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; flex: 1; }
+    .ev-meta-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--body-text);
+    }
+    .ev-meta-row svg { color: var(--muted); flex-shrink: 0; }
+    .ev-meta-row .map-link {
+      color: var(--rausch); text-decoration: none; font-weight: 600;
+      margin-left: 4px;
+    }
+    .ev-meta-row .map-link:hover { text-decoration: underline; }
+    .ev-price {
+      display: inline-block;
+      font-size: 12px; font-weight: 700;
+      padding: 3px 10px;
+      background: var(--surface);
+      border-radius: var(--r-full);
+      color: var(--ink);
+    }
+    .ev-price.free { background: #e6f4ea; color: #15803d; }
+
+    .ev-action {
+      display: block;
+      text-align: center;
+      padding: 10px 14px;
+      background: var(--ink); color: #fff;
+      border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 700;
+      text-decoration: none;
+      cursor: pointer; border: none;
+      transition: background 0.12s;
+    }
+    .ev-action:hover { background: var(--rausch); }
+
+    /* ── Empty state ── */
+    .ev-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--canvas);
+      border: 1px dashed var(--hairline);
+      border-radius: var(--r-md);
+    }
+    .ev-empty .icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--muted);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .ev-empty h3 { font-size: 17px; margin-bottom: 6px; }
+    .ev-empty p { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+
+    /* ── Loading skeleton ── */
+    .ev-skeleton {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+    }
+
+    /* ── Modal (event detail) ── */
+    .ev-modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      z-index: 100;
+    }
+    .ev-modal-backdrop.open { display: flex; }
+    .ev-modal {
+      background: var(--canvas);
+      border-radius: var(--r-md);
+      max-width: 720px; width: 100%; max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    }
+    .ev-modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--hairline);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+    }
+    .ev-modal-thumb { aspect-ratio: 16/9; background: var(--surface); position: relative; }
+    .ev-modal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .ev-modal-body { padding: 28px 32px; }
+    .ev-modal-body .cat-tag {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; background: rgba(0,53,102,0.08); color: #0066cc;
+      padding: 3px 10px; border-radius: var(--r-full); margin-bottom: 12px;
+    }
+    .ev-modal-body h2 {
+      font-family: var(--font-georgian);
+      font-size: 26px; font-weight: 800;
+      margin-bottom: 4px; line-height: 1.2;
+    }
+    .ev-modal-body .en-title { font-size: 16px; color: var(--muted); margin-bottom: 18px; }
+    .ev-modal-body .en-title.solo {
+      font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 18px;
+      font-family: inherit;
+    }
+    .ev-modal-meta {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border-radius: var(--r-sm);
+      margin-bottom: 20px;
+    }
+    @media (max-width: 540px) { .ev-modal-meta { grid-template-columns: 1fr; } }
+    .ev-modal-meta .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .ev-modal-meta .val   { font-size: 14px; color: var(--ink); }
+    .ev-modal-body .desc { font-size: 15px; line-height: 1.7; color: var(--body-text); white-space: pre-wrap; margin-bottom: 24px; }
+    .ev-modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Submission modal — multi-step ── */
+    .submit-modal { max-width: 600px; }
+    .submit-progress {
+      display: flex; gap: 6px;
+      padding: 18px 28px 0;
+    }
+    .submit-progress .step {
+      flex: 1; height: 4px;
+      background: var(--hairline);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .submit-progress .step.done .fill,
+    .submit-progress .step.active .fill { width: 100%; background: var(--rausch); }
+    .submit-progress .step .fill {
+      height: 100%; width: 0;
+      background: var(--rausch);
+      transition: width 0.3s;
+    }
+    .submit-step-num {
+      padding: 12px 28px 0;
+      font-size: 12px; font-weight: 700; color: var(--muted);
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .submit-form { padding: 8px 28px 24px; }
+    .submit-step { display: none; }
+    .submit-step.active { display: block; }
+    .submit-step h3 { font-size: 18px; margin-bottom: 16px; }
+    .submit-form .field {
+      display: flex; flex-direction: column;
+      gap: 5px; margin-bottom: 14px;
+    }
+    .submit-form label {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+    }
+    .submit-form .hint { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .submit-form input,
+    .submit-form select,
+    .submit-form textarea {
+      padding: 10px 12px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-sm);
+      font: inherit; font-size: 14px;
+      background: var(--canvas); color: var(--ink);
+    }
+    .submit-form input:focus,
+    .submit-form select:focus,
+    .submit-form textarea:focus {
+      outline: none;
+      border-color: var(--rausch);
+      box-shadow: 0 0 0 3px rgba(255,56,92,0.15);
+    }
+    .submit-form textarea { min-height: 100px; resize: vertical; }
+    .submit-form .row2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    @media (max-width: 480px) { .submit-form .row2 { grid-template-columns: 1fr; } }
+    .submit-form .check-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--body-text);
+    }
+    .submit-form .check-row input { width: 16px; height: 16px; accent-color: var(--rausch); }
+
+    .submit-nav {
+      display: flex; justify-content: space-between; gap: 8px;
+      padding: 16px 28px 24px;
+      border-top: 1px solid var(--hairline);
+      margin-top: 8px;
+    }
+    .submit-nav .btn-back {
+      padding: 10px 16px;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--hairline); border-radius: var(--r-sm);
+      font: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer;
+    }
+    .submit-nav .btn-back[disabled] { opacity: 0.4; cursor: not-allowed; }
+    .submit-nav .btn-next,
+    .submit-nav .btn-submit {
+      padding: 10px 20px;
+      background: var(--rausch); color: #fff;
+      border: none; border-radius: var(--r-sm);
+      font: inherit; font-size: 13px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .submit-nav .btn-next:hover,
+    .submit-nav .btn-submit:hover { background: #e21d4d; }
+    .submit-msg { padding: 0 28px 18px; }
+    .submit-msg .err {
+      background: #fff0f2; color: #c20030;
+      border: 1px solid #ffd4dc;
+      padding: 10px 14px; border-radius: var(--r-sm);
+      font-size: 13px;
+    }
+    .submit-msg .ok {
+      background: #f0fdf4; color: #15803d;
+      border: 1px solid #bbf7d0;
+      padding: 14px 18px; border-radius: var(--r-sm);
+      font-size: 14px;
+      margin: 0 28px 24px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="site-nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">G</div>
+      <span class="nav-logo-text">geosin<span>.be</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="housing.html">Housing</a>
+      <a href="services.html">Services</a>
+      <a href="events.html" class="active">Events</a>
+      <a href="checklists.html">Checklists</a>
+      <a href="scams.html">Avoid Scams</a>
+      <a href="forum.html">Forum</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
+      </div>
+    </div>
+    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px;color:var(--rausch)">
+      <span data-lang-block="en">Community calendar</span>
+      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საზოგადოების კალენდარი</span>
+    </p>
+    <h1>
+      <span data-lang-block="en">Events for the Georgian community</span>
+      <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ღონისძიებები ქართველებისთვის</span>
+    </h1>
+    <p class="sub">ღონისძიებები · Évènements</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<section class="section">
+  <div class="container">
+
+    <button class="ev-filter-toggle" onclick="toggleSidebar()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      Filters
+    </button>
+
+    <div class="ev-sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="ev-layout">
+      <!-- ── SIDEBAR ── -->
+      <aside class="ev-sidebar" id="ev-sidebar">
+        <button class="ev-sidebar-close" onclick="toggleSidebar()" aria-label="Close">×</button>
+
+        <button class="post-event-cta" onclick="openSubmit()">
+          + <span data-lang-block="en">Post an Event</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">დაამატე ღონისძიება</span>
+        </button>
+
+        <hr class="ev-sidebar-divider" />
+
+        <h5>
+          <span data-lang-block="en">Category</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">კატეგორია</span>
+        </h5>
+        <div class="cat-list" id="cat-list">
+          <button class="cat-btn active" data-cat="all" onclick="setCat('all')">
+            <span><span data-lang-block="en">All</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყველა</span></span>
+            <span class="num" data-count="all">0</span>
+          </button>
+          <button class="cat-btn" data-cat="Workshop" onclick="setCat('Workshop')">
+            <span><span data-lang-block="en">Workshops</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ვორქშოპი</span></span>
+            <span class="num" data-count="Workshop">0</span>
+          </button>
+          <button class="cat-btn" data-cat="Concert" onclick="setCat('Concert')">
+            <span><span data-lang-block="en">Concerts</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">კონცერტი</span></span>
+            <span class="num" data-count="Concert">0</span>
+          </button>
+          <button class="cat-btn" data-cat="Religious" onclick="setCat('Religious')">
+            <span><span data-lang-block="en">Religious</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სასულიერო</span></span>
+            <span class="num" data-count="Religious">0</span>
+          </button>
+          <button class="cat-btn" data-cat="Networking" onclick="setCat('Networking')">
+            <span><span data-lang-block="en">Networking</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ნეთვორქინგი</span></span>
+            <span class="num" data-count="Networking">0</span>
+          </button>
+          <button class="cat-btn" data-cat="Other" onclick="setCat('Other')">
+            <span><span data-lang-block="en">Other</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სხვა</span></span>
+            <span class="num" data-count="Other">0</span>
+          </button>
+        </div>
+
+        <hr class="ev-sidebar-divider" />
+
+        <h5>
+          <span data-lang-block="en">City</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ქალაქი</span>
+        </h5>
+        <div class="check-list" id="city-filter">
+          <label><input type="checkbox" value="Brussels" checked onchange="applyFilter()" /> Brussels</label>
+          <label><input type="checkbox" value="Antwerp"  checked onchange="applyFilter()" /> Antwerp</label>
+          <label><input type="checkbox" value="Ghent"    checked onchange="applyFilter()" /> Ghent</label>
+          <label><input type="checkbox" value="Liège"    checked onchange="applyFilter()" /> Liège</label>
+          <label><input type="checkbox" value="Bruges"   checked onchange="applyFilter()" /> Bruges</label>
+          <label><input type="checkbox" value="Remote"   checked onchange="applyFilter()" /> Remote</label>
+          <label><input type="checkbox" value="Other"    checked onchange="applyFilter()" /> Other</label>
+        </div>
+      </aside>
+
+      <!-- ── MAIN FEED ── -->
+      <div>
+        <div class="ev-head">
+          <h2 id="ev-list-title">
+            <span data-lang-block="en">Upcoming events</span>
+            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">მომავალი ღონისძიებები</span>
+          </h2>
+          <span class="ev-count" id="ev-count">Loading…</span>
+        </div>
+
+        <div class="ev-grid" id="ev-grid">
+          <div class="ev-skeleton">Loading events…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DETAIL MODAL ── -->
+<div class="ev-modal-backdrop" id="detail-modal" onclick="closeModalIfBackdrop(event)">
+  <div class="ev-modal" id="detail-modal-inner">
+    <button class="ev-modal-close" onclick="closeDetail()" aria-label="Close">×</button>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<!-- ── SUBMISSION MODAL (multi-step) ── -->
+<div class="ev-modal-backdrop" id="submit-modal" onclick="closeModalIfBackdrop(event)">
+  <div class="ev-modal submit-modal">
+    <button class="ev-modal-close" onclick="closeSubmit()" aria-label="Close">×</button>
+
+    <div class="submit-progress">
+      <div class="step active" data-step-bar="1"><div class="fill"></div></div>
+      <div class="step" data-step-bar="2"><div class="fill"></div></div>
+      <div class="step" data-step-bar="3"><div class="fill"></div></div>
+    </div>
+    <div class="submit-step-num"><span id="step-num-text">Step 1 of 3</span> · <span id="step-title-text">About the event</span></div>
+
+    <form class="submit-form" id="submit-form" novalidate onsubmit="return submitEvent(event)">
+
+      <!-- STEP 1: About -->
+      <div class="submit-step active" data-step="1">
+        <div class="field">
+          <label>Title (English) <span class="hint">required</span></label>
+          <input type="text" name="title" maxlength="120" required />
+        </div>
+        <div class="field">
+          <label>Title (Georgian) <span class="hint">optional but recommended</span></label>
+          <input type="text" name="title_ka" maxlength="120" style="font-family:var(--font-georgian)" />
+        </div>
+        <div class="field">
+          <label>Category <span class="hint">required</span></label>
+          <select name="category" required>
+            <option value="">Select…</option>
+            <option>Workshop</option>
+            <option>Concert</option>
+            <option>Religious</option>
+            <option>Networking</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Description <span class="hint">required, max 1500 chars</span></label>
+          <textarea name="description" maxlength="1500" required placeholder="What is it? Who is it for? What should people bring?"></textarea>
+        </div>
+      </div>
+
+      <!-- STEP 2: When & where -->
+      <div class="submit-step" data-step="2">
+        <div class="row2">
+          <div class="field">
+            <label>Date <span class="hint">required</span></label>
+            <input type="date" name="event_date" required />
+          </div>
+          <div class="field">
+            <label>Time</label>
+            <input type="text" name="event_time" placeholder="19:00 or 'All day'" />
+          </div>
+        </div>
+        <div class="field">
+          <label>City <span class="hint">required</span></label>
+          <select name="city" required>
+            <option value="">Select…</option>
+            <option>Brussels</option>
+            <option>Antwerp</option>
+            <option>Ghent</option>
+            <option>Liège</option>
+            <option>Bruges</option>
+            <option>Remote</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Venue / location name</label>
+          <input type="text" name="venue" maxlength="120" placeholder="e.g. Bozar, Cathédrale Saint-Michel" />
+        </div>
+        <div class="field">
+          <label>Address</label>
+          <input type="text" name="address" maxlength="200" placeholder="Rue de … 12, 1000 Brussels" />
+        </div>
+        <div class="field">
+          <label>Map link <span class="hint">optional — Google Maps URL</span></label>
+          <input type="url" name="map_url" placeholder="https://maps.google.com/…" />
+        </div>
+      </div>
+
+      <!-- STEP 3: Details -->
+      <div class="submit-step" data-step="3">
+        <div class="row2">
+          <div class="field">
+            <label>Price</label>
+            <input type="text" name="price" placeholder="Free, €10, Donation…" />
+          </div>
+          <div class="field">
+            <label>Contact email <span class="hint">required</span></label>
+            <input type="email" name="contact_email" required />
+          </div>
+        </div>
+        <div class="field">
+          <label>Image URL <span class="hint">optional 16:9 thumbnail</span></label>
+          <input type="url" name="image_url" placeholder="https://…" />
+        </div>
+        <div class="field">
+          <label class="check-row">
+            <input type="checkbox" name="urgent" />
+            <span>Mark as urgent (limited spots / soon)</span>
+          </label>
+        </div>
+        <div class="field">
+          <label class="check-row">
+            <input type="checkbox" name="sold_out" />
+            <span>Mark as sold out</span>
+          </label>
+        </div>
+      </div>
+    </form>
+
+    <div class="submit-msg" id="submit-msg"></div>
+
+    <div class="submit-nav">
+      <button type="button" class="btn-back" id="step-back" onclick="prevStep()" disabled>← Back</button>
+      <div style="display:flex;gap:8px">
+        <button type="button" class="btn-next"   id="step-next"   onclick="nextStep()">Next →</button>
+        <button type="button" class="btn-submit" id="step-submit" onclick="submitEvent()" style="display:none">Submit event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-mark">G</div>
+          <span class="nav-logo-text">geosin<span>.be</span></span>
+        </a>
+        <p>A practical hub for Georgians in Belgium. Free for everyone.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site</h5>
+        <ul>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="jobs.html">Jobs</a></li>
+          <li><a href="housing.html">Housing</a></li>
+          <li><a href="events.html">Events</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="checklists.html">Checklists</a></li>
+          <li><a href="scams.html">Avoid Scams</a></li>
+          <li><a href="forum.html">Forum</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Account</h5>
+        <ul>
+          <li><a href="signup.html">Sign up</a></li>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="account.html">My account</a></li>
+          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 geosin.be</span>
+      <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js?v=2"></script>
+<script>
+  /* ── Language ── */
+  function setLang(lang) {
+    localStorage.setItem('geosin-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
+    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+  }
+  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  setLang(localStorage.getItem('geosin-lang') || 'en');
+
+  /* ── Sidebar drawer (mobile) ── */
+  function toggleSidebar() {
+    document.getElementById('ev-sidebar').classList.toggle('open');
+    document.getElementById('sidebar-backdrop').classList.toggle('open');
+  }
+
+  const sb = window.sb || null;
+  const escapeHtml = s => String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]);
+
+  let allEvents = [];
+  let currentCat = 'all';
+
+  /* ── Helpers ── */
+  function isToday(dateStr) {
+    if (!dateStr) return false;
+    const d = new Date(dateStr);
+    const t = new Date();
+    return d.toDateString() === t.toDateString();
+  }
+  function fmtDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  /* ── Render one card ── */
+  function renderCard(e) {
+    const today = isToday(e.event_date);
+    const badges = [];
+    if (today)        badges.push('<span class="ev-badge today">Today</span>');
+    if (e.urgent && !today) badges.push('<span class="ev-badge urgent">Urgent</span>');
+    if (e.sold_out)   badges.push('<span class="ev-badge soldout">Sold out</span>');
+    if (badges.length === 0) badges.push('<span class="ev-badge upcoming">Upcoming</span>');
+
+    const hasKa = e.title_ka && e.title_ka.trim().length > 0;
+    const titleBlock = hasKa
+      ? `<div class="ev-title-ka">${escapeHtml(e.title_ka)}</div>
+         <div class="ev-title-en">${escapeHtml(e.title)}</div>`
+      : `<div class="ev-title-en solo">${escapeHtml(e.title)}</div>`;
+
+    const thumb = e.image_url
+      ? `<img src="${escapeHtml(e.image_url)}" alt="${escapeHtml(e.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;ev-thumb-fallback&quot;>📅</div>'+this.parentElement.querySelector('.ev-badges')?.outerHTML+(this.parentElement.querySelector('.ev-badge.cat')?.outerHTML||'')" />`
+      : `<div class="ev-thumb-fallback">📅</div>`;
+
+    const priceClass = (e.price && /^free$/i.test(e.price.trim())) ? 'free' : '';
+
+    return `
+      <article class="ev-card">
+        <div class="ev-thumb">
+          ${thumb}
+          <div class="ev-badges">${badges.join('')}</div>
+          <span class="ev-badge cat">${escapeHtml(e.category)}</span>
+        </div>
+        <div class="ev-body">
+          ${titleBlock}
+          <div class="ev-meta">
+            <div class="ev-meta-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>${fmtDate(e.event_date)}${e.event_time ? ' · ' + escapeHtml(e.event_time) : ''}</span>
+            </div>
+            <div class="ev-meta-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>${escapeHtml(e.city)}${e.venue ? ' — ' + escapeHtml(e.venue) : ''}${e.map_url ? `<a class="map-link" href="${escapeHtml(e.map_url)}" target="_blank" rel="noopener">View on Map</a>` : ''}</span>
+            </div>
+            ${e.price ? `<div class="ev-meta-row"><span class="ev-price ${priceClass}">${escapeHtml(e.price)}</span></div>` : ''}
+          </div>
+          <button class="ev-action" onclick="openDetail(${e.id})">View details</button>
+        </div>
+      </article>
+    `;
+  }
+
+  /* ── Filter + render ── */
+  function getCheckedCities() {
+    return Array.from(document.querySelectorAll('#city-filter input:checked')).map(i => i.value);
+  }
+  function setCat(cat) {
+    currentCat = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    applyFilter();
+  }
+  function applyFilter() {
+    const cities = getCheckedCities();
+    let filtered = allEvents.filter(e => cities.includes(e.city));
+    if (currentCat !== 'all') filtered = filtered.filter(e => e.category === currentCat);
+
+    // Sort: today first, then by date asc
+    filtered.sort((a, b) => {
+      const at = isToday(a.event_date) ? 0 : 1;
+      const bt = isToday(b.event_date) ? 0 : 1;
+      if (at !== bt) return at - bt;
+      return new Date(a.event_date) - new Date(b.event_date);
+    });
+
+    const grid = document.getElementById('ev-grid');
+    document.getElementById('ev-count').textContent = `${filtered.length} event${filtered.length === 1 ? '' : 's'}`;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="ev-empty">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3>No events match these filters</h3>
+          <p>Try clearing the filters, or be the first to post one.</p>
+          <button class="btn btn-primary btn-sm" onclick="clearFilters()">Clear filters</button>
+          <button class="btn btn-ghost btn-sm" onclick="openSubmit()" style="margin-left:8px">+ Post an event</button>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(renderCard).join('');
+  }
+  function clearFilters() {
+    document.querySelectorAll('#city-filter input').forEach(i => i.checked = true);
+    setCat('all');
+  }
+
+  /* ── Update sidebar counts ── */
+  function updateCounts() {
+    const counts = { all: allEvents.length };
+    allEvents.forEach(e => { counts[e.category] = (counts[e.category] || 0) + 1; });
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = counts[el.dataset.count] || 0;
+    });
+  }
+
+  /* ── Load from Supabase ── */
+  async function loadEvents() {
+    if (!sb) {
+      document.getElementById('ev-grid').innerHTML = '<div class="ev-empty"><h3>Database unavailable</h3><p>Please refresh.</p></div>';
+      return;
+    }
+    const today = new Date(); today.setHours(0,0,0,0);
+    const { data, error } = await sb
+      .from('events')
+      .select('*')
+      .eq('approved', true)
+      .gte('event_date', today.toISOString().split('T')[0])
+      .order('event_date', { ascending: true });
+
+    if (error) {
+      console.error(error);
+      document.getElementById('ev-grid').innerHTML = `<div class="ev-empty"><h3>Couldn't load events</h3><p>${escapeHtml(error.message)}</p><p>Has the SQL been run? See SETUP.sql.</p></div>`;
+      return;
+    }
+    allEvents = data || [];
+    updateCounts();
+    applyFilter();
+  }
+  loadEvents();
+
+  /* ── Detail modal ── */
+  function openDetail(id) {
+    const e = allEvents.find(x => x.id === id);
+    if (!e) return;
+    const hasKa = e.title_ka && e.title_ka.trim().length > 0;
+    const c = document.getElementById('detail-content');
+    const priceClass = (e.price && /^free$/i.test(e.price.trim())) ? 'free' : '';
+    c.innerHTML = `
+      <div class="ev-modal-thumb">
+        ${e.image_url ? `<img src="${escapeHtml(e.image_url)}" alt="${escapeHtml(e.title)}" loading="lazy" />` : '<div class="ev-thumb-fallback">📅</div>'}
+      </div>
+      <div class="ev-modal-body">
+        <span class="cat-tag">${escapeHtml(e.category)}</span>
+        ${hasKa
+          ? `<h2>${escapeHtml(e.title_ka)}</h2><div class="en-title">${escapeHtml(e.title)}</div>`
+          : `<div class="en-title solo">${escapeHtml(e.title)}</div>`
+        }
+        <div class="ev-modal-meta">
+          <div><div class="label">When</div><div class="val">${fmtDate(e.event_date)}${e.event_time ? ' · ' + escapeHtml(e.event_time) : ''}</div></div>
+          <div><div class="label">City</div><div class="val">${escapeHtml(e.city)}</div></div>
+          ${e.venue   ? `<div><div class="label">Venue</div><div class="val">${escapeHtml(e.venue)}</div></div>` : ''}
+          ${e.address ? `<div><div class="label">Address</div><div class="val">${escapeHtml(e.address)}</div></div>` : ''}
+          ${e.price   ? `<div><div class="label">Price</div><div class="val"><span class="ev-price ${priceClass}">${escapeHtml(e.price)}</span></div></div>` : ''}
+        </div>
+        <div class="desc">${escapeHtml(e.description)}</div>
+        <div class="ev-modal-actions">
+          ${e.map_url ? `<a href="${escapeHtml(e.map_url)}" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">View on Map</a>` : ''}
+          ${e.contact_email ? `<a href="mailto:${escapeHtml(e.contact_email)}" class="btn btn-primary btn-sm">Contact organiser</a>` : ''}
+        </div>
+      </div>
+    `;
+    document.getElementById('detail-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDetail() {
+    document.getElementById('detail-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalIfBackdrop(e) {
+    if (e.target.classList.contains('ev-modal-backdrop')) {
+      closeDetail();
+      closeSubmit();
+    }
+  }
+
+  /* ── Submission flow ── */
+  let currentStep = 1;
+  const totalSteps = 3;
+  const stepTitles = { 1: 'About the event', 2: 'When & where', 3: 'Final details' };
+
+  async function openSubmit() {
+    const u = await AUTH.getUser();
+    if (!u) {
+      location.href = 'login.html?next=' + encodeURIComponent('events.html');
+      return;
+    }
+    document.getElementById('submit-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    currentStep = 1; updateStepUI();
+  }
+  function closeSubmit() {
+    document.getElementById('submit-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateStepUI() {
+    document.querySelectorAll('.submit-step').forEach(el => el.classList.toggle('active', +el.dataset.step === currentStep));
+    document.querySelectorAll('.submit-progress .step').forEach(el => {
+      const n = +el.dataset.stepBar;
+      el.classList.toggle('active', n === currentStep);
+      el.classList.toggle('done',   n < currentStep);
+    });
+    document.getElementById('step-num-text').textContent = `Step ${currentStep} of ${totalSteps}`;
+    document.getElementById('step-title-text').textContent = stepTitles[currentStep];
+    document.getElementById('step-back').disabled = currentStep === 1;
+    document.getElementById('step-next').style.display   = currentStep < totalSteps ? '' : 'none';
+    document.getElementById('step-submit').style.display = currentStep === totalSteps ? '' : 'none';
+  }
+
+  function validateStep(step) {
+    const form = document.getElementById('submit-form');
+    const fd = new FormData(form);
+    const errors = [];
+    if (step === 1) {
+      if (!fd.get('title')?.trim())       errors.push('English title is required.');
+      if (!fd.get('category'))            errors.push('Category is required.');
+      if (!fd.get('description')?.trim()) errors.push('Description is required.');
+    } else if (step === 2) {
+      if (!fd.get('event_date')) errors.push('Date is required.');
+      if (!fd.get('city'))       errors.push('City is required.');
+    } else if (step === 3) {
+      if (!fd.get('contact_email')?.trim()) errors.push('Contact email is required.');
+    }
+    return errors;
+  }
+  function showStepError(errs) {
+    const m = document.getElementById('submit-msg');
+    if (errs.length === 0) { m.innerHTML = ''; return; }
+    m.innerHTML = `<div class="err">${errs.map(escapeHtml).join('<br/>')}</div>`;
+  }
+  function nextStep() {
+    const errs = validateStep(currentStep);
+    if (errs.length) { showStepError(errs); return; }
+    showStepError([]);
+    if (currentStep < totalSteps) currentStep++;
+    updateStepUI();
+  }
+  function prevStep() {
+    showStepError([]);
+    if (currentStep > 1) currentStep--;
+    updateStepUI();
+  }
+
+  async function submitEvent() {
+    const errs = validateStep(currentStep);
+    if (errs.length) { showStepError(errs); return; }
+    const user = await AUTH.getUser();
+    if (!user) { location.href = 'login.html?next=' + encodeURIComponent('events.html'); return; }
+
+    const fd = new FormData(document.getElementById('submit-form'));
+    const row = {
+      user_id: user.id,
+      title:        fd.get('title').trim(),
+      title_ka:     fd.get('title_ka')?.trim() || null,
+      category:     fd.get('category'),
+      description:  fd.get('description').trim(),
+      event_date:   fd.get('event_date'),
+      event_time:   fd.get('event_time')?.trim() || null,
+      city:         fd.get('city'),
+      venue:        fd.get('venue')?.trim() || null,
+      address:      fd.get('address')?.trim() || null,
+      map_url:      fd.get('map_url')?.trim() || null,
+      price:        fd.get('price')?.trim() || null,
+      contact_email: fd.get('contact_email').trim(),
+      image_url:    fd.get('image_url')?.trim() || null,
+      urgent:   !!fd.get('urgent'),
+      sold_out: !!fd.get('sold_out')
+    };
+
+    document.getElementById('step-submit').disabled = true;
+    document.getElementById('step-submit').textContent = 'Submitting…';
+
+    const { error } = await sb.from('events').insert(row);
+
+    document.getElementById('step-submit').disabled = false;
+    document.getElementById('step-submit').textContent = 'Submit event';
+
+    if (error) {
+      showStepError(['Submission failed: ' + error.message]);
+      return;
+    }
+    document.getElementById('submit-msg').innerHTML = '<div class="ok"><strong>Thanks!</strong> Your event is live. You can edit or delete it from <a href="account.html" style="color:var(--rausch);font-weight:600">My account</a>.</div>';
+    document.getElementById('submit-form').reset();
+    setTimeout(() => { closeSubmit(); loadEvents(); }, 1800);
+  }
+
+  /* ── ESC closes modals ── */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeDetail(); closeSubmit(); }
+  });
+</script>
+</body>
+</html>
