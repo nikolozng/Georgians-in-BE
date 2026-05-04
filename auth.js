@@ -85,12 +85,13 @@
   };
 
   // ────────── Inject auth-aware nav buttons ──────────
+  // Guard against parallel renders (DOMContentLoaded + onAuthStateChange can race)
+  let _navRenderToken = 0;
+
   async function renderNavAuth() {
+    const myToken = ++_navRenderToken;          // claim a fresh ticket
     const actions = document.getElementById('nav-actions');
     if (!actions) return;
-
-    // Remove any previously-rendered auth block (so it survives re-renders)
-    actions.querySelectorAll('[data-auth-block]').forEach(el => el.remove());
 
     const wrap = document.createElement('div');
     wrap.setAttribute('data-auth-block', '');
@@ -100,6 +101,8 @@
     wrap.style.marginLeft = '8px';
 
     const user = await getUser();
+    if (myToken !== _navRenderToken) return;    // a newer render already started — bail
+
     if (!user) {
       wrap.innerHTML = `
         <a href="login.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">Log in</a>
@@ -107,6 +110,7 @@
       `;
     } else {
       const unread = await unreadNotificationCount();
+      if (myToken !== _navRenderToken) return;
       const bell = unread > 0
         ? `<a href="account.html#notifications" title="${unread} new" style="position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--ink);text-decoration:none">
              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -120,6 +124,9 @@
         <a href="account.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">My account</a>
       `;
     }
+
+    // Cleanup + append in one synchronous block (no awaits between them)
+    actions.querySelectorAll('[data-auth-block]').forEach(el => el.remove());
     actions.appendChild(wrap);
   }
 
