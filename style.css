@@ -790,41 +790,89 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
 }
 
 @media (max-width: 768px) {
-  :root { --nav-h: 64px; }
+  :root { --nav-h: 60px; }
+
+  /* Prevent any horizontal scroll caused by oversize backgrounds */
+  html, body { overflow-x: hidden; }
+
+  /* iOS zooms in on inputs whose text is < 16px. Force ≥16px to stop that. */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* Bigger tap targets */
+  .btn, .btn-sm, .lang-btn, button, a.btn { min-height: 44px; }
+
+  /* ───── MOBILE NAV ─────
+     Single full-screen drawer:
+       - logo + hamburger stay in top bar
+       - nav-links scrolls in middle
+       - nav-actions (lang toggle + auth buttons) docked at bottom
+  */
   .nav-links, .nav-actions { display: none; }
   .nav-hamburger { display: flex; }
+
   .nav-mobile-open .nav-links {
     display: flex;
     flex-direction: column;
     position: fixed;
     top: var(--nav-h);
     left: 0; right: 0;
+    bottom: 88px;                      /* leave room for the docked action bar */
     background: var(--canvas);
-    border-bottom: 1px solid var(--hairline);
-    padding: 16px 24px 24px;
-    gap: 2px;
+    padding: 18px 24px 24px;
+    gap: 4px;
     z-index: 99;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
+  .nav-mobile-open .nav-links a {
+    padding: 14px 12px;
+    font-size: 17px;
+    border-radius: var(--r-sm);
+  }
+
   .nav-mobile-open .nav-actions {
     display: flex;
     position: fixed;
-    top: calc(var(--nav-h) + 200px);
     left: 0; right: 0;
+    bottom: 0;
     background: var(--canvas);
-    padding: 16px 24px 24px;
-    border-bottom: 1px solid var(--hairline);
-    z-index: 99;
+    border-top: 1px solid var(--hairline);
+    padding: 14px 20px max(14px, env(safe-area-inset-bottom)) 20px;
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
   }
+  /* The auth-block injected by auth.js — keep its buttons compact */
+  .nav-mobile-open .nav-actions [data-auth-block] {
+    margin-left: 0 !important;
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .nav-mobile-open .nav-actions [data-auth-block] .btn {
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+  }
+
+  /* When the drawer is open, lock the body so background doesn't scroll */
+  body.has-mobile-nav-open { overflow: hidden; }
+
   .feature-grid  { grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr; }
   .team-grid     { grid-template-columns: 1fr 1fr; }
   .stats-grid    { grid-template-columns: 1fr 1fr; }
   .stat-item:nth-child(2) { border-right: none; }
   .form-grid     { grid-template-columns: 1fr; }
-  .form-card     { padding: 28px 20px; }
+  .form-card     { padding: 24px 18px; }
   .footer-grid   { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   .hero { min-height: 420px; }
+
+  /* Section padding tighter on mobile */
+  .section { padding: 44px 0; }
+  .container { padding: 0 18px; }
 }
 
 @media (max-width: 480px) {
@@ -845,3 +893,16 @@ html[lang="ka"] .en { display: none !important; }
 
 /* Required-field marker (red asterisk) used across all forms */
 .req { color: var(--rausch); margin-left: 3px; font-weight: 700; }
+
+/* ── Touch / no-hover devices ──
+   Disable scale-up hover effects (they look weird when tapped on mobile)
+*/
+@media (hover: none) {
+  .bento-card:hover,
+  .can-do-card:hover,
+  .journey-card:hover,
+  .spot-card:hover,
+  .ev-card:hover {
+    transform: none !important;
+  }
+}

@@ -273,7 +273,11 @@
     document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
-  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  function toggleMobileNav() {
+    const nav = document.getElementById('site-nav');
+    const opened = nav.classList.toggle('nav-mobile-open');
+    document.body.classList.toggle('has-mobile-nav-open', opened);
+  }
 
   if (typeof window.sb === 'undefined' || !window.sb) {
     document.getElementById('h-list').innerHTML = '<p class="no-results">Could not load. Please refresh.</p>';

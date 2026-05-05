@@ -156,6 +156,12 @@
     }
     .hero-search button:hover { background: #e21d4d; }
     .hero-search button:active { transform: scale(0.97); }
+    @media (max-width: 540px) {
+      .hero-search { padding: 4px 4px 4px 16px; }
+      .hero-search input { padding: 12px 8px; font-size: 16px; }
+      .hero-search button { padding: 11px 16px; font-size: 13px; }
+      .hero-search svg { width: 16px; height: 16px; }
+    }
 
     /* ────────────────────────────────────────
        BENTO GRID — 4 interactive cards
@@ -1014,7 +1020,11 @@
     document.querySelectorAll('.ka').forEach(el => { el.style.display = lang === 'ka' ? '' : 'none'; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
-  function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
+  function toggleMobileNav() {
+    const nav = document.getElementById('site-nav');
+    const opened = nav.classList.toggle('nav-mobile-open');
+    document.body.classList.toggle('has-mobile-nav-open', opened);
+  }
   setLang(localStorage.getItem('geosin-lang') || 'en');
 
   /* ── FAQ accordion ── */

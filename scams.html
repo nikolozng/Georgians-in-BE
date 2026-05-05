@@ -454,7 +454,9 @@
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
   function toggleMobileNav() {
-    document.getElementById('site-nav').classList.toggle('nav-mobile-open');
+    const nav = document.getElementById('site-nav');
+    const opened = nav.classList.toggle('nav-mobile-open');
+    document.body.classList.toggle('has-mobile-nav-open', opened);
   }
 
   if (typeof window.sb === 'undefined' || !window.sb) {
