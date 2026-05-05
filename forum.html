@@ -214,7 +214,7 @@
 
         <form id="new-thread-form" novalidate>
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-cat">Category</label>
+            <label class="form-label" for="t-cat">Category<span class="req">*</span></label>
             <select class="form-select" id="t-cat" required>
               <option value="">Select…</option>
               <option>General</option>
@@ -231,22 +231,22 @@
           </div>
 
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-title">Title</label>
+            <label class="form-label" for="t-title">Title<span class="req">*</span></label>
             <input class="form-input" id="t-title" type="text" required maxlength="140" placeholder="One sentence — keep it specific" />
           </div>
 
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-body">Body</label>
+            <label class="form-label" for="t-body">Body<span class="req">*</span></label>
             <textarea class="form-textarea" id="t-body" required maxlength="3000" placeholder="What's the situation? What have you already tried? Any details that matter (city, deadline, etc.)?" style="min-height:160px"></textarea>
             <span class="form-hint">Max 3000 characters. Plain text — no HTML.</span>
           </div>
 
           <div class="form-group" style="margin-bottom:24px">
             <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;background:var(--surface);padding:14px 16px;border-radius:var(--r-sm);border:1px solid var(--hairline)">
-              <input type="checkbox" id="t-incognito" style="margin-top:2px" />
+              <input type="checkbox" id="t-incognito" style="margin-top:2px" onchange="onThreadIncognitoToggle(this)" />
               <span>
                 <strong>Post anonymously</strong>
-                <span class="form-hint" style="display:block;margin-top:4px">Posts as your incognito name (<span id="t-incognito-name">…</span>) instead of your display name. Other people won't see your real name or email.</span>
+                <span class="form-hint" style="display:block;margin-top:4px">Posts as <span id="t-incognito-name" style="font-family:var(--font-georgian);color:var(--ink);font-weight:700">a random Georgian alias</span> instead of your display name. Other people won't see your real name or email.</span>
               </span>
             </label>
           </div>
@@ -295,7 +295,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
@@ -460,15 +460,15 @@
       `;
     } else {
       if (!currentProfile) currentProfile = await AUTH.getProfile();
-      const incogName = currentProfile?.incognito_name || '—';
       const dispName  = currentProfile?.display_name || user.email.split('@')[0];
+      const incogName = currentProfile?.incognito_name; // may be null — auto-assigned on first use
       replyForm = `
         <div class="reply-form-card">
           <div class="form-error-banner" id="reply-error" style="margin-bottom:12px"></div>
           <textarea id="reply-body" placeholder="Write your reply… Be specific and helpful." maxlength="2000"></textarea>
           <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted-soft);cursor:pointer">
-            <input type="checkbox" id="reply-incognito" />
-            Post anonymously as <strong style="color:var(--ink)">${escapeHtml(incogName)}</strong>
+            <input type="checkbox" id="reply-incognito" onchange="onReplyIncognitoToggle(this)" />
+            <span>Post anonymously${incogName ? ' as <strong id="reply-incog-display" style="color:var(--ink);font-family:var(--font-georgian)">' + escapeHtml(incogName) + '</strong>' : ' <span id="reply-incog-display" style="color:var(--muted)">(a random Georgian alias will be assigned)</span>'}</span>
           </label>
           <div class="actions">
             <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">Post reply as ${escapeHtml(dispName)}</button>
@@ -498,6 +498,31 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Lazily fetch & display incognito name when the user toggles the checkbox.
+  async function onReplyIncognitoToggle(cb) {
+    const display = document.getElementById('reply-incog-display');
+    if (!cb.checked) return;
+    if (!currentProfile) currentProfile = await AUTH.getProfile();
+    if (currentProfile?.incognito_name) {
+      if (display) {
+        display.textContent = currentProfile.incognito_name;
+        display.style.color = 'var(--ink)';
+        display.style.fontFamily = 'var(--font-georgian)';
+        display.style.fontWeight = '700';
+      }
+      return;
+    }
+    if (display) { display.textContent = 'assigning…'; display.style.color = 'var(--muted)'; }
+    const newName = await AUTH.ensureIncognitoName();
+    currentProfile = await AUTH.getProfile();
+    if (display && newName) {
+      display.textContent = newName;
+      display.style.color = 'var(--ink)';
+      display.style.fontFamily = 'var(--font-georgian)';
+      display.style.fontWeight = '700';
+    }
+  }
+
   async function postReply(threadId) {
     const errBox = document.getElementById('reply-error');
     const submitBtn = document.getElementById('reply-submit');
@@ -517,6 +542,12 @@
       errBox.textContent = 'Reply too short. Add a bit more context.';
       errBox.style.display = 'block';
       return;
+    }
+
+    // Auto-assign incognito name if needed
+    if (incognito) {
+      await AUTH.ensureIncognitoName();
+      currentProfile = await AUTH.getProfile();
     }
 
     const author_name = incognito
@@ -568,6 +599,10 @@
     const title = document.getElementById('t-title').value.trim();
     const body = document.getElementById('t-body').value.trim();
     const incognito = document.getElementById('t-incognito').checked;
+    if (incognito) {
+      await AUTH.ensureIncognitoName();
+      currentProfile = await AUTH.getProfile();
+    }
 
     if (!cat || !title || !body) {
       errBox.textContent = 'Please fill category, title, and body.';
@@ -631,19 +666,50 @@
 
   async function refreshNewThreadGate() {
     const u = await AUTH.getUser();
-    const card = document.getElementById('new-thread-card');
     const form = document.getElementById('new-thread-form');
     const gate = document.getElementById('new-auth-gate');
     if (u) {
       currentProfile = await AUTH.getProfile();
-      const inc = currentProfile?.incognito_name || '—';
       const incEl = document.getElementById('t-incognito-name');
-      if (incEl) incEl.textContent = inc;
+      if (incEl) {
+        if (currentProfile?.incognito_name) {
+          incEl.textContent = currentProfile.incognito_name;
+        } else {
+          incEl.textContent = 'a random Georgian alias';
+          incEl.style.fontFamily = 'inherit';
+          incEl.style.color = 'var(--muted)';
+          incEl.style.fontWeight = '400';
+        }
+      }
       form.style.display = '';
       gate.style.display = 'none';
     } else {
       form.style.display = 'none';
       gate.style.display = 'block';
+    }
+  }
+
+  // When user toggles "Post anonymously" on the new-thread form, ensure they have a name.
+  async function onThreadIncognitoToggle(cb) {
+    const incEl = document.getElementById('t-incognito-name');
+    if (!cb.checked) return;
+    if (!currentProfile) currentProfile = await AUTH.getProfile();
+    if (currentProfile?.incognito_name) {
+      incEl.textContent = currentProfile.incognito_name;
+      incEl.style.color = 'var(--ink)';
+      incEl.style.fontFamily = 'var(--font-georgian)';
+      incEl.style.fontWeight = '700';
+      return;
+    }
+    incEl.textContent = 'assigning…';
+    incEl.style.color = 'var(--muted)';
+    const newName = await AUTH.ensureIncognitoName();
+    currentProfile = await AUTH.getProfile();
+    if (newName) {
+      incEl.textContent = newName;
+      incEl.style.color = 'var(--ink)';
+      incEl.style.fontFamily = 'var(--font-georgian)';
+      incEl.style.fontWeight = '700';
     }
   }
 

@@ -842,3 +842,6 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
 html[lang="en"] .ka { display: none !important; }
 html[lang="ka"] .en { display: none !important; }
 /* Specifically: when the language switches, the nav-mark "G" stays visible (no .ka/.en class on it). */
+
+/* Required-field marker (red asterisk) used across all forms */
+.req { color: var(--rausch); margin-left: 3px; font-weight: 700; }

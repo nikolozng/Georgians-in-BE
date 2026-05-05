@@ -233,11 +233,11 @@
 
       <div class="settings-row">
         <h4>Forum incognito name</h4>
-        <p>Used when you post anonymously on the forum. Pick anything you like — change it whenever.</p>
-        <form id="incognito-form">
-          <select name="incognito_name" id="incognito-select"></select>
-          <button type="submit" class="btn btn-primary btn-sm">Save</button>
-        </form>
+        <p>Auto-assigned the first time you post anonymously on the forum. You can regenerate it any time.</p>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span id="incognito-display" style="font-size:15px;font-weight:700;color:var(--ink);font-family:var(--font-georgian)">—</span>
+          <button id="regenerate-incognito" class="btn btn-ghost btn-sm" type="button">⟲ Regenerate</button>
+        </div>
         <div id="incognito-msg"></div>
       </div>
 
@@ -269,7 +269,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
@@ -326,27 +326,27 @@
     document.getElementById('me').textContent = user.email;
     document.getElementById('email-display').textContent = user.email;
 
-    // Populate incognito dropdown
-    const sel = document.getElementById('incognito-select');
-    AUTH.INCOGNITO_NAMES.slice().sort().forEach(n => {
-      const opt = document.createElement('option'); opt.value = n; opt.textContent = n;
-      sel.appendChild(opt);
-    });
-
     // Make sure a profile row exists (defensive — for accounts created
-    // before profiles existed, or if signup somehow skipped the upsert)
+    // before profiles existed, or if signup somehow skipped the upsert).
+    // incognito_name is intentionally NOT set here — it's auto-assigned on first incognito post.
     let profile = await AUTH.getProfile();
     if (!profile) {
-      const fallback = (user.user_metadata && user.user_metadata.incognito_name) || AUTH.pickRandomIncognito();
+      const display = (user.user_metadata && user.user_metadata.display_name) || user.email.split('@')[0];
       const { data } = await sb.from('profiles').upsert({
         id: user.id,
         email: user.email,
-        incognito_name: fallback
+        display_name: display
       }).select().single();
       profile = data;
     }
-    if (profile) sel.value = profile.incognito_name;
     document.getElementById('display-input').value = profile?.display_name || '';
+    const incoDisplay = document.getElementById('incognito-display');
+    incoDisplay.textContent = profile?.incognito_name || 'Not assigned yet';
+    if (!profile?.incognito_name) {
+      incoDisplay.style.color = 'var(--muted)';
+      incoDisplay.style.fontFamily = 'inherit';
+      incoDisplay.style.fontWeight = '400';
+    }
 
     // Save display name
     document.getElementById('display-form').addEventListener('submit', async (e) => {
@@ -358,14 +358,20 @@
       else      msg.innerHTML = `<div class="auth-msg success">Saved.</div>`;
     });
 
-    // Save incognito
-    document.getElementById('incognito-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const newName = sel.value;
+    // Regenerate incognito name (force a new one)
+    document.getElementById('regenerate-incognito').addEventListener('click', async () => {
+      const newName = AUTH.pickRandomIncognitoWithNumber();
       const { error } = await sb.from('profiles').update({ incognito_name: newName }).eq('id', user.id);
       const msg = document.getElementById('incognito-msg');
-      if (error) msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
-      else      msg.innerHTML = `<div class="auth-msg success">Saved.</div>`;
+      if (error) {
+        msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      } else {
+        incoDisplay.textContent = newName;
+        incoDisplay.style.color = 'var(--ink)';
+        incoDisplay.style.fontFamily = 'var(--font-georgian)';
+        incoDisplay.style.fontWeight = '700';
+        msg.innerHTML = `<div class="auth-msg success">New incognito name assigned.</div>`;
+      }
     });
 
     // Password reset email

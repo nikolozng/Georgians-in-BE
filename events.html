@@ -595,7 +595,7 @@
       <!-- STEP 1: About -->
       <div class="submit-step active" data-step="1">
         <div class="field">
-          <label>Title (English) <span class="hint">required</span></label>
+          <label>Title (English)<span class="req">*</span></label>
           <input type="text" name="title" maxlength="120" required />
         </div>
         <div class="field">
@@ -603,7 +603,7 @@
           <input type="text" name="title_ka" maxlength="120" style="font-family:var(--font-georgian)" />
         </div>
         <div class="field">
-          <label>Category <span class="hint">required</span></label>
+          <label>Category<span class="req">*</span></label>
           <select name="category" required>
             <option value="">Select…</option>
             <option>Workshop</option>
@@ -614,7 +614,7 @@
           </select>
         </div>
         <div class="field">
-          <label>Description <span class="hint">required, max 1500 chars</span></label>
+          <label>Description<span class="req">*</span></label>
           <textarea name="description" maxlength="1500" required placeholder="What is it? Who is it for? What should people bring?"></textarea>
         </div>
       </div>
@@ -623,7 +623,7 @@
       <div class="submit-step" data-step="2">
         <div class="row2">
           <div class="field">
-            <label>Date <span class="hint">required</span></label>
+            <label>Date<span class="req">*</span></label>
             <input type="date" name="event_date" required />
           </div>
           <div class="field">
@@ -632,7 +632,7 @@
           </div>
         </div>
         <div class="field">
-          <label>City <span class="hint">required</span></label>
+          <label>City<span class="req">*</span></label>
           <select name="city" required>
             <option value="">Select…</option>
             <option>Brussels</option>
@@ -666,7 +666,7 @@
             <input type="text" name="price" placeholder="Free, €10, Donation…" />
           </div>
           <div class="field">
-            <label>Contact email <span class="hint">required</span></label>
+            <label>Contact email<span class="req">*</span></label>
             <input type="email" name="contact_email" required />
           </div>
         </div>
@@ -748,7 +748,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   /* ── Language ── */
   function setLang(lang) {

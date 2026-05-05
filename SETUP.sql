@@ -184,11 +184,12 @@ create table if not exists profiles (
   created_at timestamptz default now(),
   email text,
   display_name text,        -- shown on forum when NOT incognito
-  incognito_name text not null
+  incognito_name text       -- auto-assigned (e.g. "Tariel_4827") on FIRST incognito post
 );
 
--- (If profiles already existed before display_name was added)
+-- (Backfill if running on a DB where these columns or constraints existed before)
 alter table profiles add column if not exists display_name text;
+alter table profiles alter column incognito_name drop not null;
 
 alter table profiles enable row level security;
 

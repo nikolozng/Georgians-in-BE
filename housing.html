@@ -183,18 +183,18 @@
         <div class="form-grid">
 
           <div class="form-group">
-            <label class="form-label" for="h-type">Listing type</label>
+            <label class="form-label" for="h-type">Listing type<span class="req">*</span></label>
             <select class="form-select" id="h-type" required>
               <option value="">Select…</option>
               <option>Room</option><option>Apartment</option><option>Studio</option><option>House</option><option>Roommate wanted</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-rent">Monthly rent (€)</label>
+            <label class="form-label" for="h-rent">Monthly rent (€)<span class="req">*</span></label>
             <input class="form-input" id="h-rent" type="number" min="0" step="10" required placeholder="e.g. 750" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-city">City</label>
+            <label class="form-label" for="h-city">City<span class="req">*</span></label>
             <select class="form-select" id="h-city" required>
               <option value="">Select…</option>
               <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Other</option>
@@ -213,7 +213,7 @@
             <input class="form-input" id="h-from" type="date" />
           </div>
           <div class="form-group span-2">
-            <label class="form-label" for="h-desc">Description</label>
+            <label class="form-label" for="h-desc">Description<span class="req">*</span></label>
             <textarea class="form-textarea" id="h-desc" required maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…"></textarea>
           </div>
           <div class="form-group span-2" style="display:flex;align-items:center;gap:10px">
@@ -221,11 +221,11 @@
             <label for="h-furnished" style="font-size:14px;color:var(--body-text);cursor:pointer">Furnished</label>
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-name">Your name</label>
+            <label class="form-label" for="h-name">Your name<span class="req">*</span></label>
             <input class="form-input" id="h-name" type="text" required maxlength="80" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-email">Contact email</label>
+            <label class="form-label" for="h-email">Contact email<span class="req">*</span></label>
             <input class="form-input" id="h-email" type="email" required maxlength="120" />
           </div>
           <div class="form-group span-2">
@@ -265,7 +265,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);

@@ -79,18 +79,7 @@
     }
     .auth-msg.error   { background: #fff0f2; color: #c20030; border: 1px solid #ffd4dc; }
     .auth-msg.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-    .incognito-row { display: flex; gap: 8px; align-items: end; }
-    .incognito-row select { flex: 1; }
-    .incognito-row .reroll-btn {
-      padding: 11px 13px;
-      border: 1px solid var(--hairline);
-      background: var(--canvas);
-      border-radius: var(--r-sm);
-      cursor: pointer;
-      font-size: 16px;
-      line-height: 1;
-    }
-    .incognito-row .reroll-btn:hover { background: var(--surface); }
+    .req { color: var(--rausch); margin-left: 3px; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -138,29 +127,20 @@
 
     <form class="auth-form" id="signup-form">
       <label>
-        Email
+        Email<span class="req">*</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
 
       <label>
-        Password
+        Password<span class="req">*</span>
         <input type="password" name="password" required minlength="8" autocomplete="new-password" />
         <span class="field-hint">Minimum 8 characters.</span>
       </label>
 
       <label>
-        Display name
+        Display name<span class="req">*</span>
         <input type="text" name="display_name" required maxlength="40" placeholder="e.g. Niko, or Niko G." autocomplete="nickname" />
-        <span class="field-hint">Shown on the forum when you post publicly. Can be a first name or alias.</span>
-      </label>
-
-      <label>
-        Forum incognito name
-        <div class="incognito-row">
-          <select name="incognito_name" id="incognito-select"></select>
-          <button type="button" class="reroll-btn" id="reroll-btn" title="Pick a random one">⟲</button>
-        </div>
-        <span class="field-hint">Used when you post anonymously on the forum. You can change it anytime.</span>
+        <span class="field-hint">Shown on the forum when you post publicly. If you choose to post anonymously, a random Georgian alias is generated for you.</span>
       </label>
 
       <button type="submit" class="btn btn-primary">Create account</button>
@@ -185,7 +165,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);
@@ -197,18 +177,6 @@
   }
   function toggleMobileNav() { document.getElementById('site-nav').classList.toggle('nav-mobile-open'); }
   setLang(localStorage.getItem('geosin-lang') || 'en');
-
-  // Populate incognito name dropdown
-  const sel = document.getElementById('incognito-select');
-  AUTH.INCOGNITO_NAMES.slice().sort().forEach(n => {
-    const opt = document.createElement('option');
-    opt.value = n; opt.textContent = n;
-    sel.appendChild(opt);
-  });
-  sel.value = AUTH.pickRandomIncognito();
-  document.getElementById('reroll-btn').addEventListener('click', () => {
-    sel.value = AUTH.pickRandomIncognito();
-  });
 
   // If already logged in, bounce to account
   AUTH.getUser().then(u => { if (u) location.href = 'account.html'; });
@@ -223,7 +191,6 @@
     const email = fd.get('email').trim();
     const password = fd.get('password');
     const display = fd.get('display_name').trim();
-    const incognito = fd.get('incognito_name');
 
     const submitBtn = form.querySelector('button[type=submit]');
     submitBtn.disabled = true;
@@ -232,7 +199,7 @@
     const { data, error } = await sb.auth.signUp({
       email,
       password,
-      options: { data: { display_name: display, incognito_name: incognito } }
+      options: { data: { display_name: display } }
     });
 
     if (error) {
@@ -242,13 +209,12 @@
       return;
     }
 
-    // Insert profile row (the user is logged in immediately if email confirmation is off)
+    // Insert profile row — incognito_name stays NULL until first incognito post
     if (data.user) {
       await sb.from('profiles').upsert({
         id: data.user.id,
         email,
-        display_name: display,
-        incognito_name: incognito
+        display_name: display
       });
     }
 

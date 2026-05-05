@@ -337,14 +337,14 @@
 
           <div class="form-group">
             <label class="form-label" for="f-name">
-              Full name <span class="ka">· სახელი და გვარი</span>
+              Full name<span class="req">*</span> <span class="ka">· სახელი და გვარი</span>
             </label>
             <input class="form-input" id="f-name" type="text" placeholder="Nino Beridze" required maxlength="80" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="f-email">
-              Email <span class="ka">· ელ-ფოსტა</span>
+              Email<span class="req">*</span> <span class="ka">· ელ-ფოსტა</span>
             </label>
             <input class="form-input" id="f-email" type="email" placeholder="nino@example.com" required maxlength="120" />
           </div>
@@ -358,7 +358,7 @@
 
           <div class="form-group">
             <label class="form-label" for="f-city">
-              City <span class="ka">· ქალაქი</span>
+              City<span class="req">*</span> <span class="ka">· ქალაქი</span>
             </label>
             <select class="form-select" id="f-city" required>
               <option value="">Select city…</option>
@@ -374,7 +374,7 @@
 
           <div class="form-group">
             <label class="form-label" for="f-cat">
-              Category <span class="ka">· კატეგორია</span>
+              Category<span class="req">*</span> <span class="ka">· კატეგორია</span>
             </label>
             <select class="form-select" id="f-cat" required>
               <option value="">Select category…</option>
@@ -394,14 +394,14 @@
 
           <div class="form-group">
             <label class="form-label" for="f-service">
-              Service title <span class="ka">· სერვისის სათაური</span>
+              Service title<span class="req">*</span> <span class="ka">· სერვისის სათაური</span>
             </label>
             <input class="form-input" id="f-service" type="text" placeholder="e.g. Certified Georgian–French translator" required maxlength="120" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="f-languages">
-              Languages spoken <span class="ka">· ენები</span>
+              Languages spoken<span class="req">*</span> <span class="ka">· ენები</span>
             </label>
             <input class="form-input" id="f-languages" type="text" placeholder="e.g. Georgian, English, French" required maxlength="80" />
           </div>
@@ -415,7 +415,7 @@
 
           <div class="form-group span-2">
             <label class="form-label" for="f-desc">
-              Description <span class="ka">· აღწერა</span>
+              Description<span class="req">*</span> <span class="ka">· აღწერა</span>
             </label>
             <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." required maxlength="500"></textarea>
             <span class="form-hint">Please write in English or Georgian (or both). Max 500 characters.</span>
@@ -493,7 +493,7 @@
 
 <!-- Supabase JavaScript client library + shared auth -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 
 <script>
   // Defensive: if the Supabase library failed to load, show a clear message.

@@ -346,7 +346,7 @@
 
           <div class="form-group span-2">
             <label class="form-label" for="r-type">
-              Type of scam <span class="ka">· თაღლითობის ტიპი</span>
+              Type of scam<span class="req">*</span> <span class="ka">· თაღლითობის ტიპი</span>
             </label>
             <select class="form-select" id="r-type" required>
               <option value="">Select type…</option>
@@ -364,7 +364,7 @@
 
           <div class="form-group span-2">
             <label class="form-label" for="r-desc">
-              What happened? <span class="ka">· რა მოხდა?</span>
+              What happened?<span class="req">*</span> <span class="ka">· რა მოხდა?</span>
             </label>
             <textarea class="form-textarea" id="r-desc" required maxlength="1500" placeholder="Describe the scam in detail. What did they ask for? How did they contact you? What red flags did you notice (in hindsight)? Don't include your full ID details."></textarea>
             <span class="form-hint">Max 1500 characters. Don't include eID numbers, bank details, or full names of accused parties — refer to them by role (e.g. "the landlord").</span>
@@ -443,7 +443,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js?v=2"></script>
+<script src="auth.js?v=3"></script>
 <script>
   function setLang(lang) {
     localStorage.setItem('geosin-lang', lang);

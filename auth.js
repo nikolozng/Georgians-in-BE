@@ -34,6 +34,38 @@
     return INCOGNITO_NAMES[Math.floor(Math.random() * INCOGNITO_NAMES.length)];
   }
 
+  // e.g. "Tariel_4827" — used as the auto-assigned forum incognito name
+  function pickRandomIncognitoWithNumber() {
+    const name = pickRandomIncognito();
+    const num  = Math.floor(1000 + Math.random() * 9000);
+    return `${name}_${num}`;
+  }
+
+  // Returns the user's incognito name. Auto-creates one if none exists yet.
+  // Called the first time a user toggles "Post as incognito" in the forum.
+  async function ensureIncognitoName() {
+    const user = await getUser();
+    if (!user) return null;
+    let profile = await getProfile();
+    if (profile && profile.incognito_name) return profile.incognito_name;
+
+    const newName = pickRandomIncognitoWithNumber();
+    const display = (user.user_metadata && user.user_metadata.display_name)
+                  || user.email.split('@')[0];
+
+    if (profile) {
+      await sb.from('profiles').update({ incognito_name: newName }).eq('id', user.id);
+    } else {
+      await sb.from('profiles').upsert({
+        id: user.id,
+        email: user.email,
+        display_name: display,
+        incognito_name: newName
+      });
+    }
+    return newName;
+  }
+
   // ────────── Helpers ──────────
   async function getUser() {
     const { data } = await sb.auth.getUser();
@@ -81,7 +113,9 @@
     requireAuth,
     unreadNotificationCount,
     INCOGNITO_NAMES,
-    pickRandomIncognito
+    pickRandomIncognito,
+    pickRandomIncognitoWithNumber,
+    ensureIncognitoName
   };
 
   // ────────── Inject auth-aware nav buttons ──────────
