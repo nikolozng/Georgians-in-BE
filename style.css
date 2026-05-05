@@ -130,7 +130,8 @@ body {
   text-decoration: none;
 }
 .nav-links a:hover { background: var(--surface); color: var(--ink); }
-.nav-links a.active { color: var(--ink); font-weight: 600; }
+/* Active state: change color + background only — keep font-weight identical so the layout never shifts */
+.nav-links a.active { color: var(--rausch); background: rgba(255,56,92,0.08); }
 
 .nav-actions {
   display: flex;
