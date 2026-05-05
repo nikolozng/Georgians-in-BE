@@ -122,23 +122,46 @@
   // Guard against parallel renders (DOMContentLoaded + onAuthStateChange can race)
   let _navRenderToken = 0;
 
+  // Synchronously reserve space in nav-actions the moment this script runs.
+  // This prevents the layout shift ("shake") when the auth buttons render
+  // a few milliseconds after the page paints.
+  function ensureAuthPlaceholder() {
+    const actions = document.getElementById('nav-actions');
+    if (!actions) return null;
+    let wrap = actions.querySelector('[data-auth-block]');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.setAttribute('data-auth-block', '');
+      wrap.style.display = 'flex';
+      wrap.style.alignItems = 'center';
+      wrap.style.gap = '8px';
+      wrap.style.marginLeft = '8px';
+      // Reserve enough width for either logged-in or logged-out content so the
+      // surrounding nav-links don't reflow when the real content appears.
+      wrap.style.minWidth = '180px';
+      wrap.style.justifyContent = 'flex-end';
+      actions.appendChild(wrap);
+    }
+    return wrap;
+  }
+  // Run immediately if DOM is parsed; otherwise the moment it is.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureAuthPlaceholder);
+  } else {
+    ensureAuthPlaceholder();
+  }
+
   async function renderNavAuth() {
     const myToken = ++_navRenderToken;          // claim a fresh ticket
-    const actions = document.getElementById('nav-actions');
-    if (!actions) return;
-
-    const wrap = document.createElement('div');
-    wrap.setAttribute('data-auth-block', '');
-    wrap.style.display = 'flex';
-    wrap.style.alignItems = 'center';
-    wrap.style.gap = '8px';
-    wrap.style.marginLeft = '8px';
+    const wrap = ensureAuthPlaceholder();
+    if (!wrap) return;
 
     const user = await getUser();
     if (myToken !== _navRenderToken) return;    // a newer render already started — bail
 
+    let html;
     if (!user) {
-      wrap.innerHTML = `
+      html = `
         <a href="login.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">Log in</a>
         <a href="signup.html" class="btn btn-primary btn-sm" style="padding:6px 12px;font-size:13px">Sign up</a>
       `;
@@ -153,15 +176,14 @@
         : `<a href="account.html#notifications" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--muted);text-decoration:none">
              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
            </a>`;
-      wrap.innerHTML = `
+      html = `
         ${bell}
         <a href="account.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">My account</a>
       `;
     }
 
-    // Cleanup + append in one synchronous block (no awaits between them)
-    actions.querySelectorAll('[data-auth-block]').forEach(el => el.remove());
-    actions.appendChild(wrap);
+    // Update existing wrap's contents — no remove/append, so layout stays stable
+    wrap.innerHTML = html;
   }
 
   // Run on load
