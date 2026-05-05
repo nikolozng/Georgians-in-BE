@@ -135,12 +135,11 @@
       wrap.style.display = 'flex';
       wrap.style.alignItems = 'center';
       wrap.style.gap = '8px';
-      wrap.style.marginLeft = '8px';
-      // Reserve enough width for either logged-in or logged-out content so the
-      // surrounding nav-links don't reflow when the real content appears.
       wrap.style.minWidth = '180px';
       wrap.style.justifyContent = 'flex-end';
-      actions.appendChild(wrap);
+      // Insert BEFORE lang-toggle so the toggle stays anchored to the right
+      // and the auth block fills reserved space on its left.
+      actions.insertBefore(wrap, actions.firstChild);
     }
     return wrap;
   }

@@ -138,6 +138,9 @@ body {
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+  /* Reserve the full final width so injected auth buttons don't push the layout once JS runs */
+  min-width: 280px;
+  justify-content: flex-end;
 }
 .lang-toggle {
   display: flex;
