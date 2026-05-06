@@ -161,15 +161,15 @@
       <span class="nav-logo-text">geosin<span>.be</span></span>
     </a>
     <div class="nav-links" id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="housing.html">Housing</a>
-      <a href="services.html">Services</a>
-      <a href="events.html">Events</a>
-      <a href="forum.html">Forum</a>
-      <a href="checklists.html">Checklists</a>
-      <a href="scams.html">Avoid Scams</a>
-      <a href="about.html">About</a>
+      <a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
+      <a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
+      <a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a>
+      <a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
+      <a href="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
+      <a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
+      <a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a>
+      <a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
+      <a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <div class="lang-toggle">
@@ -222,7 +222,7 @@
 
     <section class="panel" id="panel-settings">
       <div class="settings-row">
-        <h4>Display name</h4>
+        <h4><span class="en">Display name</span><span class="ka">სახელი (რომელიც გამოჩნდება)</span></h4>
         <p>Shown on your forum posts when you post publicly (not anonymously).</p>
         <form id="display-form">
           <input type="text" name="display_name" id="display-input" maxlength="40" placeholder="e.g. Niko" />
@@ -262,7 +262,7 @@
 <footer class="site-footer">
   <div class="container">
     <div class="footer-bottom">
-      <span>&copy; 2025 geosin.be</span>
+      <span><span class="en">&copy; 2025 geosin.be</span><span class="ka">&copy; 2025 geosin.be</span></span>
       <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
@@ -526,7 +526,7 @@
       document.getElementById('count-jobs').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't posted any jobs yet.<br><a href="jobs.html#post" class="btn btn-primary btn-sm">Post a job</a></div>`;
+        list.innerHTML = `<div class="empty-state">You haven't posted any jobs yet.<br><a href="jobs.html#post" class="btn btn-primary btn-sm"><span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a></div>`;
         return;
       }
 
@@ -560,7 +560,7 @@
       document.getElementById('count-housing').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't posted any housing listings yet.<br><a href="housing.html#post" class="btn btn-primary btn-sm">Post a listing</a></div>`;
+        list.innerHTML = `<div class="empty-state">You haven't posted any housing listings yet.<br><a href="housing.html#post" class="btn btn-primary btn-sm"><span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a></div>`;
         return;
       }
 

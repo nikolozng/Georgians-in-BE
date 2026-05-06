@@ -64,15 +64,15 @@
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
     <div class="nav-links" id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="housing.html" class="active">Housing</a>
-      <a href="services.html">Services</a>
-      <a href="events.html">Events</a>
-      <a href="forum.html">Forum</a>
-      <a href="checklists.html">Checklists</a>
-      <a href="scams.html">Avoid Scams</a>
-      <a href="about.html">About</a>
+      <a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
+      <a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
+      <a href="housing.html" class="active"><span class="en">Housing</span><span class="ka">ბინები</span></a>
+      <a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
+      <a href="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
+      <a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
+      <a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a>
+      <a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
+      <a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <div class="lang-toggle">
@@ -107,10 +107,10 @@
       <aside class="sidebar">
         <div class="search-bar-sm">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#929292" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="h-search" placeholder="Search listings…" oninput="applyFilter()" />
+          <input type="text" id="h-search" placeholder="Search listings…" data-placeholder-en="Search listings…" data-placeholder-ka="მოძებნეთ განცხადება..." oninput="applyFilter()" />
         </div>
 
-        <h5>Type</h5>
+        <h5><span class="en">Type</span><span class="ka">ტიპი</span></h5>
         <div class="check-list" id="type-filter">
           <label><input type="checkbox" value="Room" onchange="applyFilter()" checked /> Room</label>
           <label><input type="checkbox" value="Apartment" onchange="applyFilter()" checked /> Apartment</label>
@@ -120,7 +120,7 @@
         </div>
 
         <hr class="sidebar-divider" />
-        <h5>City</h5>
+        <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="check-list" id="city-filter">
           <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> Brussels</label>
           <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> Antwerp</label>
@@ -131,16 +131,16 @@
         </div>
 
         <hr class="sidebar-divider" />
-        <h5>Max rent (€/mo)</h5>
+        <h5><span class="en">Max rent (€/mo)</span><span class="ka">მაქსიმალური ქირა</span></h5>
         <div class="price-input">
-          <input type="number" id="max-rent" placeholder="Any" oninput="applyFilter()" min="0" />
+          <input type="number" id="max-rent" placeholder="Any" data-placeholder-en="Any" data-placeholder-ka="ნებისმიერი" oninput="applyFilter()" min="0" />
         </div>
 
         <hr class="sidebar-divider" />
-        <label class="check-list" style="gap:0"><input type="checkbox" id="furnished-only" onchange="applyFilter()" /> <span style="margin-left:8px;font-size:14px">Furnished only</span></label>
+        <label class="check-list" style="gap:0"><input type="checkbox" id="furnished-only" onchange="applyFilter()" /> <span style="margin-left:8px;font-size:14px"><span class="en">Furnished only</span><span class="ka">ავეჯით</span></span></label>
 
         <hr class="sidebar-divider" />
-        <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ Post a listing</a>
+        <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ <span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a>
       </aside>
 
       <div>
@@ -160,22 +160,22 @@
       <p class="section-eyebrow">For landlords / current tenants</p>
       <h2>
         <span data-lang-block="en">Post a housing listing</span>
-        <span data-lang-block="ka" class="ka" style="display:none">გამოაქვეყნეთ ბინა</span>
+        <span data-lang-block="ka" class="ka" style="display:none">განცხადების განთავსება ბინის შესახებ</span>
       </h2>
       <p data-lang-block="en">Free. You'll need a free account so you can edit or remove your listing later.</p>
       <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">უფასოა. დაგჭირდებათ უფასო ანგარიში, რათა მოგვიანებით შეცვალოთ ან წაშალოთ ბინის განცხადება.</p>
     </div>
 
     <div id="auth-gate" style="display:none; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md); margin-bottom:18px;">
-      <strong>Log in to post a listing.</strong> It takes 30 seconds and lets you delete the listing later.
+      <strong><span class="en">Log in to post a listing.</span><span class="ka">განცხადების დასადებად გაიარეთ ავტორიზაცია.</span></strong> <span class="en">It takes 30 seconds and lets you delete the listing later.</span><span class="ka">ამას 30 წამი სჭირდება და მოგვიანებით განცხადების წაშლის საშუალებას მოგცემთ.</span>
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="login.html?next=housing.html%23post" class="btn btn-primary btn-sm">Log in</a>
-        <a href="signup.html?next=housing.html%23post" class="btn btn-ghost btn-sm">Sign up</a>
+        <a href="login.html?next=housing.html%23post" class="btn btn-primary btn-sm"><span class="en">Log in</span><span class="ka">შესვლა</span></a>
+        <a href="signup.html?next=housing.html%23post" class="btn btn-ghost btn-sm"><span class="en">Sign up</span><span class="ka">რეგისტრაცია</span></a>
       </div>
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thanks!</strong> Your listing is now live. Edit or delete it from <a href="account.html">My account</a>.
+      <strong>Thanks!</strong> Your listing is now live. Edit or delete it from <a href="account.html"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a>.
     </div>
     <div class="form-error-banner" id="form-error"></div>
 
@@ -184,18 +184,18 @@
         <div class="form-grid">
 
           <div class="form-group">
-            <label class="form-label" for="h-type">Listing type<span class="req">*</span></label>
+            <label class="form-label" for="h-type"><span class="en">Listing type</span><span class="ka">განცხადების ტიპი</span><span class="req">*</span></label>
             <select class="form-select" id="h-type" required>
               <option value="">Select…</option>
               <option>Room</option><option>Apartment</option><option>Studio</option><option>House</option><option>Roommate wanted</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-rent">Monthly rent (€)<span class="req">*</span></label>
+            <label class="form-label" for="h-rent"><span class="en">Monthly rent (€)</span><span class="ka">თვიური ქირა (€)</span><span class="req">*</span></label>
             <input class="form-input" id="h-rent" type="number" min="0" step="10" required placeholder="e.g. 750" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-city">City<span class="req">*</span></label>
+            <label class="form-label" for="h-city"><span class="en">City</span><span class="ka">ქალაქი</span><span class="req">*</span></label>
             <select class="form-select" id="h-city" required>
               <option value="">Select…</option>
               <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Other</option>
@@ -219,18 +219,18 @@
           </div>
           <div class="form-group span-2" style="display:flex;align-items:center;gap:10px">
             <input type="checkbox" id="h-furnished" style="accent-color:var(--rausch);width:16px;height:16px" />
-            <label for="h-furnished" style="font-size:14px;color:var(--body-text);cursor:pointer">Furnished</label>
+            <label for="h-furnished" style="font-size:14px;color:var(--body-text);cursor:pointer"><span class="en">Furnished</span><span class="ka">ავეჯით</span></label>
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-name">Your name<span class="req">*</span></label>
+            <label class="form-label" for="h-name"><span class="en">Your name</span><span class="ka">თქვენი სახელი</span><span class="req">*</span></label>
             <input class="form-input" id="h-name" type="text" required maxlength="80" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-email">Contact email<span class="req">*</span></label>
+            <label class="form-label" for="h-email"><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
             <input class="form-input" id="h-email" type="email" required maxlength="120" />
           </div>
           <div class="form-group span-2">
-            <label class="form-label" for="h-phone">Phone (optional)</label>
+            <label class="form-label" for="h-phone"><span class="en">Phone (optional)</span><span class="ka">ტელეფონი</span></label>
             <input class="form-input" id="h-phone" type="tel" maxlength="40" />
           </div>
         </div>
@@ -247,21 +247,21 @@
         <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
         <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
       </div>
-      <div class="footer-col"><h5>Site</h5><ul>
-        <li><a href="index.html">Home</a></li><li><a href="jobs.html">Jobs</a></li><li><a href="housing.html">Housing</a></li>
-        <li><a href="services.html">Services</a></li><li><a href="checklists.html">Checklists</a></li>
-        <li><a href="scams.html">Avoid Scams</a></li><li><a href="about.html">About</a></li>
+      <div class="footer-col"><h5><span class="en">Site</span><span class="ka">საიტი</span></h5><ul>
+        <li><a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a></li><li><a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a></li><li><a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a></li>
+        <li><a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a></li><li><a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a></li>
+        <li><a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a></li><li><a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li>
       </ul></div>
-      <div class="footer-col"><h5>Post</h5><ul>
-        <li><a href="jobs.html#post">Post a job</a></li><li><a href="housing.html#post">Post housing</a></li>
-        <li><a href="services.html#register">List a service</a></li>
+      <div class="footer-col"><h5><span class="en">Post</span><span class="ka">განთავსება</span></h5><ul>
+        <li><a href="jobs.html#post"><span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a></li><li><a href="housing.html#post"><span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a></li>
+        <li><a href="services.html#register"><span class="en">List a service</span><span class="ka">სერვისის დამატება</span></a></li>
       </ul></div>
-      <div class="footer-col"><h5>Community</h5><ul>
-        <li><a href="about.html">About us</a></li><li><a href="mailto:hello@geosin.be">Contact</a></li>
-        <li><a href="index.html#faq">FAQ</a></li>
+      <div class="footer-col"><h5><span class="en">Community</span><span class="ka">საზოგადოება</span></h5><ul>
+        <li><a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li><li><a href="mailto:hello@geosin.be"><span class="en">Contact</span><span class="ka">კონტაქტი</span></a></li>
+        <li><a href="index.html#faq"><span class="en">FAQ</span><span class="ka">ხშირად დასმული კითხვები</span></a></li>
       </ul></div>
     </div>
-    <div class="footer-bottom"><span>&copy; 2026 geosin.be</span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
+    <div class="footer-bottom"><span><span class="en">&copy; 2026 geosin.be</span><span class="ka">&copy; 2026 geosin.be</span></span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
   </div>
 </footer>
 
@@ -272,6 +272,7 @@
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
+    document.querySelectorAll('[data-placeholder-en]').forEach(el => { el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
   function toggleMobileNav() {
