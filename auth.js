@@ -125,6 +125,33 @@
   // Synchronously reserve space in nav-actions the moment this script runs.
   // This prevents the layout shift ("shake") when the auth buttons render
   // a few milliseconds after the page paints.
+  // Pre-rendered HTML for the two states — kept in sync with renderNavAuth
+  const LOGGED_OUT_HTML = `
+    <a href="login.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">Log in</a>
+    <a href="signup.html" class="btn btn-primary btn-sm" style="padding:6px 12px;font-size:13px">Sign up</a>
+  `;
+  function loggedInHTML(unread) {
+    const bell = unread > 0
+      ? `<a href="account.html#notifications" title="${unread} new" style="position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--ink);text-decoration:none">
+           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+           <span style="position:absolute;top:0;right:0;background:var(--rausch);color:#fff;font-size:10px;font-weight:700;border-radius:10px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px">${unread}</span>
+         </a>`
+      : `<a href="account.html#notifications" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--muted);text-decoration:none">
+           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+         </a>`;
+    return `${bell}<a href="account.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">My account</a>`;
+  }
+
+  // Cache last-known auth state in localStorage so we can render the right
+  // buttons synchronously on the next page load — no blink, no flash.
+  const AUTH_CACHE_KEY = 'geosin-auth-state'; // 'in' | 'out'
+  function getCachedState() {
+    try { return localStorage.getItem(AUTH_CACHE_KEY); } catch { return null; }
+  }
+  function setCachedState(s) {
+    try { localStorage.setItem(AUTH_CACHE_KEY, s); } catch {}
+  }
+
   function ensureAuthPlaceholder() {
     const actions = document.getElementById('nav-actions');
     if (!actions) return null;
@@ -137,9 +164,12 @@
       wrap.style.gap = '8px';
       wrap.style.minWidth = '180px';
       wrap.style.justifyContent = 'flex-end';
-      // Insert BEFORE lang-toggle so the toggle stays anchored to the right
-      // and the auth block fills reserved space on its left.
+      // Insert BEFORE lang-toggle so the toggle stays anchored to the right.
       actions.insertBefore(wrap, actions.firstChild);
+      // Render the cached state IMMEDIATELY — no blank flash.
+      const cached = getCachedState();
+      if (cached === 'in')      wrap.innerHTML = loggedInHTML(0);
+      else                       wrap.innerHTML = LOGGED_OUT_HTML; // default
     }
     return wrap;
   }
@@ -151,38 +181,33 @@
   }
 
   async function renderNavAuth() {
-    const myToken = ++_navRenderToken;          // claim a fresh ticket
+    const myToken = ++_navRenderToken;
     const wrap = ensureAuthPlaceholder();
     if (!wrap) return;
 
     const user = await getUser();
-    if (myToken !== _navRenderToken) return;    // a newer render already started — bail
+    if (myToken !== _navRenderToken) return;
 
-    let html;
     if (!user) {
-      html = `
-        <a href="login.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">Log in</a>
-        <a href="signup.html" class="btn btn-primary btn-sm" style="padding:6px 12px;font-size:13px">Sign up</a>
-      `;
-    } else {
-      const unread = await unreadNotificationCount();
-      if (myToken !== _navRenderToken) return;
-      const bell = unread > 0
-        ? `<a href="account.html#notifications" title="${unread} new" style="position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--ink);text-decoration:none">
-             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-             <span style="position:absolute;top:0;right:0;background:var(--rausch);color:#fff;font-size:10px;font-weight:700;border-radius:10px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px">${unread}</span>
-           </a>`
-        : `<a href="account.html#notifications" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;color:var(--muted);text-decoration:none">
-             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-           </a>`;
-      html = `
-        ${bell}
-        <a href="account.html" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:13px">My account</a>
-      `;
+      setCachedState('out');
+      // Only update if content actually changes — avoids a flash on logged-out pages
+      if (wrap.dataset.state !== 'out') {
+        wrap.innerHTML = LOGGED_OUT_HTML;
+        wrap.dataset.state = 'out';
+      }
+      return;
     }
 
-    // Update existing wrap's contents — no remove/append, so layout stays stable
-    wrap.innerHTML = html;
+    setCachedState('in');
+    const unread = await unreadNotificationCount();
+    if (myToken !== _navRenderToken) return;
+    const newHtml = loggedInHTML(unread);
+    // Only swap if it actually differs from what's there (e.g. unread count changed)
+    if (wrap.dataset.state !== 'in' || wrap.dataset.unread !== String(unread)) {
+      wrap.innerHTML = newHtml;
+      wrap.dataset.state = 'in';
+      wrap.dataset.unread = String(unread);
+    }
   }
 
   // Run on load
