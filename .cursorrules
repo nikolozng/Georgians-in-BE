@@ -5,6 +5,6 @@
 - **Styling:** [Add your styling here, e.g., Tailwind or CSS]
 
 # Rules for AI
-1. Always check the `supabase/` folder before suggesting database changes.
+1. Always check `SETUP.sql` before suggesting database changes.
 2. Ensure all deployment steps are compatible with Cloudflare Wrangler.
 3. If you suggest a change, explain how it might affect the existing Claude-built structure.
