@@ -1,0 +1,1 @@
+This website was built by Claude Code. It uses Supabase for data and Cloudflare for hosting. Please help me maintain and add features to this existing code.
