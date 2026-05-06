@@ -58,15 +58,15 @@
   <div class="container nav-inner">
     <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
     <div class="nav-links" id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="jobs.html" class="active">Jobs</a>
-      <a href="housing.html">Housing</a>
-      <a href="services.html">Services</a>
-      <a href="events.html">Events</a>
-      <a href="forum.html">Forum</a>
-      <a href="checklists.html">Checklists</a>
-      <a href="scams.html">Avoid Scams</a>
-      <a href="about.html">About</a>
+      <a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
+      <a href="jobs.html" class="active"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
+      <a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a>
+      <a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
+      <a href="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
+      <a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
+      <a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a>
+      <a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
+      <a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <div class="lang-toggle">
@@ -96,7 +96,7 @@
       <aside class="sidebar">
         <div class="search-bar-sm">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#929292" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="job-search" placeholder="Search jobs…" oninput="applyFilter()" />
+          <input type="text" id="job-search" placeholder="Search jobs…" data-placeholder-en="Search jobs…" data-placeholder-ka="მოძებნეთ ვაკანსია..." oninput="applyFilter()" />
         </div>
 
         <label class="urgent-toggle" style="margin-bottom:14px">
@@ -105,7 +105,7 @@
         </label>
 
         <hr class="sidebar-divider" />
-        <h5>City</h5>
+        <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="check-list" id="city-filter">
           <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> Brussels</label>
           <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> Antwerp</label>
@@ -117,7 +117,7 @@
         </div>
 
         <hr class="sidebar-divider" />
-        <h5>Language required</h5>
+        <h5><span class="en">Language required</span><span class="ka">სავალდებულო ენა</span></h5>
         <div class="check-list" id="lang-filter">
           <label><input type="checkbox" value="English only" onchange="applyFilter()" checked /> English only</label>
           <label><input type="checkbox" value="Georgian" onchange="applyFilter()" checked /> Georgian</label>
@@ -127,7 +127,7 @@
         </div>
 
         <hr class="sidebar-divider" />
-        <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ Post a job</a>
+        <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ <span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a>
       </aside>
 
       <div>
@@ -147,22 +147,22 @@
       <p class="section-eyebrow">For employers</p>
       <h2>
         <span data-lang-block="en">Post a job — free, reviewed in 48h</span>
-        <span data-lang-block="ka" class="ka" style="display:none">გამოაქვეყნეთ ვაკანსია — უფასო</span>
+        <span data-lang-block="ka" class="ka" style="display:none">ვაკანსიის გამოქვეყნება</span>
       </h2>
       <p data-lang-block="en">Hiring? Post your opening here. You'll need a free account so you can edit or remove your post later.</p>
       <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გჭირდებათ თანამშრომელი? გამოაქვეყნეთ აქ. დაგჭირდებათ უფასო ანგარიში, რათა მოგვიანებით შეცვალოთ ან წაშალოთ პოსტი.</p>
     </div>
 
     <div id="auth-gate" style="display:none; max-width:720px; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md); margin-bottom:18px;">
-      <strong>Log in to post a job.</strong> It takes 30 seconds and lets you delete the listing later.
+      <strong><span class="en">Log in to post a job.</span><span class="ka">განცხადების დასადებად გაიარეთ ავტორიზაცია.</span></strong> <span class="en">It takes 30 seconds and lets you delete the listing later.</span><span class="ka">ამას 30 წამი სჭირდება და მოგვიანებით განცხადების წაშლის საშუალებას მოგცემთ.</span>
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="login.html?next=jobs.html%23post" class="btn btn-primary btn-sm">Log in</a>
-        <a href="signup.html?next=jobs.html%23post" class="btn btn-ghost btn-sm">Sign up</a>
+        <a href="login.html?next=jobs.html%23post" class="btn btn-primary btn-sm"><span class="en">Log in</span><span class="ka">შესვლა</span></a>
+        <a href="signup.html?next=jobs.html%23post" class="btn btn-ghost btn-sm"><span class="en">Sign up</span><span class="ka">რეგისტრაცია</span></a>
       </div>
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thanks!</strong> Your job is now live. You can edit or delete it from <a href="account.html">My account</a>.
+      <strong>Thanks!</strong> Your job is now live. You can edit or delete it from <a href="account.html"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a>.
     </div>
     <div class="form-error-banner" id="form-error"></div>
 
@@ -170,36 +170,36 @@
       <form id="job-form" onsubmit="submitJob(event)" novalidate>
         <div class="form-grid">
           <div class="form-group span-2">
-            <label class="form-label" for="j-title">Job title<span class="req">*</span></label>
+            <label class="form-label" for="j-title"><span class="en">Job title</span><span class="ka">ვაკანსიის დასახელება</span><span class="req">*</span></label>
             <input class="form-input" id="j-title" type="text" placeholder="e.g. Junior Software Developer" required maxlength="120" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-company">Company / Employer<span class="req">*</span></label>
+            <label class="form-label" for="j-company"><span class="en">Company / Employer</span><span class="ka">კომპანია / დამსაქმებელი</span><span class="req">*</span></label>
             <input class="form-input" id="j-company" type="text" required maxlength="80" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-city">City<span class="req">*</span></label>
+            <label class="form-label" for="j-city"><span class="en">City</span><span class="ka">ქალაქი</span><span class="req">*</span></label>
             <select class="form-select" id="j-city" required>
               <option value="">Select…</option>
               <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Remote</option><option>Other</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-lang">Language required<span class="req">*</span></label>
+            <label class="form-label" for="j-lang"><span class="en">Language required</span><span class="ka">სავალდებულო ენა</span><span class="req">*</span></label>
             <select class="form-select" id="j-lang" required>
               <option value="">Select…</option>
               <option>English only</option><option>Georgian</option><option>Dutch</option><option>French</option><option>Other</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-contract">Contract type</label>
+            <label class="form-label" for="j-contract"><span class="en">Contract type</span><span class="ka">კონტრაქტის ტიპი</span></label>
             <select class="form-select" id="j-contract">
               <option value="">— Optional —</option>
               <option>Full-time</option><option>Part-time</option><option>Contract / Freelance</option><option>Internship</option><option>Temporary</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-salary">Salary range (optional)</label>
+            <label class="form-label" for="j-salary"><span class="en">Salary range (optional)</span><span class="ka">ხელფასის დიაპაზონი</span></label>
             <input class="form-input" id="j-salary" type="text" placeholder="e.g. €2,500–€3,500/month" maxlength="80" />
           </div>
           <div class="form-group span-2">
@@ -207,11 +207,11 @@
             <textarea class="form-textarea" id="j-desc" required maxlength="1500" placeholder="What does the role involve? Required experience? Key benefits?"></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-email">Contact email<span class="req">*</span></label>
+            <label class="form-label" for="j-email"><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
             <input class="form-input" id="j-email" type="email" required maxlength="120" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-link">Application link (optional)</label>
+            <label class="form-label" for="j-link"><span class="en">Application link (optional)</span><span class="ka">განაცხადის ბმული</span></label>
             <input class="form-input" id="j-link" type="url" placeholder="https://..." maxlength="200" />
           </div>
           <div class="form-group span-2" style="display:flex;align-items:center;gap:10px">
@@ -232,21 +232,21 @@
         <a href="index.html" class="nav-logo"><div class="nav-logo-mark">G</div><span class="nav-logo-text">geosin<span>.be</span></span></a>
         <p>A practical platform for Georgians in Belgium. Free, public, no accounts needed.</p>
       </div>
-      <div class="footer-col"><h5>Site</h5><ul>
-        <li><a href="index.html">Home</a></li><li><a href="jobs.html">Jobs</a></li><li><a href="housing.html">Housing</a></li>
-        <li><a href="services.html">Services</a></li><li><a href="checklists.html">Checklists</a></li>
-        <li><a href="scams.html">Avoid Scams</a></li><li><a href="about.html">About</a></li>
+      <div class="footer-col"><h5><span class="en">Site</span><span class="ka">საიტი</span></h5><ul>
+        <li><a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a></li><li><a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a></li><li><a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a></li>
+        <li><a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a></li><li><a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a></li>
+        <li><a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a></li><li><a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li>
       </ul></div>
-      <div class="footer-col"><h5>Post</h5><ul>
-        <li><a href="jobs.html#post">Post a job</a></li><li><a href="housing.html#post">Post housing</a></li>
-        <li><a href="services.html#register">List a service</a></li>
+      <div class="footer-col"><h5><span class="en">Post</span><span class="ka">განთავსება</span></h5><ul>
+        <li><a href="jobs.html#post"><span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a></li><li><a href="housing.html#post"><span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a></li>
+        <li><a href="services.html#register"><span class="en">List a service</span><span class="ka">სერვისის დამატება</span></a></li>
       </ul></div>
-      <div class="footer-col"><h5>Community</h5><ul>
-        <li><a href="about.html">About us</a></li><li><a href="mailto:hello@geosin.be">Contact</a></li>
-        <li><a href="index.html#faq">FAQ</a></li>
+      <div class="footer-col"><h5><span class="en">Community</span><span class="ka">საზოგადოება</span></h5><ul>
+        <li><a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li><li><a href="mailto:hello@geosin.be"><span class="en">Contact</span><span class="ka">კონტაქტი</span></a></li>
+        <li><a href="index.html#faq"><span class="en">FAQ</span><span class="ka">ხშირად დასმული კითხვები</span></a></li>
       </ul></div>
     </div>
-    <div class="footer-bottom"><span>&copy; 2026 geosin.be</span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
+    <div class="footer-bottom"><span><span class="en">&copy; 2026 geosin.be</span><span class="ka">&copy; 2026 geosin.be</span></span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
   </div>
 </footer>
 
@@ -257,6 +257,7 @@
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
+    document.querySelectorAll('[data-placeholder-en]').forEach(el => { el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
   }
   function toggleMobileNav() {

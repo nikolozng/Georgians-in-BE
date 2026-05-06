@@ -447,15 +447,15 @@
       <span class="nav-logo-text">geosin<span>.be</span></span>
     </a>
     <div class="nav-links" id="nav-links">
-      <a href="index.html">Home</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="housing.html">Housing</a>
-      <a href="services.html">Services</a>
-      <a href="events.html" class="active">Events</a>
-      <a href="forum.html">Forum</a>
-      <a href="checklists.html">Checklists</a>
-      <a href="scams.html">Avoid Scams</a>
-      <a href="about.html">About</a>
+      <a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
+      <a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
+      <a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a>
+      <a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
+      <a href="events.html" class="active"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
+      <a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
+      <a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a>
+      <a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
+      <a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <div class="lang-toggle">
@@ -633,7 +633,7 @@
           </div>
         </div>
         <div class="field">
-          <label>City<span class="req">*</span></label>
+          <label><span class="en">City</span><span class="ka">ქალაქი</span><span class="req">*</span></label>
           <select name="city" required>
             <option value="">Select…</option>
             <option>Brussels</option>
@@ -667,7 +667,7 @@
             <input type="text" name="price" placeholder="Free, €10, Donation…" />
           </div>
           <div class="field">
-            <label>Contact email<span class="req">*</span></label>
+            <label><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
             <input type="email" name="contact_email" required />
           </div>
         </div>
@@ -714,35 +714,35 @@
         <p>A practical hub for Georgians in Belgium. Free for everyone.</p>
       </div>
       <div class="footer-col">
-        <h5>Site</h5>
+        <h5><span class="en">Site</span><span class="ka">საიტი</span></h5>
         <ul>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="jobs.html">Jobs</a></li>
-          <li><a href="housing.html">Housing</a></li>
-          <li><a href="events.html">Events</a></li>
+          <li><a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a></li>
+          <li><a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a></li>
+          <li><a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a></li>
+          <li><a href="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Resources</h5>
+        <h5><span class="en">Resources</span><span class="ka">რესურსები</span></h5>
         <ul>
-          <li><a href="checklists.html">Checklists</a></li>
-          <li><a href="scams.html">Avoid Scams</a></li>
-          <li><a href="forum.html">Forum</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a></li>
+          <li><a href="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a></li>
+          <li><a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a></li>
+          <li><a href="about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Account</h5>
+        <h5><span class="en">Account</span><span class="ka">ანგარიში</span></h5>
         <ul>
-          <li><a href="signup.html">Sign up</a></li>
-          <li><a href="login.html">Log in</a></li>
-          <li><a href="account.html">My account</a></li>
-          <li><a href="mailto:hello@geosin.be">Contact</a></li>
+          <li><a href="signup.html"><span class="en">Sign up</span><span class="ka">რეგისტრაცია</span></a></li>
+          <li><a href="login.html"><span class="en">Log in</span><span class="ka">შესვლა</span></a></li>
+          <li><a href="account.html"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a></li>
+          <li><a href="mailto:hello@geosin.be"><span class="en">Contact</span><span class="ka">კონტაქტი</span></a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2025 geosin.be</span>
+      <span><span class="en">&copy; 2025 geosin.be</span><span class="ka">&copy; 2025 geosin.be</span></span>
       <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
@@ -1069,7 +1069,7 @@
       showStepError(['Submission failed: ' + error.message]);
       return;
     }
-    document.getElementById('submit-msg').innerHTML = '<div class="ok"><strong>Thanks!</strong> Your event is live. You can edit or delete it from <a href="account.html" style="color:var(--rausch);font-weight:600">My account</a>.</div>';
+    document.getElementById('submit-msg').innerHTML = '<div class="ok"><strong>Thanks!</strong> Your event is live. You can edit or delete it from <a href="account.html" style="color:var(--rausch);font-weight:600"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a>.</div>';
     document.getElementById('submit-form').reset();
     setTimeout(() => { closeSubmit(); loadEvents(); }, 1800);
   }
