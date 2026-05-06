@@ -1,1 +1,10 @@
-This website was built by Claude Code. It uses Supabase for data and Cloudflare for hosting. Please help me maintain and add features to this existing code.
+# Project Context
+- **Built by:** Claude Code
+- **Database/Auth:** Supabase
+- **Hosting:** Cloudflare Pages
+- **Styling:** [Add your styling here, e.g., Tailwind or CSS]
+
+# Rules for AI
+1. Always check the `supabase/` folder before suggesting database changes.
+2. Ensure all deployment steps are compatible with Cloudflare Wrangler.
+3. If you suggest a change, explain how it might affect the existing Claude-built structure.
