@@ -57,7 +57,7 @@ body {
 }
 
 .ka, :lang(ka) { font-family: var(--font-georgian); }
-
+ 
 /* ── LAYOUT ── */
 .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
 .section    { padding: 64px 0; }
