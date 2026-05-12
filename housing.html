@@ -370,7 +370,7 @@
     form.querySelectorAll('[required]').forEach(el => {
       if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
     });
-    if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; return; }
+    if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; return; }
 
     const user = await AUTH.getUser();
