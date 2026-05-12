@@ -81,12 +81,13 @@
         Email<span class="req">*</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
-      <label>
+      <label id="password-field">
         Password<span class="req">*</span>
         <input type="password" name="password" required autocomplete="current-password" />
       </label>
-      <div class="forgot"><a href="#" id="forgot-link"><span class="en">Forgot password?</span><span class="ka">დაგავიწყდათ პაროლი?</span></a></div>
-      <button type="submit" class="btn btn-primary"><span class="en">Log in</span><span class="ka">შესვლა</span></button>
+      <div class="forgot" id="forgot-row"><a href="#" id="forgot-link"><span class="en">Forgot password?</span><span class="ka">დაგავიწყდათ პაროლი?</span></a></div>
+      <button type="submit" class="btn btn-primary" id="submit-btn"><span class="en">Log in</span><span class="ka">შესვლა</span></button>
+      <div id="back-row" style="display:none;text-align:center"><a href="#" id="back-link" style="font-size:13px;color:var(--muted);text-decoration:none">← Back to log in</a></div>
     </form>
 
     <div id="msg"></div>
@@ -124,48 +125,74 @@
 
   AUTH.getUser().then(u => { if (u) location.href = new URLSearchParams(location.search).get('next') || 'account.html'; });
 
-  const form = document.getElementById('login-form');
-  const msg  = document.getElementById('msg');
+  const form      = document.getElementById('login-form');
+  const msg       = document.getElementById('msg');
+  const submitBtn = document.getElementById('submit-btn');
+  let mode = 'login'; // 'login' or 'forgot'
 
+  // ── Switch to "forgot password" view ──
+  document.getElementById('forgot-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    mode = 'forgot';
+    document.getElementById('password-field').style.display = 'none';
+    form.querySelector('input[name=password]').required = false;
+    document.getElementById('forgot-row').style.display = 'none';
+    document.getElementById('back-row').style.display = '';
+    document.querySelector('.auth-card h1').textContent = 'Reset your password';
+    document.querySelector('.auth-card .subtitle').textContent = 'Enter your email and we\'ll send you a reset link.';
+    submitBtn.innerHTML = 'Send reset link';
+    msg.innerHTML = '';
+  });
+
+  // ── Switch back to login view ──
+  document.getElementById('back-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    mode = 'login';
+    document.getElementById('password-field').style.display = '';
+    form.querySelector('input[name=password]').required = true;
+    document.getElementById('forgot-row').style.display = '';
+    document.getElementById('back-row').style.display = 'none';
+    document.querySelector('.auth-card h1').innerHTML = '<span data-lang-block="en">Welcome back</span><span data-lang-block="ka" class="ka" style="display:block;font-family:var(--font-georgian);display:none">მოგესალმებით</span>';
+    document.querySelector('.auth-card .subtitle').innerHTML = '<span data-lang-block="en">Log in to manage your posts and the forum.</span><span data-lang-block="ka" class="ka" style="display:block;font-family:var(--font-georgian)">შედით თქვენი პოსტებისა და ფორუმის სამართავად.</span>';
+    submitBtn.innerHTML = '<span class="en">Log in</span><span class="ka">შესვლა</span>';
+    msg.innerHTML = '';
+  });
+
+  // ── Form submit — handles both login and forgot-password modes ──
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.innerHTML = '';
-    const fd = new FormData(form);
-    const email = fd.get('email').trim();
-    const password = fd.get('password');
+    const email = form.querySelector('input[name=email]').value.trim();
 
-    const submitBtn = form.querySelector('button[type=submit]');
+    if (mode === 'forgot') {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: location.origin + '/reset-password.html'
+      });
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send reset link';
+      if (error) {
+        msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
+      } else {
+        msg.innerHTML = `<div class="auth-msg success">Check your email for a password reset link.</div>`;
+      }
+      return;
+    }
+
+    // Normal login
+    const password = form.querySelector('input[name=password]').value;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Logging in…';
 
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
+    const { error } = await sb.auth.signInWithPassword({ email, password });
     if (error) {
       msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Log in';
+      submitBtn.innerHTML = '<span class="en">Log in</span><span class="ka">შესვლა</span>';
       return;
     }
-
-    const next = new URLSearchParams(location.search).get('next') || 'account.html';
-    location.href = next;
-  });
-
-  document.getElementById('forgot-link').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const email = form.querySelector('input[name=email]').value.trim();
-    if (!email) {
-      msg.innerHTML = `<div class="auth-msg error">Enter your email above first, then click "Forgot password?"</div>`;
-      return;
-    }
-    const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: location.origin + '/reset-password.html'
-    });
-    if (error) {
-      msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
-    } else {
-      msg.innerHTML = `<div class="auth-msg success">Check your email for a password reset link.</div>`;
-    }
+    location.href = new URLSearchParams(location.search).get('next') || 'account.html';
   });
 </script>
 
