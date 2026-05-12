@@ -68,8 +68,8 @@
 
   // ────────── Helpers ──────────
   async function getUser() {
-    const { data } = await sb.auth.getUser();
-    return data?.user || null;
+    const { data } = await sb.auth.getSession();
+    return data?.session?.user || null;
   }
 
   async function getProfile() {
