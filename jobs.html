@@ -353,6 +353,7 @@
 
   async function submitJob(e) {
     e.preventDefault();
+    console.log('submitJob: started');
     const form = document.getElementById('job-form');
     const errBox = document.getElementById('form-error');
     const submitBtn = document.getElementById('j-submit');
@@ -361,10 +362,13 @@
     form.querySelectorAll('[required]').forEach(el => {
       if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
     });
+    console.log('submitJob: validation =', valid, '| sb =', !!sb, '| AUTH =', !!window.AUTH);
     if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
+    console.log('submitJob: calling AUTH.getUser()…');
     const user = await AUTH.getUser();
+    console.log('submitJob: user =', user);
     if (!user) {
       location.href = 'login.html?next=' + encodeURIComponent('jobs.html#post');
       return;
