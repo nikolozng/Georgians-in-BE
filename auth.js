@@ -61,37 +61,85 @@
                   || user.email.split('@')[0];
 
     if (profile) {
-      await sb.from('profiles').update({ incognito_name: newName }).eq('id', user.id);
+      const { data } = await sb.from('profiles')
+        .update({ incognito_name: newName })
+        .eq('id', user.id)
+        .select()
+        .single();
+      // Update the cache so callers don't have to re-fetch.
+      _profileCache = data || { ...profile, incognito_name: newName };
     } else {
-      await sb.from('profiles').upsert({
-        id: user.id,
-        email: user.email,
-        display_name: display,
-        incognito_name: newName
-      });
+      const { data } = await sb.from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          display_name: display,
+          incognito_name: newName
+        })
+        .select()
+        .single();
+      _profileCache = data || {
+        id: user.id, email: user.email, display_name: display, incognito_name: newName
+      };
     }
     return newName;
   }
 
+  // ────────── In-memory cache ──────────
+  // Avoid hitting Supabase for getUser/getProfile on every interaction.
+  // Cleared when auth state changes (sign in / sign out / token refresh).
+  // undefined = not loaded yet, null = loaded-and-empty, object = loaded value.
+  let _userCache = undefined;
+  let _profileCache = undefined;
+  let _userPromise = null;     // in-flight dedup so two callers don't both fetch
+  let _profilePromise = null;
+
+  function clearAuthCache() {
+    _userCache = undefined;
+    _profileCache = undefined;
+    _userPromise = null;
+    _profilePromise = null;
+  }
+  window._clearAuthCache = clearAuthCache; // exposed for debugging
+
   // ────────── Helpers ──────────
   async function getUser() {
-    try {
-      const { data } = await Promise.race([
-        sb.auth.getSession(),
-        new Promise((_, rej) => setTimeout(() => rej(new Error('getSession timed out after 5s')), 5000))
-      ]);
-      return data?.session?.user || null;
-    } catch (e) {
-      console.error('auth.getUser:', e);
-      return null;
-    }
+    if (_userCache !== undefined) return _userCache;
+    if (_userPromise) return _userPromise;
+    _userPromise = (async () => {
+      try {
+        const { data } = await Promise.race([
+          sb.auth.getSession(),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('getSession timed out after 5s')), 5000))
+        ]);
+        _userCache = data?.session?.user || null;
+        return _userCache;
+      } catch (e) {
+        console.error('auth.getUser:', e);
+        _userCache = null;
+        return null;
+      } finally {
+        _userPromise = null;
+      }
+    })();
+    return _userPromise;
   }
 
   async function getProfile() {
-    const u = await getUser();
-    if (!u) return null;
-    const { data } = await sb.from('profiles').select('*').eq('id', u.id).maybeSingle();
-    return data || null;
+    if (_profileCache !== undefined) return _profileCache;
+    if (_profilePromise) return _profilePromise;
+    _profilePromise = (async () => {
+      try {
+        const u = await getUser();
+        if (!u) { _profileCache = null; return null; }
+        const { data } = await sb.from('profiles').select('*').eq('id', u.id).maybeSingle();
+        _profileCache = data || null;
+        return _profileCache;
+      } finally {
+        _profilePromise = null;
+      }
+    })();
+    return _profilePromise;
   }
 
   async function signOut() {
@@ -232,8 +280,12 @@
     renderNavAuth();
   }
 
-  // Re-render when auth state changes (login/logout in another tab too)
-  sb.auth.onAuthStateChange(() => renderNavAuth());
+  // Re-render when auth state changes (login/logout in another tab too).
+  // Also clear caches so the next getUser/getProfile sees fresh data.
+  sb.auth.onAuthStateChange(() => {
+    clearAuthCache();
+    renderNavAuth();
+  });
 
   window.renderNavAuth = renderNavAuth;
 })();
