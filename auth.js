@@ -17,7 +17,14 @@
   }
 
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true }
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      // Bypass the Web Locks API. The Supabase client uses it to coordinate
+      // token refreshes between tabs, but a stuck/ghost lock will cause
+      // getSession() to hang forever. For a small site this is safe.
+      lock: (_name, _acquireTimeout, fn) => fn()
+    }
   });
   window.sb = sb;
 
@@ -68,8 +75,16 @@
 
   // ────────── Helpers ──────────
   async function getUser() {
-    const { data } = await sb.auth.getSession();
-    return data?.session?.user || null;
+    try {
+      const { data } = await Promise.race([
+        sb.auth.getSession(),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('getSession timed out after 5s')), 5000))
+      ]);
+      return data?.session?.user || null;
+    } catch (e) {
+      console.error('auth.getUser:', e);
+      return null;
+    }
   }
 
   async function getProfile() {
