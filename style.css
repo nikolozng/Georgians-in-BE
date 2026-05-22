@@ -194,6 +194,64 @@ body {
   border-radius: 2px;
 }
 
+/* ── NAV DROPDOWNS (grouped menu items) ── */
+.nav-dropdown { position: relative; }
+
+/* The clickable group label (e.g. "Community ▾"). Styled to match .nav-links a. */
+.nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--body-text);
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.nav-dropdown-toggle:hover { background: var(--surface); color: var(--ink); }
+/* "active" = the page you're on lives inside this group */
+.nav-dropdown-toggle.active { color: var(--rausch); background: rgba(255,56,92,0.08); }
+
+/* The little chevron; flips when the menu is open */
+.nav-caret { flex-shrink: 0; transition: transform 0.15s ease; }
+.nav-dropdown.open .nav-caret { transform: rotate(180deg); }
+
+/* The panel that drops down on click */
+.nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 190px;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow);
+  z-index: 200;
+}
+.nav-dropdown.open .nav-dropdown-menu { display: flex; }
+.nav-dropdown-menu a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body-text);
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-menu a:hover { background: var(--surface); color: var(--ink); }
+.nav-dropdown-menu a.active { color: var(--rausch); background: rgba(255,56,92,0.08); }
+
 /* ── BUTTONS ── */
 .btn {
   display: inline-flex;
@@ -833,6 +891,25 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
     font-size: 17px;
     border-radius: var(--r-sm);
   }
+
+  /* Grouped dropdowns inside the mobile drawer: expand inline instead of floating */
+  .nav-mobile-open .nav-dropdown { width: 100%; }
+  .nav-mobile-open .nav-dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 14px 12px;
+    font-size: 17px;
+    border-radius: var(--r-sm);
+  }
+  .nav-mobile-open .nav-dropdown-menu {
+    position: static;
+    min-width: 0;
+    border: none;
+    box-shadow: none;
+    padding: 2px 0 6px 14px;
+    gap: 0;
+  }
+  .nav-mobile-open .nav-dropdown-menu a { font-size: 16px; color: var(--muted); }
 
   .nav-mobile-open .nav-actions {
     display: flex;

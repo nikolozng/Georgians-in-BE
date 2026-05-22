@@ -289,3 +289,39 @@
 
   window.renderNavAuth = renderNavAuth;
 })();
+
+// ── Nav dropdowns ───────────────────────────────────────────────
+// Shared "click to open" behaviour for the grouped menu items
+// (Community ▾, Guides ▾). Kept in its own block so it always runs,
+// even if the Supabase setup above bailed out. We use one listener on
+// the whole document ("event delegation") instead of one per button —
+// that way it works on every page and on items added later.
+(function () {
+  function closeAll(except) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+      if (dd === except) return;
+      dd.classList.remove('open');
+      var t = dd.querySelector('.nav-dropdown-toggle');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var toggle = e.target.closest('.nav-dropdown-toggle');
+    if (toggle) {
+      var dd = toggle.closest('.nav-dropdown');
+      var willOpen = !dd.classList.contains('open');
+      closeAll(dd);                       // only one group open at a time
+      dd.classList.toggle('open', willOpen);
+      toggle.setAttribute('aria-expanded', String(willOpen));
+      return;
+    }
+    // A click anywhere that isn't inside an open menu closes the menus.
+    if (!e.target.closest('.nav-dropdown-menu')) closeAll(null);
+  });
+
+  // Esc closes any open dropdown.
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeAll(null);
+  });
+})();
