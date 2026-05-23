@@ -20,11 +20,11 @@
     ──────────────────────────────────────── */
     .hero-v2 {
       position: relative;
-      padding: clamp(64px, 11vw, 128px) 0 clamp(96px, 14vw, 160px);
+      padding: clamp(36px, 6vw, 68px) 0 clamp(44px, 7vw, 80px);
       overflow: hidden;
       background: #0a1014;
     }
-    /* Background image — Caucasus / Kazbegi area (Georgia, not Tbilisi) */
+    /* Background image — Brussels, Grand-Place (Belgium) */
     .hero-bg {
       position: absolute; inset: 0;
       z-index: 0;
@@ -41,7 +41,7 @@
       content: "";
       position: absolute; inset: 0;
       background:
-        linear-gradient(115deg, rgba(10,16,20,0.78) 0%, rgba(10,16,20,0.55) 45%, rgba(10,16,20,0.30) 100%),
+        linear-gradient(115deg, rgba(10,16,20,0.85) 0%, rgba(10,16,20,0.66) 45%, rgba(10,16,20,0.42) 100%),
         radial-gradient(900px 480px at 95% 0%, rgba(255,56,92,0.20), transparent 60%);
     }
     /* Subtle noise on top */
@@ -100,10 +100,11 @@
     .hero-v2 h1 .accent { color: var(--rausch); }
     .hero-v2 .lead {
       font-size: clamp(15px, 1.55vw, 18px);
-      color: var(--body-text);
+      color: rgba(255,255,255,0.92);
       line-height: 1.6;
       max-width: 540px;
       margin-bottom: 28px;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     }
 
     .hero-actions-v2 { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
@@ -570,11 +571,12 @@
 ════════════════════════════════════════════════════════════ -->
 <section class="hero-v2">
   <div class="hero-bg" aria-hidden="true">
-    <!-- Caucasus / Kazbegi (Georgia). If the first image fails, the next in the chain loads. -->
+    <!-- Brussels, Grand-Place (Belgium). If the first image fails, the next in the chain loads. -->
     <img
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Gergeti_Trinity_Church_with_Mount_Kazbek.jpg/1920px-Gergeti_Trinity_Church_with_Mount_Kazbek.jpg"
-      alt=""
-      onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1800&q=80';this.onerror=function(){this.onerror=null;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=80'};"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG/1600px-La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG"
+      alt="The Grand-Place in Brussels, Belgium"
+      data-fallbacks="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Bruxelles_Grand_Place.JPG/1600px-Bruxelles_Grand_Place.JPG|https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Grand%27_Place_de_Bruxelles2.JPG/1600px-Grand%27_Place_de_Bruxelles2.JPG|https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Art_d%C3%A9co,_avenue_Brugmann_N%C2%B0384_Bruxelles,_Brussels,_Belgium.JPG/1280px-Art_d%C3%A9co,_avenue_Brugmann_N%C2%B0384_Bruxelles,_Brussels,_Belgium.JPG"
+      onerror="var f=(this.dataset.fallbacks||'').split('|').filter(Boolean);if(f.length){this.src=f.shift();this.dataset.fallbacks=f.join('|');}else{this.onerror=null;}"
       loading="eager"
     />
   </div>
