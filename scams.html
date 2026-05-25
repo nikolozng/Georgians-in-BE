@@ -548,6 +548,30 @@
   }
 
   (function() { setLang(localStorage.getItem('geosin-lang') || 'en'); })();
+
+  // ── Load scam warning cards from the database (admin-editable). ──
+  // If the table has rows, they replace the static cards above. If it's
+  // empty or unreachable, the hardcoded cards stay as a safe fallback.
+  (async function renderScamCards() {
+    if (!sb) return;
+    try {
+      const { data, error } = await sb.from('scam_patterns').select('*').order('position', { ascending: true });
+      if (error || !data || !data.length) return;
+      const grid = document.querySelector('.scam-grid');
+      if (!grid) return;
+      grid.innerHTML = data.map(function (s, i) {
+        const title = s.title_ka
+          ? '<span class="en">' + s.title_en + '</span><span class="ka">' + s.title_ka + '</span>'
+          : s.title_en;
+        return '<div class="scam-card">' +
+          '<span class="pattern-num">#' + (i + 1) + '</span>' +
+          '<h3>' + title + '</h3>' +
+          '<p>' + (s.description || '') + '</p>' +
+          (s.what_to_do ? '<p class="what-to-do">→ ' + s.what_to_do + '</p>' : '') +
+          '</div>';
+      }).join('');
+    } catch (e) { console.warn('scam_patterns load failed', e); }
+  })();
 </script>
 </body>
 </html>

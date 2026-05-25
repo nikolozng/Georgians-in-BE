@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · geosin.be</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rausch:#ff385c; --rausch-active:#e00b41; --rausch-light:#ffd1da;
+    --ink:#222; --body:#3f3f3f; --muted:#6a6a6a; --muted-soft:#929292;
+    --canvas:#fff; --surface:#f7f7f7; --hairline:#ddd; --border-strong:#c1c1c1;
+    --error:#c13515; --green:#0f7a4a; --green-light:#e3f5ec; --amber:#9a6700; --amber-light:#fff4d6;
+    --r-sm:8px; --r-md:14px; --r-lg:18px;
+    --font:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif;
+    --ka:'Noto Sans Georgian','Plus Jakarta Sans',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);color:var(--body);background:var(--surface);min-height:100vh}
+  .ka{font-family:var(--ka);font-size:.9em;color:var(--muted)}
+  a{color:inherit;text-decoration:none}
+
+  /* gate */
+  #gate{position:fixed;inset:0;background:var(--surface);display:flex;align-items:center;justify-content:center;z-index:100;text-align:center;padding:24px}
+  #gate .box{max-width:420px}
+  .spinner{width:34px;height:34px;border:3px solid var(--hairline);border-top-color:var(--rausch);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #gate h1{font-size:22px;color:var(--ink);margin-bottom:10px}
+  #gate p{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px}
+
+  /* top bar */
+  .topbar{height:60px;background:var(--canvas);border-bottom:1px solid var(--hairline);display:flex;align-items:center;padding:0 22px;gap:14px;position:sticky;top:0;z-index:20}
+  .logo{font-weight:700;font-size:18px;color:var(--ink)}
+  .logo span{color:var(--rausch)}
+  .badge-admin{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:var(--ink);color:#fff;padding:3px 9px;border-radius:99px}
+  .topbar-spacer{flex:1}
+  .top-link{font-size:13px;color:var(--muted);font-weight:600}
+  .top-link:hover{color:var(--ink)}
+  .who{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
+  .avatar{width:32px;height:32px;border-radius:50%;background:var(--rausch);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+
+  .shell{display:flex;min-height:calc(100vh - 60px)}
+  .side{width:230px;background:var(--canvas);border-right:1px solid var(--hairline);padding:18px 12px;flex-shrink:0}
+  .nav-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:var(--r-sm);font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;margin-bottom:3px}
+  .nav-item:hover{background:var(--surface);color:var(--ink)}
+  .nav-item.active{background:rgba(255,56,92,.08);color:var(--rausch)}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0}
+  .nav-count{margin-left:auto;background:var(--rausch);color:#fff;font-size:11px;font-weight:700;border-radius:99px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0 6px}
+  .nav-sec{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted-soft);padding:14px 13px 6px}
+
+  .main{flex:1;padding:30px 36px;max-width:1100px}
+  .page{display:none}
+  .page.show{display:block}
+  h1.page-title{font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px}
+  .page-sub{font-size:14px;color:var(--muted);margin-bottom:26px}
+
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+  .metric{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-md);padding:18px}
+  .metric .label{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .metric .num{font-size:30px;font-weight:700;color:var(--ink);line-height:1}
+  .metric .delta{font-size:12px;color:var(--green);margin-top:6px;font-weight:600}
+  .metric.alert .num{color:var(--rausch)}
+
+  .card{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-md);padding:22px;margin-bottom:20px}
+  .card h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:16px}
+
+  .row{display:flex;align-items:flex-start;gap:14px;padding:15px 0;border-top:1px solid var(--surface)}
+  .row:first-of-type{border-top:none}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+  .pill.job{background:#eaf1fb;color:#185fa5}
+  .pill.housing{background:#e1f5ee;color:#0f6e56}
+  .pill.forum{background:#f3eefe;color:#534ab7}
+  .pill.event{background:#faece7;color:#993c1d}
+  .pill.service{background:#fbeaf0;color:#993556}
+  .pill.live{background:var(--green-light);color:var(--green)}
+  .row .body{flex:1;min-width:0}
+  .row .ttl{font-weight:600;color:var(--ink);font-size:14.5px;margin-bottom:3px}
+  .row .meta{font-size:12.5px;color:var(--muted-soft)}
+  .row .excerpt{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5;white-space:pre-wrap}
+  .actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+  .btn{font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--r-sm);cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:transform .05s}
+  .btn:active{transform:scale(.97)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn-approve{background:var(--green);color:#fff}
+  .btn-approve:hover{background:#0c633c}
+  .btn-reject{background:#fff;color:var(--error);border-color:var(--hairline)}
+  .btn-reject:hover{border-color:var(--error)}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--hairline)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-danger{background:#fff;color:var(--error);border-color:var(--hairline)}
+  .btn-danger:hover{background:#fdecec}
+  .btn-primary{background:var(--rausch);color:#fff}
+  .btn-primary:hover{background:var(--rausch-active)}
+  .btn-sm{padding:6px 11px;font-size:12.5px}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{font-size:13px;font-weight:600;padding:7px 14px;border-radius:99px;border:1px solid var(--hairline);background:#fff;color:var(--muted);cursor:pointer}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .empty{text-align:center;color:var(--muted-soft);font-size:14px;padding:34px 0}
+
+  .ed{border:1px solid var(--hairline);border-radius:var(--r-md);padding:18px;margin-bottom:14px;background:var(--canvas)}
+  .ed .head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .ed .num{width:26px;height:26px;border-radius:50%;background:var(--rausch-light);color:var(--rausch-active);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .ed label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.3px}
+  .ed input,.ed textarea{width:100%;border:1px solid var(--hairline);border-radius:var(--r-sm);padding:10px 12px;font-family:inherit;font-size:14px;color:var(--ink);background:var(--surface)}
+  .ed textarea{min-height:70px;resize:vertical}
+  .ed .ka-in{font-family:var(--ka)}
+  .ed .view .ttl{font-weight:700;color:var(--ink);font-size:15px}
+  .ed .view p{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.55}
+  .ed .fields{display:none}
+  .ed.editing .fields{display:block}
+  .ed.editing .view{display:none}
+  .editrow{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+  .hint{font-size:12px;color:var(--muted-soft);margin-top:4px}
+
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--r-sm);font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.2);max-width:90vw}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast.ok{background:var(--green)}
+  #toast.err{background:var(--error)}
+
+  @media(max-width:820px){.metrics{grid-template-columns:repeat(2,1fr)}.side{width:60px}.side .nav-item span,.side .nav-sec{display:none}.main{padding:20px 14px}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <div class="spinner" id="gate-spin"></div>
+    <div id="gate-msg"><h1>Checking your access…</h1></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="topbar">
+    <div class="logo">geosin<span>.be</span></div>
+    <span class="badge-admin">Admin</span>
+    <div class="topbar-spacer"></div>
+    <a href="index.html" class="top-link">View site ↗</a>
+    <a href="#" class="top-link" onclick="window.AUTH.signOut();return false">Log out</a>
+    <div class="who"><span id="who-name"></span><div class="avatar" id="who-av">N</div></div>
+  </div>
+
+  <div class="shell">
+    <aside class="side">
+      <div class="nav-sec">Overview</div>
+      <div class="nav-item active" data-page="dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-sec">Moderation</div>
+      <div class="nav-item" data-page="queue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Review queue</span><span class="nav-count" id="queueCount" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-page="manage">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Manage live posts</span>
+      </div>
+      <div class="nav-sec">Content</div>
+      <div class="nav-item" data-page="scams">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Scam warnings</span>
+      </div>
+      <div class="nav-item" data-page="checklists">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/></svg>
+        <span>Checklists</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- DASHBOARD -->
+      <section class="page show" id="page-dash">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-sub" id="dash-date"></p>
+        <div class="metrics">
+          <div class="metric alert"><div class="label">Waiting on you</div><div class="num" id="m-pending">–</div><div class="delta" style="color:var(--rausch)">needs review</div></div>
+          <div class="metric"><div class="label">Live posts</div><div class="num" id="m-live">–</div><div class="delta">published</div></div>
+          <div class="metric"><div class="label">Members</div><div class="num" id="m-members">–</div><div class="delta">total</div></div>
+          <div class="metric"><div class="label">New this week</div><div class="num" id="m-new">–</div><div class="delta">members</div></div>
+        </div>
+        <div class="card">
+          <h2>Needs your attention</h2>
+          <div id="dash-attention"></div>
+        </div>
+        <div class="card">
+          <h2>Recently published</h2>
+          <div id="dash-recent"></div>
+        </div>
+      </section>
+
+      <!-- REVIEW QUEUE -->
+      <section class="page" id="page-queue">
+        <h1 class="page-title">Review queue</h1>
+        <p class="page-sub">Submissions and unpublished posts waiting to go live. Approve to publish, reject to delete.</p>
+        <div class="chips" id="queueChips">
+          <div class="chip on" data-f="all">All</div>
+          <div class="chip" data-f="job">Jobs</div>
+          <div class="chip" data-f="housing">Housing</div>
+          <div class="chip" data-f="forum">Forum</div>
+          <div class="chip" data-f="event">Events</div>
+          <div class="chip" data-f="service">Services</div>
+        </div>
+        <div class="card" id="queueCard"></div>
+      </section>
+
+      <!-- MANAGE LIVE -->
+      <section class="page" id="page-manage">
+        <h1 class="page-title">Manage live posts</h1>
+        <p class="page-sub">Everything currently published. Edit a post, unpublish it (moves it back to the queue), or delete it for good.</p>
+        <div class="chips" id="manageChips">
+          <div class="chip on" data-f="all">All</div>
+          <div class="chip" data-f="job">Jobs</div>
+          <div class="chip" data-f="housing">Housing</div>
+          <div class="chip" data-f="forum">Forum</div>
+          <div class="chip" data-f="event">Events</div>
+          <div class="chip" data-f="service">Services</div>
+        </div>
+        <div class="card" id="manageCard"></div>
+      </section>
+
+      <!-- SCAM WARNINGS -->
+      <section class="page" id="page-scams">
+        <h1 class="page-title">Scam warnings</h1>
+        <p class="page-sub">The warning cards on your public Scams page. Edits go live there immediately. You can use basic HTML (e.g. links) in the description.</p>
+        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="addScam()">+ Add new warning</button></div>
+        <div id="scamList"><div class="empty">Loading…</div></div>
+      </section>
+
+      <!-- CHECKLISTS -->
+      <section class="page" id="page-checklists">
+        <h1 class="page-title">Checklists</h1>
+        <p class="page-sub">The step-by-step lists on your public Checklists page. Pick a list, then edit, reorder, add or remove steps. You can use basic HTML (e.g. links) in the description.</p>
+        <div class="chips" id="clChips">
+          <div class="chip on" data-l="arrived">Just arrived</div>
+          <div class="chip" data-l="job">Find a job</div>
+          <div class="chip" data-l="business">Open a business</div>
+        </div>
+        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="addCL()">+ Add step</button></div>
+        <div id="clList"><div class="empty">Loading…</div></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth.js?v=9"></script>
+<script>
+const sb = window.sb;
+
+/* ---------- helpers ---------- */
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function stripHtml(s){const d=document.createElement('div');d.innerHTML=s||'';return d.textContent||'';}
+function truncate(s,n){s=stripHtml(s);return s.length>n?s.slice(0,n).trim()+'…':s;}
+function labelize(k){return k.replace(/_/g,' ').replace(/^\w/,c=>c.toUpperCase());}
+function fmtDate(d){try{return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'});}catch(e){return '';}}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+let toastT;
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=(type?type+' ':'')+'show';clearTimeout(toastT);toastT=setTimeout(()=>t.className=t.className.replace('show','').trim(),2600);}
+
+/* ---------- table config ---------- */
+const TABLES=[
+  {key:'job',table:'jobs',pill:'Job',title:r=>r.title,sub:r=>[r.company,r.city].filter(Boolean).join(' · '),excerpt:r=>r.description},
+  {key:'housing',table:'housing',pill:'Housing',title:r=>(r.listing_type?r.listing_type+' — ':'')+(r.city||''),sub:r=>r.monthly_rent?('€'+r.monthly_rent+'/mo'):'',excerpt:r=>r.description},
+  {key:'forum',table:'forum_threads',pill:'Forum',title:r=>r.title,sub:r=>r.category||'',excerpt:r=>r.body},
+  {key:'event',table:'events',pill:'Event',title:r=>r.title,sub:r=>[r.city,r.event_date].filter(Boolean).join(' · '),excerpt:r=>r.description},
+  {key:'service',table:'services',pill:'Service',title:r=>r.name||'Service',sub:r=>[r.category,r.region].filter(Boolean).join(' · '),excerpt:r=>r.description},
+];
+const T = Object.fromEntries(TABLES.map(t=>[t.key,t]));
+function findCfg(table){return TABLES.find(t=>t.table===table);}
+
+/* ---------- boot / auth gate ---------- */
+async function boot(){
+  let user;
+  try{ user = await window.AUTH.getUser(); }catch(e){ user=null; }
+  if(!user){ location.href='login.html?next='+encodeURIComponent('admin.html'); return; }
+  let prof=null;
+  try{ const {data}=await sb.from('profiles').select('is_admin,display_name,email').eq('id',user.id).maybeSingle(); prof=data; }catch(e){}
+  if(!prof || !prof.is_admin){ return showDenied(user.email); }
+
+  const name=(prof.display_name||user.email||'Admin');
+  setText('who-name', name.split('@')[0]);
+  document.getElementById('who-av').textContent=(name[0]||'A').toUpperCase();
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' — here’s what’s happening on geosin.be.';
+
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='';
+  loadQueue(); loadLive(); loadStats(); loadScams(); loadCL();
+}
+function showDenied(email){
+  document.getElementById('gate-spin').style.display='none';
+  document.getElementById('gate-msg').innerHTML='<h1>You’re not an admin</h1><p>The account <strong>'+esc(email||'')+'</strong> doesn’t have admin access. If this is your site, run the admin setup SQL in Supabase, then reload.</p><a href="index.html" class="btn btn-primary">Back to site</a> &nbsp; <a href="#" onclick="window.AUTH.signOut();return false" class="btn btn-ghost">Log out</a>';
+}
+
+/* ---------- navigation ---------- */
+function go(p){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===p));
+  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('show',s.id==='page-'+p));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',()=>go(n.dataset.page)));
+
+/* ---------- queue ---------- */
+let pending=[], qFilter='all';
+async function loadQueue(){
+  const rows=[];
+  for(const t of TABLES){
+    const {data,error}=await sb.from(t.table).select('*').eq('approved',false).order('created_at',{ascending:false});
+    if(error){console.warn('queue',t.table,error.message);continue;}
+    (data||[]).forEach(r=>rows.push(Object.assign({},r,{__k:t.key})));
+  }
+  rows.sort((a,b)=>(a.created_at<b.created_at?1:-1));
+  pending=rows; renderQueue(); renderDash();
+  const c=pending.length, badge=document.getElementById('queueCount');
+  badge.textContent=c; badge.style.display=c?'flex':'none';
+}
+function rowHtml(r,acts){
+  const t=T[r.__k];
+  return '<div class="row">'+
+    '<span class="pill '+t.key+'">'+t.pill+'</span>'+
+    '<div class="body"><div class="ttl">'+esc(t.title(r)||'(untitled)')+'</div>'+
+    '<div class="meta">'+esc(t.sub(r)||'')+(r.created_at?' · '+fmtDate(r.created_at):'')+'</div>'+
+    (t.excerpt(r)?'<div class="excerpt">'+esc(truncate(t.excerpt(r),180))+'</div>':'')+'</div>'+
+    '<div class="actions">'+acts+'</div></div>';
+}
+function renderQueue(){
+  const card=document.getElementById('queueCard');
+  const list=pending.filter(r=>qFilter==='all'||r.__k===qFilter);
+  if(!list.length){card.innerHTML='<div class="empty">Nothing waiting here — you’re all caught up.</div>';return;}
+  card.innerHTML=list.map(r=>rowHtml(r,
+    '<button class="btn btn-approve" onclick="approve(\''+r.__k+'\','+r.id+')">Approve</button>'+
+    '<button class="btn btn-reject" onclick="reject(\''+r.__k+'\','+r.id+')">Reject</button>')).join('');
+}
+document.querySelectorAll('#queueChips .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#queueChips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); qFilter=c.dataset.f; renderQueue();
+}));
+async function approve(k,id){
+  const {error}=await sb.from(T[k].table).update({approved:true}).eq('id',id);
+  if(error)return toast('Could not approve: '+error.message,'err');
+  toast('Approved — now live on the site','ok'); await refresh();
+}
+async function reject(k,id){
+  if(!confirm('Delete this submission permanently? This cannot be undone.'))return;
+  const {error}=await sb.from(T[k].table).delete().eq('id',id);
+  if(error)return toast('Could not reject: '+error.message,'err');
+  toast('Rejected and removed'); await refresh();
+}
+
+/* ---------- manage live ---------- */
+let live=[], mFilter='all';
+async function loadLive(){
+  const rows=[];
+  for(const t of TABLES){
+    const {data,error}=await sb.from(t.table).select('*').eq('approved',true).order('created_at',{ascending:false}).limit(100);
+    if(error){console.warn('live',t.table,error.message);continue;}
+    (data||[]).forEach(r=>rows.push(Object.assign({},r,{__k:t.key})));
+  }
+  rows.sort((a,b)=>(a.created_at<b.created_at?1:-1));
+  live=rows; renderManage(); renderDash();
+}
+function renderManage(){
+  const card=document.getElementById('manageCard');
+  const list=live.filter(r=>mFilter==='all'||r.__k===mFilter);
+  if(!list.length){card.innerHTML='<div class="empty">No live posts in this category yet.</div>';return;}
+  card.innerHTML=list.map(r=>'<div id="mrow-'+r.__k+'-'+r.id+'">'+rowHtml(r,
+    '<button class="btn btn-ghost btn-sm" onclick="editPost(\''+r.__k+'\','+r.id+')">Edit</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="unpublish(\''+r.__k+'\','+r.id+')">Unpublish</button>'+
+    '<button class="btn btn-danger btn-sm" onclick="delPost(\''+r.__k+'\','+r.id+')">Delete</button>')+'</div>').join('');
+}
+document.querySelectorAll('#manageChips .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#manageChips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); mFilter=c.dataset.f; renderManage();
+}));
+async function unpublish(k,id){
+  const {error}=await sb.from(T[k].table).update({approved:false}).eq('id',id);
+  if(error)return toast('Could not unpublish: '+error.message,'err');
+  toast('Unpublished — moved to your review queue','ok'); await refresh();
+}
+async function delPost(k,id){
+  if(!confirm('Delete this post permanently? This cannot be undone.'))return;
+  const {error}=await sb.from(T[k].table).delete().eq('id',id);
+  if(error)return toast('Could not delete: '+error.message,'err');
+  toast('Post deleted'); await refresh();
+}
+const SKIP_FIELDS=['id','created_at','updated_at','user_id','approved','incognito'];
+function editPost(k,id){
+  const r=live.find(x=>x.__k===k&&x.id===id); if(!r)return;
+  const keys=Object.keys(r).filter(f=>!SKIP_FIELDS.includes(f)&&!f.startsWith('__'));
+  let html='<div class="ed editing" style="margin:0"><div class="fields" style="display:block">';
+  keys.forEach(f=>{
+    const v=r[f];
+    html+='<label>'+esc(labelize(f))+'</label>';
+    if(typeof v==='boolean'){
+      html+='<select id="ef-'+f+'"><option value="true"'+(v?' selected':'')+'>Yes</option><option value="false"'+(!v?' selected':'')+'>No</option></select>';
+    }else if(f==='description'||f==='body'||(typeof v==='string'&&v.length>70)){
+      html+='<textarea id="ef-'+f+'">'+esc(v==null?'':v)+'</textarea>';
+    }else{
+      html+='<input id="ef-'+f+'" value="'+esc(v==null?'':v)+'">';
+    }
+  });
+  html+='<div class="editrow"><button class="btn btn-ghost btn-sm" onclick="loadLive()">Cancel</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="savePost(\''+k+'\','+id+',['+keys.map(x=>'\''+x+'\'').join(',')+'])">Save changes</button></div>';
+  html+='</div></div>';
+  document.getElementById('mrow-'+k+'-'+id).innerHTML=html;
+}
+async function savePost(k,id,keys){
+  const patch={};
+  keys.forEach(f=>{
+    const el=document.getElementById('ef-'+f); if(!el)return;
+    let val=el.value;
+    if(el.tagName==='SELECT'&&(val==='true'||val==='false')) val=(val==='true');
+    else if(val==='') val=null;
+    patch[f]=val;
+  });
+  const {error}=await sb.from(T[k].table).update(patch).eq('id',id);
+  if(error)return toast('Could not save: '+error.message,'err');
+  toast('Saved','ok'); await refresh();
+}
+
+/* ---------- dashboard ---------- */
+function renderDash(){
+  setText('m-pending', pending.length);
+  const att=document.getElementById('dash-attention');
+  const top=pending.slice(0,5);
+  att.innerHTML=top.length?top.map(r=>{const t=T[r.__k];return '<div class="row"><span class="pill '+t.key+'">'+t.pill+'</span><div class="body"><div class="ttl">'+esc(t.title(r)||'(untitled)')+'</div><div class="meta">'+esc(t.sub(r)||'')+(r.created_at?' · '+fmtDate(r.created_at):'')+'</div></div><div class="actions"><button class="btn btn-ghost btn-sm" onclick="go(\'queue\')">Review →</button></div></div>';}).join(''):'<div class="empty">Nothing waiting — you’re all caught up.</div>';
+  const rec=document.getElementById('dash-recent');
+  const recent=live.slice(0,5);
+  rec.innerHTML=recent.length?recent.map(r=>{const t=T[r.__k];return '<div class="row"><span class="pill '+t.key+'">'+t.pill+'</span><div class="body"><div class="ttl" style="font-weight:500">'+esc(t.title(r)||'(untitled)')+'</div><div class="meta">'+(r.created_at?fmtDate(r.created_at):'')+'</div></div></div>';}).join(''):'<div class="empty">No published posts yet.</div>';
+}
+async function loadStats(){
+  let liveCount=0;
+  for(const t of TABLES){
+    const {count}=await sb.from(t.table).select('id',{count:'exact',head:true}).eq('approved',true);
+    liveCount+=count||0;
+  }
+  setText('m-live',liveCount);
+  const {count:members}=await sb.from('profiles').select('id',{count:'exact',head:true});
+  setText('m-members',members||0);
+  const weekAgo=new Date(Date.now()-7*86400000).toISOString();
+  const {count:nw}=await sb.from('profiles').select('id',{count:'exact',head:true}).gte('created_at',weekAgo);
+  setText('m-new',nw||0);
+}
+
+/* ---------- scam warnings ---------- */
+let scams=[];
+async function loadScams(){
+  const {data,error}=await sb.from('scam_patterns').select('*').order('position',{ascending:true});
+  if(error){document.getElementById('scamList').innerHTML='<div class="empty">Could not load: '+esc(error.message)+'</div>';return;}
+  scams=data||[]; renderScams();
+}
+function renderScams(){
+  const el=document.getElementById('scamList');
+  if(!scams.length){el.innerHTML='<div class="empty">No warnings yet. Click “Add new warning”.</div>';return;}
+  el.innerHTML=scams.map((s,i)=>'<div class="ed" id="sc-'+s.id+'">'+
+    '<div class="head"><span class="num">'+(i+1)+'</span>'+
+      '<div style="margin-left:auto;display:flex;gap:4px">'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveScam('+i+',-1)"'+(i===0?' disabled':'')+'>↑</button>'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveScam('+i+',1)"'+(i===scams.length-1?' disabled':'')+'>↓</button>'+
+      '</div></div>'+
+    '<div class="view"><div class="ttl">'+esc(s.title_en)+'</div>'+
+      (s.title_ka?'<div class="ka" style="font-size:14px;margin-top:2px">'+esc(s.title_ka)+'</div>':'')+
+      '<p>'+(s.description||'')+'</p>'+
+      (s.what_to_do?'<p style="color:var(--green)">→ '+esc(s.what_to_do)+'</p>':'')+
+      '<div class="editrow"><button class="btn btn-ghost btn-sm" onclick="editScam('+s.id+')">Edit</button></div></div>'+
+    '<div class="fields">'+
+      '<label>Title (English)</label><input id="se-en-'+s.id+'" value="'+esc(s.title_en)+'">'+
+      '<label>Title (Georgian)</label><input class="ka-in" id="se-ka-'+s.id+'" value="'+esc(s.title_ka)+'" placeholder="optional">'+
+      '<label>Description</label><textarea id="se-desc-'+s.id+'">'+esc(s.description)+'</textarea>'+
+      '<label>What to do</label><textarea id="se-wtd-'+s.id+'">'+esc(s.what_to_do)+'</textarea>'+
+      '<div class="editrow"><button class="btn btn-danger btn-sm" style="margin-right:auto" onclick="delScam('+s.id+')">Delete</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="renderScams()">Cancel</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="saveScam('+s.id+')">Save changes</button></div>'+
+    '</div></div>').join('');
+}
+function editScam(id){document.getElementById('sc-'+id).classList.add('editing');}
+async function saveScam(id){
+  const patch={
+    title_en:document.getElementById('se-en-'+id).value.trim(),
+    title_ka:document.getElementById('se-ka-'+id).value.trim()||null,
+    description:document.getElementById('se-desc-'+id).value.trim(),
+    what_to_do:document.getElementById('se-wtd-'+id).value.trim()||null
+  };
+  if(!patch.title_en||!patch.description)return toast('Title and description are required','err');
+  const {error}=await sb.from('scam_patterns').update(patch).eq('id',id);
+  if(error)return toast('Could not save: '+error.message,'err');
+  toast('Saved — updated on the public Scams page','ok'); loadScams();
+}
+async function delScam(id){
+  if(!confirm('Delete this warning card?'))return;
+  const {error}=await sb.from('scam_patterns').delete().eq('id',id);
+  if(error)return toast('Could not delete: '+error.message,'err');
+  toast('Deleted'); loadScams();
+}
+async function addScam(){
+  const pos=scams.length?Math.max.apply(null,scams.map(s=>s.position||0))+1:1;
+  const {error}=await sb.from('scam_patterns').insert({position:pos,title_en:'New warning',description:'Describe the scam here.'});
+  if(error)return toast('Could not add: '+error.message,'err');
+  await loadScams(); go('scams');
+}
+async function moveScam(i,dir){
+  const j=i+dir; if(j<0||j>=scams.length)return;
+  const a=scams[i],b=scams[j];
+  await sb.from('scam_patterns').update({position:b.position}).eq('id',a.id);
+  await sb.from('scam_patterns').update({position:a.position}).eq('id',b.id);
+  loadScams();
+}
+
+/* ---------- checklists ---------- */
+let clItems=[], clKey='arrived';
+async function loadCL(){
+  const {data,error}=await sb.from('checklist_items').select('*').eq('list_key',clKey).order('position',{ascending:true});
+  if(error){document.getElementById('clList').innerHTML='<div class="empty">Could not load: '+esc(error.message)+'</div>';return;}
+  clItems=data||[]; renderCL();
+}
+function renderCL(){
+  const el=document.getElementById('clList');
+  if(!clItems.length){el.innerHTML='<div class="empty">No steps in this list yet. Click “Add step”.</div>';return;}
+  el.innerHTML=clItems.map((s,i)=>'<div class="ed" id="cl-'+s.id+'">'+
+    '<div class="head"><span class="num">'+(i+1)+'</span>'+
+      '<strong style="color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Step '+(i+1)+'</strong>'+
+      '<div style="margin-left:auto;display:flex;gap:4px">'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveCL('+i+',-1)"'+(i===0?' disabled':'')+'>↑</button>'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveCL('+i+',1)"'+(i===clItems.length-1?' disabled':'')+'>↓</button>'+
+      '</div></div>'+
+    '<div class="view"><div class="ttl">'+esc(s.title_en)+'</div>'+
+      (s.title_ka?'<div class="ka" style="font-size:14px;margin-top:2px">'+esc(s.title_ka)+'</div>':'')+
+      (s.description?'<p>'+s.description+'</p>':'')+
+      '<div class="editrow"><button class="btn btn-ghost btn-sm" onclick="editCL('+s.id+')">Edit</button></div></div>'+
+    '<div class="fields">'+
+      '<label>Step title (English)</label><input id="ce-en-'+s.id+'" value="'+esc(s.title_en)+'">'+
+      '<label>Step title (Georgian)</label><input class="ka-in" id="ce-ka-'+s.id+'" value="'+esc(s.title_ka)+'" placeholder="optional">'+
+      '<label>Description</label><textarea id="ce-desc-'+s.id+'">'+esc(s.description)+'</textarea>'+
+      '<div class="editrow"><button class="btn btn-danger btn-sm" style="margin-right:auto" onclick="delCL('+s.id+')">Delete step</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="renderCL()">Cancel</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="saveCL('+s.id+')">Save changes</button></div>'+
+    '</div></div>').join('');
+}
+function editCL(id){document.getElementById('cl-'+id).classList.add('editing');}
+async function saveCL(id){
+  const patch={
+    title_en:document.getElementById('ce-en-'+id).value.trim(),
+    title_ka:document.getElementById('ce-ka-'+id).value.trim()||null,
+    description:document.getElementById('ce-desc-'+id).value.trim()||null
+  };
+  if(!patch.title_en)return toast('Step title is required','err');
+  const {error}=await sb.from('checklist_items').update(patch).eq('id',id);
+  if(error)return toast('Could not save: '+error.message,'err');
+  toast('Saved — updated on the public Checklists page','ok'); loadCL();
+}
+async function delCL(id){
+  if(!confirm('Delete this step?'))return;
+  const {error}=await sb.from('checklist_items').delete().eq('id',id);
+  if(error)return toast('Could not delete: '+error.message,'err');
+  toast('Step deleted'); loadCL();
+}
+async function addCL(){
+  const pos=clItems.length?Math.max.apply(null,clItems.map(s=>s.position||0))+1:1;
+  const {error}=await sb.from('checklist_items').insert({list_key:clKey,position:pos,title_en:'New step',description:''});
+  if(error)return toast('Could not add: '+error.message,'err');
+  loadCL();
+}
+async function moveCL(i,dir){
+  const j=i+dir; if(j<0||j>=clItems.length)return;
+  const a=clItems[i],b=clItems[j];
+  await sb.from('checklist_items').update({position:b.position}).eq('id',a.id);
+  await sb.from('checklist_items').update({position:a.position}).eq('id',b.id);
+  loadCL();
+}
+document.querySelectorAll('#clChips .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#clChips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); clKey=c.dataset.l; loadCL();
+}));
+
+/* ---------- shared refresh ---------- */
+async function refresh(){ await Promise.all([loadQueue(), loadLive(), loadStats()]); }
+
+boot();
+</script>
+</body>
+</html>

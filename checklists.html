@@ -531,11 +531,44 @@
     }
   });
 
+  /* ── Load checklist steps from the database (admin-editable). ──
+     If the table has rows, they replace the static steps above. If it's
+     empty or unreachable, the hardcoded steps stay as a safe fallback.
+     Checkbox ids are keyed on the row id so saved progress persists. */
+  async function renderChecklists() {
+    const db = window.sb;
+    if (!db) return;
+    try {
+      const { data, error } = await db.from('checklist_items')
+        .select('*').order('list_key').order('position', { ascending: true });
+      if (error || !data || !data.length) return;
+      const byKey = { arrived: [], job: [], business: [] };
+      data.forEach(function (it) { if (byKey[it.list_key]) byKey[it.list_key].push(it); });
+      Object.keys(byKey).forEach(function (key) {
+        const list = document.querySelector('#panel-' + key + ' .cl-list');
+        if (!list || !byKey[key].length) return;
+        list.innerHTML = byKey[key].map(function (it) {
+          const title = it.title_ka
+            ? '<span class="en">' + it.title_en + '</span><span class="ka">' + it.title_ka + '</span>'
+            : it.title_en;
+          return '<label class="cl-item"><input type="checkbox" id="ck-' + key + '-' + it.id + '" data-cl="' + key + '" />' +
+            '<div class="cl-item-body">' +
+              '<div class="cl-item-title">' + title + '</div>' +
+              (it.description ? '<div class="cl-item-desc">' + it.description + '</div>' : '') +
+            '</div></label>';
+        }).join('');
+      });
+      applyState();
+      updateProgress();
+    } catch (e) { console.warn('checklist_items load failed', e); }
+  }
+
   /* ── Init ── */
   (function() {
     setLang(localStorage.getItem('geosin-lang') || 'en');
     applyState();
     updateProgress();
+    renderChecklists();
   })();
 </script>
 </body>
