@@ -66,6 +66,7 @@ create table if not exists jobs (
   contract_type text,
   urgent boolean default false not null,
   contact_email text not null,
+  contact_phone text,
   application_link text,
   approved boolean default false not null
 );
@@ -213,6 +214,7 @@ create policy "Users update own profile"
 -- ──────────────────────────────────────────────────────────────────────
 
 alter table jobs              add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table jobs              add column if not exists contact_phone text;
 alter table housing           add column if not exists user_id uuid references auth.users(id) on delete cascade;
 alter table forum_threads     add column if not exists user_id uuid references auth.users(id) on delete cascade;
 alter table forum_replies     add column if not exists user_id uuid references auth.users(id) on delete cascade;

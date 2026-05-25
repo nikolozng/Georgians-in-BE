@@ -27,18 +27,42 @@
     .urgent-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--rausch); font-weight: 600; cursor: pointer; }
     .urgent-toggle input { accent-color: var(--rausch); width: 15px; height: 15px; }
 
-    .job-list { display: grid; gap: 12px; }
-    .job-card { border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px 22px; background: var(--canvas); transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; }
+    .job-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+    .job-card { align-self: start; border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); transition: border-color 0.15s, box-shadow 0.15s; overflow: hidden; }
     .job-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
     .job-card.urgent { border-left: 4px solid var(--rausch); }
+    .job-card-toggle { width: 100%; display: block; border: 0; padding: 20px 22px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
     .job-meta-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
     .job-company { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
     .urgent-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--rausch); color: #fff; padding: 2px 8px; border-radius: var(--r-full); }
     .job-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
-    .job-card p { font-size: 14px; color: var(--body-text); line-height: 1.55; margin-bottom: 12px; }
+    .job-card-panel { display: none; padding: 0 22px 20px; }
+    .job-card.is-open .job-card-panel { display: block; }
+    .job-description-wrap { border-top: 1px solid var(--hairline); padding-top: 14px; }
+    .job-description-label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .job-description { font-size: 14px; color: var(--body-text); line-height: 1.55; margin: 0; white-space: pre-line; }
+    .job-actions { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; }
+    .contact-reveal {
+      border: 0;
+      padding: 0;
+      background: none;
+      color: var(--rausch);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .job-actions a { color: var(--rausch); font-size: 13px; font-weight: 700; text-decoration: none; }
+    .contact-reveal:hover,
+    .job-actions a:hover { text-decoration: underline; }
+    .contact-value { display: none; flex-basis: 100%; font-size: 13px; color: var(--body-text); line-height: 1.4; overflow-wrap: anywhere; }
+    .contact-value.is-visible { display: block; }
     .job-tags { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px solid var(--hairline); }
     .job-tag { font-size: 12px; color: var(--muted); background: var(--surface); padding: 3px 10px; border-radius: var(--r-full); }
     .job-tag.lang { background: rgba(0,53,102,0.08); color: var(--be-blue, #0066cc); font-weight: 600; }
+    .job-card-toggle:focus-visible { outline: 2px solid var(--rausch); outline-offset: -4px; }
+    .contact-reveal:focus-visible,
+    .job-actions a:focus-visible { outline: 2px solid var(--rausch); outline-offset: 3px; }
 
     .no-results, .loading-state { text-align: center; padding: 60px 0; color: var(--muted); }
 
@@ -49,7 +73,8 @@
     .form-success { display: none; background: #e6f4ea; border: 1px solid #c3e6cb; border-radius: var(--r-md); padding: 20px 24px; color: #1a7f37; max-width: 720px; }
     .form-error-banner { display: none; background: #fde7e9; border: 1px solid #f5b5bc; border-radius: var(--r-md); padding: 14px 20px; color: var(--error); font-size: 14px; margin-bottom: 16px; max-width: 720px; }
 
-    @media (max-width: 900px) { .listing-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+    @media (max-width: 900px) { .listing-layout { grid-template-columns: 1fr; } .sidebar { position: static; } .job-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .job-list { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -226,6 +251,10 @@
             <input class="form-input" id="j-email" type="email" required maxlength="120" />
           </div>
           <div class="form-group">
+            <label class="form-label" for="j-phone"><span class="en">Contact phone (optional)</span><span class="ka">საკონტაქტო ტელეფონი</span></label>
+            <input class="form-input" id="j-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" />
+          </div>
+          <div class="form-group">
             <label class="form-label" for="j-link"><span class="en">Application link (optional)</span><span class="ka">განაცხადის ბმული</span></label>
             <input class="form-input" id="j-link" type="url" placeholder="https://..." maxlength="200" />
           </div>
@@ -274,6 +303,7 @@
     document.querySelectorAll('[data-lang-block]').forEach(el => { el.style.display = el.dataset.langBlock === lang ? '' : 'none'; });
     document.querySelectorAll('[data-placeholder-en]').forEach(el => { el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn; });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+    if (allJobs.length) applyFilter();
   }
   function toggleMobileNav() {
     const nav = document.getElementById('site-nav');
@@ -292,24 +322,59 @@
   function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
 
   function renderJob(j) {
-    const cleanLink = j.application_link || ('mailto:' + j.contact_email);
-    const target = j.application_link ? '_blank' : '_self';
+    const descLabel = document.documentElement.lang === 'ka' ? 'აღწერა' : 'Description';
+    const emailLabel = document.documentElement.lang === 'ka' ? 'მეილი' : 'Email';
+    const phoneLabel = document.documentElement.lang === 'ka' ? 'ტელეფონი' : 'Phone';
+    const callLabel = document.documentElement.lang === 'ka' ? 'დარეკვა' : 'Call';
+    const applyLabel = document.documentElement.lang === 'ka' ? 'განაცხადის ბმული' : 'Apply';
+    const phone = j.contact_phone || j.phone || '';
+    const contactActions = [
+      `<button class="contact-reveal" type="button" data-contact-label="${emailLabel}" data-contact-value="${escapeAttr(j.contact_email)}">${emailLabel}</button>`,
+      phone ? `<button class="contact-reveal" type="button" data-contact-label="${phoneLabel}" data-contact-value="${escapeAttr(phone)}">${callLabel}</button>` : '',
+      j.application_link ? `<a href="${escapeAttr(j.application_link)}" target="_blank" rel="noopener">${applyLabel}</a>` : ''
+    ].filter(Boolean).join('');
+
     return `
-      <article class="job-card${j.urgent ? ' urgent' : ''}" data-href="${escapeAttr(cleanLink)}" data-target="${target}">
-        <div class="job-meta-top">
-          <span class="job-company">${escapeHtml(j.company)}</span>
-          ${j.urgent ? '<span class="urgent-badge">Urgent</span>' : ''}
-        </div>
-        <h3>${escapeHtml(j.title)}</h3>
-        <p>${escapeHtml(j.description.length > 220 ? j.description.slice(0, 220) + '…' : j.description)}</p>
-        <div class="job-tags">
-          <span class="job-tag">${escapeHtml(j.city)}</span>
-          <span class="job-tag lang">${escapeHtml(j.language_required)}</span>
-          ${j.contract_type ? `<span class="job-tag">${escapeHtml(j.contract_type)}</span>` : ''}
-          ${j.salary_range ? `<span class="job-tag">${escapeHtml(j.salary_range)}</span>` : ''}
+      <article class="job-card${j.urgent ? ' urgent' : ''}">
+        <button class="job-card-toggle" type="button" aria-expanded="false">
+          <div class="job-meta-top">
+            <span class="job-company">${escapeHtml(j.company)}</span>
+            ${j.urgent ? '<span class="urgent-badge">Urgent</span>' : ''}
+          </div>
+          <h3>${escapeHtml(j.title)}</h3>
+          <div class="job-tags">
+            <span class="job-tag">${escapeHtml(j.city)}</span>
+            <span class="job-tag lang">${escapeHtml(j.language_required)}</span>
+            ${j.contract_type ? `<span class="job-tag">${escapeHtml(j.contract_type)}</span>` : ''}
+            ${j.salary_range ? `<span class="job-tag">${escapeHtml(j.salary_range)}</span>` : ''}
+          </div>
+        </button>
+        <div class="job-card-panel">
+          <div class="job-description-wrap">
+            <span class="job-description-label">${descLabel}</span>
+            <p class="job-description">${escapeHtml(j.description)}</p>
+            <div class="job-actions">${contactActions}</div>
+          </div>
         </div>
       </article>
     `;
+  }
+
+  function toggleJobCard(toggle) {
+    const card = toggle.closest('.job-card');
+    const list = document.getElementById('job-list');
+    if (!card || !list) return;
+
+    const willOpen = !card.classList.contains('is-open');
+    list.querySelectorAll('.job-card.is-open').forEach(openCard => {
+      if (openCard === card) return;
+      openCard.classList.remove('is-open');
+      const openToggle = openCard.querySelector('.job-card-toggle');
+      if (openToggle) openToggle.setAttribute('aria-expanded', 'false');
+    });
+
+    card.classList.toggle('is-open', willOpen);
+    toggle.setAttribute('aria-expanded', String(willOpen));
   }
 
   function getChecked(id) {
@@ -356,14 +421,35 @@
     applyFilter();
   }
 
-  // Card click navigation
+  // Card expansion
   document.addEventListener('click', function(e) {
-    if (e.target.closest('a, button, input, label')) return;
-    const card = e.target.closest('.job-card');
-    if (!card || !card.dataset.href) return;
-    const t = card.dataset.target || '_self';
-    if (t === '_blank') window.open(card.dataset.href, '_blank', 'noopener');
-    else window.location.href = card.dataset.href;
+    const contact = e.target.closest('.contact-reveal');
+    if (contact) {
+      const actions = contact.closest('.job-actions');
+      if (!actions) return;
+      let value = actions.querySelector('.contact-value');
+      if (!value) {
+        value = document.createElement('span');
+        value.className = 'contact-value';
+        actions.appendChild(value);
+      }
+      value.textContent = `${contact.dataset.contactLabel}: ${contact.dataset.contactValue}`;
+      value.classList.add('is-visible');
+      return;
+    }
+
+    const toggle = e.target.closest('.job-card-toggle');
+    if (toggle) {
+      toggleJobCard(toggle);
+      return;
+    }
+
+    if (e.target.closest('.job-card')) return;
+    document.querySelectorAll('.job-card.is-open').forEach(openCard => {
+      openCard.classList.remove('is-open');
+      const openToggle = openCard.querySelector('.job-card-toggle');
+      if (openToggle) openToggle.setAttribute('aria-expanded', 'false');
+    });
   });
 
   async function submitJob(e) {
@@ -399,11 +485,17 @@
       contract_type: document.getElementById('j-contract').value || null,
       salary_range: document.getElementById('j-salary').value.trim() || null,
       contact_email: document.getElementById('j-email').value.trim(),
+      contact_phone: document.getElementById('j-phone').value.trim() || null,
       application_link: document.getElementById('j-link').value.trim() || null,
       urgent: document.getElementById('j-urgent').checked,
       user_id: user.id
     };
-    const { error } = await sb.from('jobs').insert(row);
+    let { error } = await sb.from('jobs').insert(row);
+    if (error && /contact_phone/i.test(error.message || '')) {
+      const fallbackRow = { ...row };
+      delete fallbackRow.contact_phone;
+      ({ error } = await sb.from('jobs').insert(fallbackRow));
+    }
     submitBtn.disabled = false; submitBtn.textContent = 'Submit job';
     if (error) {
       console.error(error);

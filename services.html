@@ -130,8 +130,9 @@
     }
     .service-card-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
     }
     .no-results {
       grid-column: 1/-1;
@@ -146,15 +147,120 @@
       color: var(--muted);
       font-size: 14px;
     }
-    .service-card { display: flex; flex-direction: column; }
-    .service-card-body { padding: 22px 22px 20px; }
-    .service-contacts { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; gap: 14px; flex-wrap: wrap; }
-    .service-contacts a { color: var(--rausch); font-size: 13px; font-weight: 600; text-decoration: none; }
+    .service-card {
+      display: block;
+      align-self: start;
+      border-radius: 10px;
+      transform: none;
+    }
+    .service-card:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: #d8d2ca;
+    }
+    .service-card-toggle {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .service-card-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .service-card-cat {
+      margin-bottom: 0;
+    }
+    .service-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .service-card-city {
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .service-card-chevron {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--r-full);
+      color: var(--rausch);
+      transition: transform 0.18s, background 0.18s;
+    }
+    .service-card.is-open .service-card-chevron {
+      transform: rotate(180deg);
+      background: var(--rausch-light);
+    }
+    .service-card-panel {
+      display: none;
+      padding: 0 20px 20px;
+    }
+    .service-card.is-open .service-card-panel {
+      display: block;
+    }
+    .service-card-details {
+      border-top: 1px solid var(--hairline);
+      padding-top: 16px;
+    }
+    .service-detail-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .service-card .service-description {
+      font-size: 14px;
+      color: var(--body-text);
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-line;
+    }
+    .service-contacts { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hairline); display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; }
+    .contact-reveal {
+      border: 0;
+      padding: 0;
+      background: none;
+      color: var(--rausch);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .service-contacts a { color: var(--rausch); font-size: 13px; font-weight: 700; text-decoration: none; }
+    .contact-reveal:hover,
     .service-contacts a:hover { text-decoration: underline; }
-    .service-card[data-href] { cursor: pointer; }
-    .service-card[data-href]:hover {
-      border-color: var(--rausch);
-      box-shadow: 0 4px 14px rgba(255, 56, 92, 0.10);
+    .contact-value {
+      display: none;
+      flex-basis: 100%;
+      font-size: 13px;
+      color: var(--body-text);
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+    .contact-value.is-visible { display: block; }
+    .service-card-toggle:focus-visible,
+    .contact-reveal:focus-visible,
+    .service-contacts a:focus-visible {
+      outline: 2px solid var(--rausch);
+      outline-offset: 3px;
     }
     .service-meta-top {
       display: flex;
@@ -193,10 +299,22 @@
     @media (max-width: 900px) {
       .services-layout { grid-template-columns: 1fr; }
       .sidebar { position: static; }
-      .service-card-grid { grid-template-columns: repeat(2, 1fr); }
+      .service-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 560px) {
       .service-card-grid { grid-template-columns: 1fr; }
+      .service-card-toggle {
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+      }
+      .service-card-city {
+        grid-column: 1;
+        justify-self: start;
+      }
+      .service-card-chevron {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
     }
   </style>
 </head>
@@ -799,26 +917,50 @@
     const cityLabel = isKa ? (CITY_SLUG_KA[citySlug] || escapeHtml(s.region))  : (CITY_SLUG_EN[citySlug] || escapeHtml(s.region));
 
     const contacts = [];
-    if (s.email) contacts.push(`<a href="mailto:${escapeHtml(s.email)}">${isKa ? 'მეილი' : 'Email'}</a>`);
-    if (s.phone) {
-      const cleanPhone = (s.phone || '').replace(/\s+/g, '');
-      contacts.push(`<a href="tel:${escapeHtml(cleanPhone)}">${isKa ? 'დარეკვა' : 'Call'}</a>`);
-    }
+    if (s.email) contacts.push(`<button class="contact-reveal" type="button" data-contact-label="${isKa ? 'მეილი' : 'Email'}" data-contact-value="${escapeHtml(s.email)}">${isKa ? 'მეილი' : 'Email'}</button>`);
+    if (s.phone) contacts.push(`<button class="contact-reveal" type="button" data-contact-label="${isKa ? 'ტელეფონი' : 'Phone'}" data-contact-value="${escapeHtml(s.phone)}">${isKa ? 'დარეკვა' : 'Call'}</button>`);
     if (s.link) contacts.push(`<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener">${isKa ? 'ვებგვერდი' : 'Website'}</a>`);
 
     return `
       <div class="service-card" data-cat="${catSlug}" data-city="${citySlug}">
-        <div class="service-card-body">
-          <div class="service-card-cat">${catLabel}</div>
-          <h4>${escapeHtml(s.name)}</h4>
-          <p>${escapeHtml(s.description)}</p>
-          <div class="service-card-meta">
-            <span>${cityLabel}</span>
+        <button class="service-card-toggle" type="button" aria-expanded="false">
+          <span class="service-card-main">
+            <span class="service-card-cat">${catLabel}</span>
+            <span class="service-card-title">${escapeHtml(s.name)}</span>
+          </span>
+          <span class="service-card-city">${cityLabel}</span>
+          <span class="service-card-chevron" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div class="service-card-panel">
+          <div class="service-card-details">
+            <span class="service-detail-label">${isKa ? 'აღწერა' : 'Description'}</span>
+            <p class="service-description">${escapeHtml(s.description)}</p>
+            ${contacts.length ? `<div class="service-contacts">${contacts.join('')}</div>` : ''}
           </div>
-          ${contacts.length ? `<div class="service-contacts">${contacts.join('')}</div>` : ''}
         </div>
       </div>
     `;
+  }
+
+  function toggleServiceCard(toggle) {
+    const card = toggle.closest('.service-card');
+    const grid = document.getElementById('cards-grid');
+    if (!card || !grid) return;
+
+    const willOpen = !card.classList.contains('is-open');
+    grid.querySelectorAll('.service-card.is-open').forEach(openCard => {
+      if (openCard === card) return;
+      openCard.classList.remove('is-open');
+      const openToggle = openCard.querySelector('.service-card-toggle');
+      if (openToggle) openToggle.setAttribute('aria-expanded', 'false');
+    });
+
+    card.classList.toggle('is-open', willOpen);
+    toggle.setAttribute('aria-expanded', String(willOpen));
   }
 
   /* ========== Filter / render grid ========== */
@@ -883,6 +1025,35 @@
       countEl.innerHTML = `Showing <strong>${sorted.length}</strong> of ${total} listing${total === 1 ? '' : 's'}`;
     }
   }
+
+  document.getElementById('cards-grid').addEventListener('click', e => {
+    const contact = e.target.closest('.contact-reveal');
+    if (contact) {
+      const contacts = contact.closest('.service-contacts');
+      if (!contacts) return;
+      let value = contacts.querySelector('.contact-value');
+      if (!value) {
+        value = document.createElement('span');
+        value.className = 'contact-value';
+        contacts.appendChild(value);
+      }
+      value.textContent = `${contact.dataset.contactLabel}: ${contact.dataset.contactValue}`;
+      value.classList.add('is-visible');
+      return;
+    }
+
+    const toggle = e.target.closest('.service-card-toggle');
+    if (toggle) toggleServiceCard(toggle);
+  });
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('.service-card')) return;
+    document.querySelectorAll('.service-card.is-open').forEach(openCard => {
+      openCard.classList.remove('is-open');
+      const openToggle = openCard.querySelector('.service-card-toggle');
+      if (openToggle) openToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
 
   function setCat(btn, cat) {
     currentCat = cat;
