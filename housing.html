@@ -19,6 +19,7 @@
     .check-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
     .check-list label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--body-text); cursor: pointer; }
     .check-list input { accent-color: var(--rausch); width: 15px; height: 15px; cursor: pointer; }
+    .checkbox-row { display: flex; flex-direction: row; align-items: center; gap: 8px; }
     .search-bar-sm { display: flex; align-items: center; gap: 8px; border: 1px solid var(--hairline); border-radius: var(--r-sm); padding: 10px 14px; margin-bottom: 18px; }
     .search-bar-sm:focus-within { border-color: var(--ink); }
     .search-bar-sm input { border: none; outline: none; font-size: 14px; color: var(--ink); width: 100%; background: none; }
@@ -152,7 +153,7 @@
         </div>
 
         <hr class="sidebar-divider" />
-        <label class="check-list" style="gap:0"><input type="checkbox" id="furnished-only" onchange="applyFilter()" /> <span style="margin-left:8px;font-size:14px"><span class="en">Furnished only</span><span class="ka">ავეჯით</span></span></label>
+        <label class="checkbox-row" style="margin-top:6px"><input type="checkbox" id="furnished-only" onchange="applyFilter()" /> <span style="font-size:14px"><span class="en">Furnished only</span><span class="ka">ავეჯით</span></span></label>
 
         <hr class="sidebar-divider" />
         <a href="#post" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ <span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a>
@@ -232,7 +233,7 @@
             <label class="form-label" for="h-desc">Description<span class="req">*</span></label>
             <textarea class="form-textarea" id="h-desc" required maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…"></textarea>
           </div>
-          <div class="form-group span-2" style="display:flex;align-items:center;gap:10px">
+          <div class="form-group span-2 checkbox-row">
             <input type="checkbox" id="h-furnished" style="accent-color:var(--rausch);width:16px;height:16px" />
             <label for="h-furnished" style="font-size:14px;color:var(--body-text);cursor:pointer"><span class="en">Furnished</span><span class="ka">ავეჯით</span></label>
           </div>
