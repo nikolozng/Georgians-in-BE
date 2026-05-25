@@ -83,6 +83,34 @@
       width: 100%;
       background: none;
     }
+    /* Listing type toggle */
+    .listing-type-toggle {
+      display: flex;
+      background: var(--surface);
+      border-radius: var(--r-sm);
+      padding: 3px;
+      margin-bottom: 20px;
+      gap: 2px;
+    }
+    .ltype-btn {
+      flex: 1;
+      padding: 8px 6px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: calc(var(--r-sm) - 2px);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      background: transparent;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .ltype-btn.active {
+      background: var(--canvas);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    }
     .results-header {
       display: flex;
       align-items: center;
@@ -118,52 +146,22 @@
       color: var(--muted);
       font-size: 14px;
     }
-    /* Service card body — adjusted because we don't have card images for dynamic data */
     .service-card { display: flex; flex-direction: column; }
     .service-card-body { padding: 22px 22px 20px; }
     .service-contacts { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; gap: 14px; flex-wrap: wrap; }
     .service-contacts a { color: var(--rausch); font-size: 13px; font-weight: 600; text-decoration: none; }
     .service-contacts a:hover { text-decoration: underline; }
-    .service-langs { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    /* Make cards clickable when there's a primary action (website or email) */
     .service-card[data-href] { cursor: pointer; }
     .service-card[data-href]:hover {
       border-color: var(--rausch);
       box-shadow: 0 4px 14px rgba(255, 56, 92, 0.10);
     }
-    /* Card top row: category badge on left, rating on right */
     .service-meta-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
-    }
-    .service-rating {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-      line-height: 1;
-    }
-    .service-rating .star { color: #ffc107; }
-    .service-rating .star.empty { color: #e0e0e0; }
-    .service-rating .rating-num {
-      color: var(--muted);
-      font-weight: 600;
-      margin-left: 4px;
-      font-size: 12px;
-    }
-    .service-rating .badge-new {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      background: var(--rausch-light);
-      color: var(--rausch);
-      padding: 2px 8px;
-      border-radius: var(--r-full);
     }
     /* Register form section */
     .register-section {
@@ -252,12 +250,18 @@
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="container">
-    <p class="section-eyebrow" style="margin-bottom:8px">Community directory</p>
+    <p class="section-eyebrow" style="margin-bottom:8px">
+      <span data-lang-block="en">Service directory</span>
+      <span data-lang-block="ka" style="display:none">სერვისების კატალოგი</span>
+    </p>
     <h1>
       <span data-lang-block="en">Georgian services in Belgium</span>
       <span data-lang-block="ka" class="ka" style="display:none">ქართული სერვისები ბელგიაში</span>
     </h1>
-    <p class="sub">სერვისების კატალოგი · Annuaire des services</p>
+    <p class="sub">
+      <span data-lang-block="en">Offer or ask for a service</span>
+      <span data-lang-block="ka" style="display:none" class="ka">შესთავაზეთ ან მოითხოვეთ სერვისი</span>
+    </p>
   </div>
 </div>
 
@@ -273,6 +277,16 @@
           <input type="text" id="search-input" placeholder="Search services…" data-placeholder-en="Search services…" data-placeholder-ka="მოძებნეთ სერვისი..." oninput="filterCards()" />
         </div>
 
+        <!-- Offering / Looking for toggle -->
+        <div class="listing-type-toggle">
+          <button class="ltype-btn active" data-type="offering" onclick="setListingType(this,'offering')">
+            <span class="en">Offering</span><span class="ka">ვთავაზობ</span>
+          </button>
+          <button class="ltype-btn" data-type="looking" onclick="setListingType(this,'looking')">
+            <span class="en">Looking for</span><span class="ka">ვეძებ</span>
+          </button>
+        </div>
+
         <h5><span class="en">Category</span><span class="ka">კატეგორია</span></h5>
         <div class="sidebar-links" id="cat-links">
           <button class="sidebar-link active" data-cat="all" onclick="setCat(this,'all')"><span class="en">All services</span><span class="ka">ყველა სერვისი</span> <span class="count" data-count="all">0</span></button>
@@ -286,24 +300,25 @@
           <button class="sidebar-link" data-cat="transport" onclick="setCat(this,'transport')"><span class="en">Transport</span><span class="ka">ტრანსპორტი</span> <span class="count" data-count="transport">0</span></button>
           <button class="sidebar-link" data-cat="it" onclick="setCat(this,'it')"><span class="en">IT &amp; tech</span><span class="ka">IT და ტექნოლოგიები</span> <span class="count" data-count="it">0</span></button>
           <button class="sidebar-link" data-cat="finance" onclick="setCat(this,'finance')"><span class="en">Finance &amp; tax</span><span class="ka">ფინანსები</span> <span class="count" data-count="finance">0</span></button>
+          <button class="sidebar-link" data-cat="other" onclick="setCat(this,'other')"><span class="en">Other</span><span class="ka">სხვა</span> <span class="count" data-count="other">0</span></button>
         </div>
 
         <hr class="sidebar-divider" />
 
         <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="city-filter">
-          <label class="city-check"><input type="checkbox" value="brussels" onchange="filterCards()" checked /> Brussels</label>
-          <label class="city-check"><input type="checkbox" value="antwerp" onchange="filterCards()" checked /> Antwerp</label>
-          <label class="city-check"><input type="checkbox" value="ghent" onchange="filterCards()" checked /> Ghent</label>
-          <label class="city-check"><input type="checkbox" value="liege" onchange="filterCards()" checked /> Liège</label>
-          <label class="city-check"><input type="checkbox" value="bruges" onchange="filterCards()" checked /> Bruges</label>
-          <label class="city-check"><input type="checkbox" value="remote" onchange="filterCards()" checked /> Remote / Online</label>
-          <label class="city-check"><input type="checkbox" value="other" onchange="filterCards()" checked /> Other</label>
+          <label class="city-check"><input type="checkbox" value="brussels" onchange="filterCards()" checked /> <span class="en">Brussels</span><span class="ka">ბრიუსელი</span></label>
+          <label class="city-check"><input type="checkbox" value="antwerp" onchange="filterCards()" checked /> <span class="en">Antwerp</span><span class="ka">ანტვერპი</span></label>
+          <label class="city-check"><input type="checkbox" value="ghent" onchange="filterCards()" checked /> <span class="en">Ghent</span><span class="ka">გენტი</span></label>
+          <label class="city-check"><input type="checkbox" value="liege" onchange="filterCards()" checked /> <span class="en">Liège</span><span class="ka">ლიჟი</span></label>
+          <label class="city-check"><input type="checkbox" value="bruges" onchange="filterCards()" checked /> <span class="en">Bruges</span><span class="ka">ბრიუგე</span></label>
+          <label class="city-check"><input type="checkbox" value="remote" onchange="filterCards()" checked /> <span class="en">Remote / Online</span><span class="ka">ონლაინ</span></label>
+          <label class="city-check"><input type="checkbox" value="other" onchange="filterCards()" checked /> <span class="en">Other</span><span class="ka">სხვა</span></label>
         </div>
 
         <hr class="sidebar-divider" />
         <a href="#register" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">
-          + <span class="en">List your service</span><span class="ka">სერვისის დამატება</span>
+          <span class="en" id="sidebar-cta-en">+ List your service</span><span class="ka" id="sidebar-cta-ka">+ სერვისის დამატება</span>
         </a>
       </aside>
 
@@ -327,34 +342,37 @@
   </div>
 </section>
 
-<!-- REGISTER YOUR SERVICE -->
+<!-- REGISTER YOUR SERVICE / POST A REQUEST -->
 <section class="section register-section" id="register">
   <div class="container">
     <div class="register-intro">
-      <p class="section-eyebrow">For providers / პროვაიდერებისთვის</p>
+      <p class="section-eyebrow" id="register-eyebrow">For providers / პროვაიდერებისთვის</p>
       <h2>
-        <span data-lang-block="en">List your service — it's free</span>
-        <span data-lang-block="ka" class="ka" style="display:none">დაამატეთ თქვენი სერვისი — ეს უფასოა</span>
+        <span data-lang-block="en" id="register-title-en">List your service — it's free</span>
+        <span data-lang-block="ka" class="ka" style="display:none" id="register-title-ka">დაამატეთ თქვენი სერვისი — ეს უფასოა</span>
       </h2>
-      <p data-lang-block="en">Reach the Georgian community in Belgium. Fill in the form and we'll publish your listing within 48 hours after a quick review.</p>
-      <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">მიაღწიეთ ქართულ საზოგადოებას ბელგიაში. შეავსეთ ფორმა და ჩვენ გამოვაქვეყნებთ თქვენს განცხადებას 48 საათში.</p>
+      <p data-lang-block="en" id="register-desc-en">Reach the Georgian community in Belgium. Fill in the form and we'll publish your listing within 48 hours after a quick review.</p>
+      <p data-lang-block="ka" class="ka" id="register-desc-ka" style="font-family:var(--font-georgian)">მიაღწიეთ ქართულ საზოგადოებას ბელგიაში. შეავსეთ ფორმა და ჩვენ გამოვაქვეყნებთ თქვენს განცხადებას 48 საათში.</p>
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.
-      <br /><span class="ka" style="font-family:var(--font-georgian)">გმადლობთ! თქვენი განცხადება გაიგზავნა და განიხილება 48 საათში.</span>
+      <span id="success-msg-en"><strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.</span>
+      <br /><span id="success-msg-ka" class="ka" style="font-family:var(--font-georgian)">გმადლობთ! თქვენი განცხადება გაიგზავნა და განიხილება 48 საათში.</span>
     </div>
 
     <div class="form-card" id="register-form-card">
       <div class="form-error-banner" id="form-error-banner"></div>
       <form id="register-form" onsubmit="submitForm(event)" novalidate>
+        <!-- Hidden field tracking whether this is an offering or a request -->
+        <input type="hidden" id="f-listing-type" value="offering" />
+
         <div class="form-grid">
 
           <div class="form-group">
             <label class="form-label" for="f-name">
               <span class="en">Full name</span><span class="ka">სახელი და გვარი</span><span class="req">*</span>
             </label>
-            <input class="form-input" id="f-name" type="text" placeholder="Nino Beridze" required maxlength="80" />
+            <input class="form-input" id="f-name" type="text" placeholder="Nino Beridze" data-placeholder-en="Nino Beridze" data-placeholder-ka="ნინო ბერიძე" required maxlength="80" />
           </div>
 
           <div class="form-group">
@@ -377,13 +395,13 @@
             </label>
             <select class="form-select" id="f-city" required>
               <option value="">Select city…</option>
-              <option>Brussels</option>
-              <option>Antwerp</option>
-              <option>Ghent</option>
-              <option>Liège</option>
-              <option>Bruges</option>
-              <option>Remote / Online</option>
-              <option>Other</option>
+              <option value="Brussels">Brussels</option>
+              <option value="Antwerp">Antwerp</option>
+              <option value="Ghent">Ghent</option>
+              <option value="Liège">Liège</option>
+              <option value="Bruges">Bruges</option>
+              <option value="Remote / Online">Remote / Online</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -393,32 +411,25 @@
             </label>
             <select class="form-select" id="f-cat" required>
               <option value="">Select category…</option>
-              <option>Legal &amp; admin</option>
-              <option>Translation</option>
-              <option>Health &amp; wellness</option>
-              <option>Education &amp; tuition</option>
-              <option>Food &amp; catering</option>
-              <option>Property &amp; housing</option>
-              <option>Beauty &amp; care</option>
-              <option>Transport</option>
-              <option>IT &amp; tech</option>
-              <option>Finance &amp; tax</option>
-              <option>Other</option>
+              <option value="Legal &amp; admin">Legal &amp; admin</option>
+              <option value="Translation">Translation</option>
+              <option value="Health &amp; wellness">Health &amp; wellness</option>
+              <option value="Education &amp; tuition">Education &amp; tuition</option>
+              <option value="Food &amp; catering">Food &amp; catering</option>
+              <option value="Property &amp; housing">Property &amp; housing</option>
+              <option value="Beauty &amp; care">Beauty &amp; care</option>
+              <option value="Transport">Transport</option>
+              <option value="IT &amp; tech">IT &amp; tech</option>
+              <option value="Finance &amp; tax">Finance &amp; tax</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="f-service">
-              <span class="en">Service title</span><span class="ka">სერვისის დასახელება</span><span class="req">*</span>
+              <span class="en" id="f-service-label-en">Service title</span><span class="ka" id="f-service-label-ka">სერვისის დასახელება</span><span class="req">*</span>
             </label>
             <input class="form-input" id="f-service" type="text" placeholder="e.g. Certified Georgian–French translator" required maxlength="120" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="f-languages">
-              <span class="en">Languages spoken</span><span class="ka">სამუშაო ენები</span><span class="req">*</span>
-            </label>
-            <input class="form-input" id="f-languages" type="text" placeholder="e.g. Georgian, English, French" required maxlength="80" />
           </div>
 
           <div class="form-group">
@@ -432,15 +443,15 @@
             <label class="form-label" for="f-desc">
               <span class="en">Description</span><span class="ka">აღწერა</span><span class="req">*</span>
             </label>
-            <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." required maxlength="500"></textarea>
-            <span class="form-hint">Please write in English or Georgian (or both). Max 500 characters.</span>
+            <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-en="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-ka="მოუყევით საზოგადოებას, რას სთავაზობთ, თქვენი კვალიფიკაცია და საკონტაქტო ინფორმაცია." required maxlength="500"></textarea>
+            <span class="form-hint"><span class="en">Please write in English or Georgian (or both). Max 500 characters.</span><span class="ka" style="font-family:var(--font-georgian)">გთხოვთ დაწეროთ ქართულად ან ინგლისურად. მაქს. 500 სიმბოლო.</span></span>
           </div>
 
           <div class="form-group span-2" style="display:flex;align-items:flex-start;gap:10px">
             <input type="checkbox" id="f-agree" required style="margin-top:3px;accent-color:var(--rausch);width:16px;height:16px;flex-shrink:0" />
             <label for="f-agree" style="font-size:13px;color:var(--body-text);cursor:pointer">
-              <span class="en">I confirm that I am a Georgian national or professional providing services in Belgium, and agree to have my contact details published once the listing is approved.</span>
-              <span class="ka" style="display:block;font-family:var(--font-georgian);margin-top:3px;font-size:12px;color:var(--muted)">ვადასტურებ, რომ ვარ საქართველოს მოქალაქე ან ბელგიაში მომსახურების მიმწოდებელი პროფესიონალი და თანახმა ვარ ჩემი საკონტაქტო ინფორმაციის გამოქვეყნებაზე დამტკიცების შემდეგ.</span>
+              <span class="en">I confirm that the information I'm submitting is genuine and agree to have my contact details published once the listing is approved.</span>
+              <span class="ka" style="display:block;font-family:var(--font-georgian);margin-top:3px;font-size:12px;color:var(--muted)">ვადასტურებ, რომ წარდგენილი ინფორმაცია სწორია და თანახმა ვარ ჩემი საკონტაქტო ინფორმაციის გამოქვეყნებაზე დამტკიცების შემდეგ.</span>
             </label>
           </div>
 
@@ -448,11 +459,11 @@
 
         <div style="margin-top:28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
           <button type="submit" class="btn btn-primary" id="submit-btn">
-            <span data-lang-block="en">Submit listing</span>
-            <span data-lang-block="ka" class="ka">განცხადების გაგზავნა</span>
+            <span data-lang-block="en" id="submit-btn-en">Submit listing</span>
+            <span data-lang-block="ka" class="ka" id="submit-btn-ka">განცხადების გაგზავნა</span>
           </button>
-          <span style="font-size:13px;color:var(--muted)" data-lang-block="en">Free to list · Reviewed within 48 h</span>
-          <span style="font-size:13px;color:var(--muted);font-family:var(--font-georgian)" data-lang-block="ka">უფასო · განიხილება 48 საათში</span>
+          <span style="font-size:13px;color:var(--muted)" data-lang-block="en" id="submit-note-en">Free to list · Reviewed within 48 h</span>
+          <span style="font-size:13px;color:var(--muted);font-family:var(--font-georgian)" data-lang-block="ka" id="submit-note-ka">უფასო · განიხილება 48 საათში</span>
         </div>
       </form>
     </div>
@@ -524,24 +535,72 @@
 
   const sb = window.sb;
 
-  /* ========== Mappings ==========
-     The DB stores categories and regions as free-form text (matching the
-     dropdown values). The filter UI uses short slug keys ("legal", "brussels"),
-     so we map between them.
+  /* ========== Category mappings ==========
+     CAT_TO_SLUG  : DB value  → filter slug key
+     CAT_KA       : DB value  → Georgian display name
+     REGION_KA    : DB value  → Georgian city name
   */
   const CAT_TO_SLUG = {
-    'Legal & admin': 'legal',
-    'Translation': 'translation',
-    'Health & wellness': 'health',
+    'Legal & admin':       'legal',
+    'Translation':         'translation',
+    'Health & wellness':   'health',
     'Education & tuition': 'education',
-    'Food & catering': 'food',
-    'Property & housing': 'property',
-    'Beauty & care': 'beauty',
-    'Transport': 'transport',
-    'IT & tech': 'it',
-    'Finance & tax': 'finance',
-    'Other': 'other'
+    'Food & catering':     'food',
+    'Property & housing':  'property',
+    'Beauty & care':       'beauty',
+    'Transport':           'transport',
+    'IT & tech':           'it',
+    'Finance & tax':       'finance',
+    'Other':               'other'
   };
+
+  const CAT_KA = {
+    'Legal & admin':       'იურიდიული და ადმინისტრაციული',
+    'Translation':         'თარგმანი',
+    'Health & wellness':   'ჯანმრთელობა',
+    'Education & tuition': 'განათლება',
+    'Food & catering':     'კვება',
+    'Property & housing':  'უძრავი ქონება',
+    'Beauty & care':       'სილამაზე',
+    'Transport':           'ტრანსპორტი',
+    'IT & tech':           'IT და ტექნოლოგიები',
+    'Finance & tax':       'ფინანსები',
+    'Other':               'სხვა'
+  };
+
+  // Slug-based lookups — used in renderCard so spelling variations in DB don't matter
+  const CITY_SLUG_KA = {
+    'brussels': 'ბრიუსელი',
+    'antwerp':  'ანტვერპი',
+    'ghent':    'გენტი',
+    'liege':    'ლიჟი',
+    'bruges':   'ბრიუგე',
+    'remote':   'ონლაინ',
+    'other':    'სხვა'
+  };
+  const CITY_SLUG_EN = {
+    'brussels': 'Brussels',
+    'antwerp':  'Antwerp',
+    'ghent':    'Ghent',
+    'liege':    'Liège',
+    'bruges':   'Bruges',
+    'remote':   'Remote / Online',
+    'other':    'Other'
+  };
+  const CAT_SLUG_KA = {
+    'legal':       'იურიდიული და ადმინისტრაციული',
+    'translation': 'თარგმანი',
+    'health':      'ჯანმრთელობა',
+    'education':   'განათლება',
+    'food':        'კვება',
+    'property':    'უძრავი ქონება',
+    'beauty':      'სილამაზე',
+    'transport':   'ტრანსპორტი',
+    'it':          'IT და ტექნოლოგიები',
+    'finance':     'ფინანსები',
+    'other':       'სხვა'
+  };
+
   function regionToSlug(region) {
     const r = (region || '').toLowerCase();
     if (r.includes('brussel') || r.includes('bruxelles')) return 'brussels';
@@ -553,15 +612,116 @@
     return 'other';
   }
 
-  /* ========== Language toggle (shared across pages) ========== */
+  /* ========== Form copy (changes based on Offering vs Looking for) ========== */
+  const FORM_COPY = {
+    offering: {
+      eyebrow:       { en: 'For providers / პროვაიდერებისთვის', ka: 'პროვაიდერებისთვის' },
+      titleEn:       "List your service — it's free",
+      titleKa:       'დაამატეთ თქვენი სერვისი — ეს უფასოა',
+      descEn:        "Reach the Georgian community in Belgium. Fill in the form and we'll publish your listing within 48 hours after a quick review.",
+      descKa:        'მიაღწიეთ ქართულ საზოგადოებას ბელგიაში. შეავსეთ ფორმა და ჩვენ გამოვაქვეყნებთ თქვენს განცხადებას 48 საათში.',
+      svcLabelEn:    'Service title',
+      svcLabelKa:    'სერვისის დასახელება',
+      svcPlaceholderEn:'e.g. Certified Georgian–French translator',
+      svcPlaceholderKa:'მაგ. სერტიფიცირებული ქართულ-ფრანგული მთარგმნელი',
+      descPlaceholderKa:'მოუყევით საზოგადოებას, რას სთავაზობთ, თქვენი კვალიფიკაცია და საკონტაქტო ინფორმაცია.',
+      submitEn:      'Submit listing',
+      submitKa:      'განცხადების გაგზავნა',
+      noteEn:        'Free to list · Reviewed within 48 h',
+      noteKa:        'უფასო · განიხილება 48 საათში',
+      ctaEn:         '+ List your service',
+      ctaKa:         '+ სერვისის დამატება',
+      successEn:     '<strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.',
+      successKa:     'გმადლობთ! თქვენი განცხადება გაიგზავნა და განიხილება 48 საათში.'
+    },
+    looking: {
+      eyebrow:       { en: 'Looking for something? / მაძიებლებისთვის', ka: 'მაძიებლებისთვის' },
+      titleEn:       "Post what you need — it's free",
+      titleKa:       'გამოაქვეყნეთ თქვენი მოთხოვნა — ეს უფასოა',
+      descEn:        "Let the Georgian community in Belgium know what service you're looking for. Fill in the form and we'll post your request within 48 hours.",
+      descKa:        'შეატყობინეთ ბელგიის ქართულ საზოგადოებას, რა სერვისი გჭირდებათ. შეავსეთ ფორმა და ჩვენ გამოვაქვეყნებთ თქვენს მოთხოვნას 48 საათში.',
+      svcLabelEn:    'What are you looking for?',
+      svcLabelKa:    'რა გჭირდებათ?',
+      svcPlaceholderEn:'e.g. Looking for a Georgian-speaking accountant',
+      svcPlaceholderKa:'მაგ. ვეძებ ქართულენოვან ბუღალტერს',
+      descPlaceholderKa:'აღწერეთ, რა სახის სერვისი გჭირდებათ და სად.',
+      submitEn:      'Post request',
+      submitKa:      'მოთხოვნის გაგზავნა',
+      noteEn:        'Free to post · Reviewed within 48 h',
+      noteKa:        'უფასო · განიხილება 48 საათში',
+      ctaEn:         '+ Post a request',
+      ctaKa:         '+ მოთხოვნის დამატება',
+      successEn:     '<strong>Thank you!</strong> Your request has been posted and will be reviewed within 48 hours.',
+      successKa:     'გმადლობთ! თქვენი მოთხოვნა გაიგზავნა და განიხილება 48 საათში.'
+    }
+  };
+
+  /* ========== State ========== */
+  let allServices      = [];
+  let currentCat       = 'all';
+  let currentLang      = 'en';
+  let currentListingType = 'offering';
+
+  /* ========== Helpers ========== */
+  function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[<>&"']/g, c => ({
+      '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
+    })[c]);
+  }
+
+  /* ========== Language toggle ========== */
   function setLang(lang) {
+    currentLang = lang;
     localStorage.setItem('geosin-lang', lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     document.querySelectorAll('[data-lang-block]').forEach(el => {
       el.style.display = el.dataset.langBlock === lang ? '' : 'none';
     });
-    document.querySelectorAll('[data-placeholder-en]').forEach(el => { el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn; });
+    document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+      el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn;
+    });
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
+    updateSelectOptions(lang);
+    updateFormForType(currentListingType);
+    filterCards();
+  }
+
+  /* ========== Translate form <select> options on lang switch ========== */
+  const CITY_OPTIONS = [
+    { value: '',               en: 'Select city…',    ka: 'აირჩიეთ ქალაქი...' },
+    { value: 'Brussels',       en: 'Brussels',         ka: 'ბრიუსელი' },
+    { value: 'Antwerp',        en: 'Antwerp',          ka: 'ანტვერპი' },
+    { value: 'Ghent',          en: 'Ghent',            ka: 'გენტი' },
+    { value: 'Liège',          en: 'Liège',            ka: 'ლიჟი' },
+    { value: 'Bruges',         en: 'Bruges',           ka: 'ბრიუგე' },
+    { value: 'Remote / Online',en: 'Remote / Online',  ka: 'ონლაინ' },
+    { value: 'Other',          en: 'Other',            ka: 'სხვა' }
+  ];
+  const CAT_OPTIONS = [
+    { value: '',                  en: 'Select category…',    ka: 'აირჩიეთ კატეგორია...' },
+    { value: 'Legal & admin',     en: 'Legal & admin',       ka: 'იურიდიული და ადმინისტრაციული' },
+    { value: 'Translation',       en: 'Translation',         ka: 'თარგმანი' },
+    { value: 'Health & wellness', en: 'Health & wellness',   ka: 'ჯანმრთელობა' },
+    { value: 'Education & tuition',en:'Education & tuition', ka: 'განათლება' },
+    { value: 'Food & catering',   en: 'Food & catering',     ka: 'კვება' },
+    { value: 'Property & housing',en: 'Property & housing',  ka: 'უძრავი ქონება' },
+    { value: 'Beauty & care',     en: 'Beauty & care',       ka: 'სილამაზე' },
+    { value: 'Transport',         en: 'Transport',           ka: 'ტრანსპორტი' },
+    { value: 'IT & tech',         en: 'IT & tech',           ka: 'IT და ტექნოლოგიები' },
+    { value: 'Finance & tax',     en: 'Finance & tax',       ka: 'ფინანსები' },
+    { value: 'Other',             en: 'Other',               ka: 'სხვა' }
+  ];
+  function updateSelectOptions(lang) {
+    const isKa = lang === 'ka';
+    function rebuildSelect(sel, opts) {
+      if (!sel) return;
+      const cur = sel.value;
+      sel.innerHTML = opts.map(o =>
+        `<option value="${o.value}"${o.value === cur ? ' selected' : ''}>${isKa ? o.ka : o.en}</option>`
+      ).join('');
+    }
+    rebuildSelect(document.getElementById('f-city'), CITY_OPTIONS);
+    rebuildSelect(document.getElementById('f-cat'),  CAT_OPTIONS);
   }
 
   /* ========== Mobile nav ========== */
@@ -571,37 +731,89 @@
     document.body.classList.toggle('has-mobile-nav-open', opened);
   }
 
-  /* ========== Listings ========== */
-  let allServices = [];
-  let currentCat = 'all';
-
-  function escapeHtml(str) {
-    return String(str == null ? '' : str).replace(/[<>&"']/g, c => ({
-      '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'
-    })[c]);
+  /* ========== Listing type toggle ========== */
+  function setListingType(btn, type) {
+    currentListingType = type;
+    document.querySelectorAll('.ltype-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const ltInput = document.getElementById('f-listing-type');
+    if (ltInput) ltInput.value = type;
+    updateCategoryCounts();
+    updateFormForType(type);
+    filterCards();
   }
 
+  /* ========== Update form text based on type + lang ========== */
+  function updateFormForType(type) {
+    const c = FORM_COPY[type] || FORM_COPY.offering;
+    const l = currentLang;
+
+    const eyebrow = document.getElementById('register-eyebrow');
+    if (eyebrow) eyebrow.textContent = l === 'ka' ? c.eyebrow.ka : c.eyebrow.en;
+
+    const titleEn = document.getElementById('register-title-en');
+    const titleKa = document.getElementById('register-title-ka');
+    if (titleEn) titleEn.textContent = c.titleEn;
+    if (titleKa) titleKa.textContent = c.titleKa;
+
+    const descEn = document.getElementById('register-desc-en');
+    const descKa = document.getElementById('register-desc-ka');
+    if (descEn) descEn.textContent = c.descEn;
+    if (descKa) descKa.textContent = c.descKa;
+
+    const svcLabelEn = document.getElementById('f-service-label-en');
+    const svcLabelKa = document.getElementById('f-service-label-ka');
+    if (svcLabelEn) svcLabelEn.textContent = c.svcLabelEn;
+    if (svcLabelKa) svcLabelKa.textContent = c.svcLabelKa;
+
+    const svcInput = document.getElementById('f-service');
+    if (svcInput) svcInput.placeholder = l === 'ka' ? c.svcPlaceholderKa : c.svcPlaceholderEn;
+
+    const descInput = document.getElementById('f-desc');
+    if (descInput && l === 'ka') descInput.placeholder = c.descPlaceholderKa;
+
+    const submitEn = document.getElementById('submit-btn-en');
+    const submitKa = document.getElementById('submit-btn-ka');
+    if (submitEn) submitEn.textContent = c.submitEn;
+    if (submitKa) submitKa.textContent = c.submitKa;
+
+    const noteEn = document.getElementById('submit-note-en');
+    const noteKa = document.getElementById('submit-note-ka');
+    if (noteEn) noteEn.textContent = c.noteEn;
+    if (noteKa) noteKa.textContent = c.noteKa;
+
+    const ctaEn = document.getElementById('sidebar-cta-en');
+    const ctaKa = document.getElementById('sidebar-cta-ka');
+    if (ctaEn) ctaEn.textContent = c.ctaEn;
+    if (ctaKa) ctaKa.textContent = c.ctaKa;
+  }
+
+  /* ========== Render a single service card ========== */
   function renderCard(s) {
-    const catSlug = CAT_TO_SLUG[s.category] || 'other';
-    const citySlug = regionToSlug(s.region);
+    const catSlug    = CAT_TO_SLUG[s.category] || 'other';
+    const citySlug   = regionToSlug(s.region);
+    const isKa       = currentLang === 'ka';
+
+    // Use slug-based maps so spelling variations in the DB (e.g. "antwerpen") always resolve
+    const catLabel  = isKa ? (CAT_SLUG_KA[catSlug] || escapeHtml(s.category)) : escapeHtml(s.category);
+    const cityLabel = isKa ? (CITY_SLUG_KA[citySlug] || escapeHtml(s.region))  : (CITY_SLUG_EN[citySlug] || escapeHtml(s.region));
+
     const contacts = [];
-    if (s.email) contacts.push(`<a href="mailto:${escapeHtml(s.email)}">Email</a>`);
+    if (s.email) contacts.push(`<a href="mailto:${escapeHtml(s.email)}">${isKa ? 'მეილი' : 'Email'}</a>`);
     if (s.phone) {
       const cleanPhone = (s.phone || '').replace(/\s+/g, '');
-      contacts.push(`<a href="tel:${escapeHtml(cleanPhone)}">Call</a>`);
+      contacts.push(`<a href="tel:${escapeHtml(cleanPhone)}">${isKa ? 'დარეკვა' : 'Call'}</a>`);
     }
-    if (s.link) contacts.push(`<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener">Website</a>`);
+    if (s.link) contacts.push(`<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener">${isKa ? 'ვებგვერდი' : 'Website'}</a>`);
 
     return `
       <div class="service-card" data-cat="${catSlug}" data-city="${citySlug}">
         <div class="service-card-body">
-          <div class="service-card-cat">${escapeHtml(s.category)}</div>
+          <div class="service-card-cat">${catLabel}</div>
           <h4>${escapeHtml(s.name)}</h4>
           <p>${escapeHtml(s.description)}</p>
-          ${s.languages ? `<p class="service-langs"><strong>Languages:</strong> ${escapeHtml(s.languages)}</p>` : ''}
           <div class="service-card-meta">
-            <span>${escapeHtml(s.region)}</span>
-            <span class="badge">Community-listed</span>
+            <span>${cityLabel}</span>
           </div>
           ${contacts.length ? `<div class="service-contacts">${contacts.join('')}</div>` : ''}
         </div>
@@ -609,13 +821,14 @@
     `;
   }
 
+  /* ========== Filter / render grid ========== */
   function getCheckedCities() {
     return [...document.querySelectorAll('.city-filter input:checked')].map(i => i.value);
   }
 
   function applySort(items) {
     const mode = (document.getElementById('sort-select') || {}).value || 'newest';
-    const out = [...items];
+    const out  = [...items];
     if (mode === 'alpha') {
       out.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     } else {
@@ -625,20 +838,30 @@
   }
 
   function filterCards() {
-    const grid = document.getElementById('cards-grid');
+    const grid    = document.getElementById('cards-grid');
     const countEl = document.getElementById('results-count');
     if (!grid) return;
 
-    const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+    const isKa  = currentLang === 'ka';
+    const q     = (document.getElementById('search-input').value || '').toLowerCase().trim();
     const cities = getCheckedCities();
 
     const filtered = allServices.filter(s => {
+      // Listing type — treat missing/null as 'offering' for old records
+      const stype = s.listing_type || 'offering';
+      if (stype !== currentListingType) return false;
+
+      // Category
       const slug = CAT_TO_SLUG[s.category] || 'other';
       if (currentCat !== 'all' && slug !== currentCat) return false;
+
+      // City
       if (cities.length === 0) return false;
       if (!cities.includes(regionToSlug(s.region))) return false;
+
+      // Search
       if (q) {
-        const haystack = [s.name, s.description, s.region, s.languages, s.category].join(' ').toLowerCase();
+        const haystack = [s.name, s.description, s.region, s.category].join(' ').toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -647,12 +870,18 @@
     const sorted = applySort(filtered);
 
     if (sorted.length === 0) {
-      grid.innerHTML = '<p class="no-results">No services match your filters yet.</p>';
+      const emptyMsg = isKa ? 'ამ ფილტრებით სერვისი ვერ მოიძებნა.' : 'No services match your filters yet.';
+      grid.innerHTML = `<p class="no-results">${emptyMsg}</p>`;
     } else {
       grid.innerHTML = sorted.map(renderCard).join('');
     }
 
-    countEl.innerHTML = `Showing <strong>${sorted.length}</strong> of ${allServices.length} service${allServices.length === 1 ? '' : 's'}`;
+    const total = allServices.filter(s => (s.listing_type || 'offering') === currentListingType).length;
+    if (isKa) {
+      countEl.innerHTML = `ნაჩვენებია <strong>${sorted.length}</strong> / ${total}`;
+    } else {
+      countEl.innerHTML = `Showing <strong>${sorted.length}</strong> of ${total} listing${total === 1 ? '' : 's'}`;
+    }
   }
 
   function setCat(btn, cat) {
@@ -663,24 +892,27 @@
   }
 
   function updateCategoryCounts() {
-    const counts = { all: allServices.length };
+    const relevant = allServices.filter(s => (s.listing_type || 'offering') === currentListingType);
+    const counts   = { all: relevant.length };
     Object.values(CAT_TO_SLUG).forEach(slug => { counts[slug] = 0; });
-    allServices.forEach(s => {
+    relevant.forEach(s => {
       const slug = CAT_TO_SLUG[s.category] || 'other';
       counts[slug] = (counts[slug] || 0) + 1;
     });
     document.querySelectorAll('[data-count]').forEach(el => {
-      const k = el.dataset.count;
-      el.textContent = counts[k] || 0;
+      el.textContent = counts[el.dataset.count] || 0;
     });
   }
 
   async function loadServices() {
-    const grid = document.getElementById('cards-grid');
+    const grid    = document.getElementById('cards-grid');
     const countEl = document.getElementById('results-count');
+
+    // select('*') gracefully includes listing_type if it exists;
+    // old rows without it will be treated as 'offering' in filterCards.
     const result = await sb
       .from('services')
-      .select('id, category, name, description, region, languages, email, phone, link, created_at')
+      .select('*')
       .eq('approved', true)
       .order('created_at', { ascending: false });
 
@@ -704,16 +936,15 @@
     filterCards();
   }
 
-  /* ========== Form submit (Supabase insert) ========== */
+  /* ========== Form submit ========== */
   async function submitForm(e) {
     e.preventDefault();
-    const form = document.getElementById('register-form');
+    const form        = document.getElementById('register-form');
     const errorBanner = document.getElementById('form-error-banner');
-    const submitBtn = document.getElementById('submit-btn');
+    const submitBtn   = document.getElementById('submit-btn');
 
     errorBanner.style.display = 'none';
 
-    // Manual validation since the form has novalidate
     const required = form.querySelectorAll('[required]');
     let valid = true;
     required.forEach(el => {
@@ -725,7 +956,9 @@
       }
     });
     if (!valid) {
-      errorBanner.textContent = 'Please fill in all required fields and accept the agreement.';
+      errorBanner.textContent = currentLang === 'ka'
+        ? 'გთხოვთ შეავსოთ ყველა სავალდებულო ველი.'
+        : 'Please fill in all required fields and accept the agreement.';
       errorBanner.style.display = 'block';
       errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -733,31 +966,24 @@
 
     submitBtn.disabled = true;
     const originalLabel = submitBtn.innerHTML;
-    submitBtn.innerHTML = 'Submitting…';
+    submitBtn.innerHTML = currentLang === 'ka' ? 'იგზავნება…' : 'Submitting…';
 
-    const fName = document.getElementById('f-name').value.trim();
+    const fName    = document.getElementById('f-name').value.trim();
     const fService = document.getElementById('f-service').value.trim();
-    const fDesc = document.getElementById('f-desc').value.trim();
-    const fLink = document.getElementById('f-link').value.trim();
+    const fDesc    = document.getElementById('f-desc').value.trim();
+    const fLink    = document.getElementById('f-link').value.trim();
+    const fType    = document.getElementById('f-listing-type').value || 'offering';
 
-    // Map design's form fields to my DB schema:
-    //   DB.name        ← f-service (the service title shown on the card)
-    //   DB.description ← f-desc + signature line "— [full name]"
-    //   DB.region      ← f-city
-    //   DB.category    ← f-cat
-    //   DB.languages   ← f-languages
-    //   DB.email       ← f-email
-    //   DB.phone       ← f-phone (nullable)
-    //   DB.link        ← f-link (nullable)
     const row = {
-      name: fService,
-      description: fDesc + (fName ? `\n\n— ${fName}` : ''),
-      region: document.getElementById('f-city').value.trim(),
-      category: document.getElementById('f-cat').value.trim(),
-      languages: document.getElementById('f-languages').value.trim(),
-      email: document.getElementById('f-email').value.trim(),
-      phone: document.getElementById('f-phone').value.trim() || null,
-      link: fLink || null
+      name:         fService,
+      description:  fDesc + (fName ? `\n\n— ${fName}` : ''),
+      region:       document.getElementById('f-city').value.trim(),
+      category:     document.getElementById('f-cat').value.trim(),
+      languages:    '',   // field kept in DB for compatibility; no longer shown on cards
+      email:        document.getElementById('f-email').value.trim(),
+      phone:        document.getElementById('f-phone').value.trim() || null,
+      link:         fLink || null,
+      listing_type: fType  // requires: ALTER TABLE services ADD COLUMN IF NOT EXISTS listing_type text DEFAULT 'offering';
     };
 
     const { error } = await sb.from('services').insert(row);
@@ -767,11 +993,20 @@
 
     if (error) {
       console.error('Supabase insert error:', error);
-      errorBanner.textContent = 'Sorry — submission failed. Please try again, or email hello@geosin.be if it keeps failing.';
+      errorBanner.textContent = currentLang === 'ka'
+        ? 'შეცდომა. გთხოვთ სცადოთ თავიდან ან მოგვწეროთ hello@geosin.be'
+        : 'Sorry — submission failed. Please try again, or email hello@geosin.be if it keeps failing.';
       errorBanner.style.display = 'block';
       errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+
+    // Update success message text based on current type + lang
+    const c = FORM_COPY[fType] || FORM_COPY.offering;
+    const msgEn = document.getElementById('success-msg-en');
+    const msgKa = document.getElementById('success-msg-ka');
+    if (msgEn) msgEn.innerHTML = c.successEn;
+    if (msgKa) msgKa.textContent = c.successKa;
 
     document.getElementById('register-form-card').style.display = 'none';
     document.getElementById('form-success').style.display = 'block';
@@ -781,6 +1016,9 @@
   /* ========== Init ========== */
   (function() {
     const lang = localStorage.getItem('geosin-lang') || 'en';
+    currentLang = lang;
+
+    // Apply lang (sets documentElement.lang, shows/hides data-lang-block elements)
     setLang(lang);
 
     // Apply ?cat= URL param for deep linking from footer
