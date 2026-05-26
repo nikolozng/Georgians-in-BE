@@ -12,6 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; overflow: hidden; pointer-events: none; }
     .listing-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
     .sidebar { position: sticky; top: calc(var(--nav-h) + 24px); background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px; }
     .sidebar h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; }
@@ -198,6 +199,11 @@
 
     <div class="form-card" id="form-card">
       <form id="h-form" onsubmit="submitHousing(event)" novalidate>
+        <!-- Honeypot: hidden from real users, bots fill it → submission rejected -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp-h-url">Leave this empty</label>
+          <input type="text" id="hp-h-url" name="url" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="form-grid">
 
           <div class="form-group">
@@ -383,6 +389,10 @@
     const form = document.getElementById('h-form');
     const errBox = document.getElementById('form-error');
     const submitBtn = document.getElementById('h-submit');
+
+    // Honeypot check
+    if (document.getElementById('hp-h-url').value) return;
+
     errBox.style.display = 'none';
     let valid = true;
     form.querySelectorAll('[required]').forEach(el => {
@@ -417,6 +427,13 @@
     if (!user) {
       location.href = 'login.html?next=' + encodeURIComponent('housing.html#post');
       return;
+    }
+
+    // Rate limit pre-check (client-side friendly message; DB enforces it too via RLS)
+    const { data: postCount } = await sb.rpc('count_user_posts_today', { uid: user.id });
+    if (postCount >= 3) {
+      errBox.textContent = 'You have reached the daily limit of 3 posts. Please try again tomorrow.';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
     }
 
     submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';

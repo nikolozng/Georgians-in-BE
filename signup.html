@@ -7,6 +7,12 @@
   <meta name="description" content="Create a free geosin.be account to post jobs, housing, and join the forum." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Cloudflare Turnstile — human verification widget -->
+  <!-- ⚠️  Replace the data-sitekey below with your REAL site key from:      -->
+  <!--     Cloudflare Dashboard → Turnstile → Add Site → copy "Site Key"     -->
+  <!-- The key below (1x00000000000000000000AA) is a test key that always    -->
+  <!-- passes — swap it before going live.                                   -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     .auth-page {
       min-height: calc(100vh - var(--nav-h));
@@ -80,6 +86,8 @@
     .auth-msg.error   { background: #fff0f2; color: #c20030; border: 1px solid #ffd4dc; }
     .auth-msg.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
     .req { color: var(--rausch); margin-left: 3px; font-weight: 700; }
+    /* ── Honeypot: invisible to real users, bots fill it in ── */
+    .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; overflow: hidden; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -141,6 +149,12 @@
     </p>
 
     <form class="auth-form" id="signup-form">
+      <!-- Honeypot: hidden from real users, bots fill it → submission rejected -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="hp-website">Leave this empty</label>
+        <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
       <label>
         Email<span class="req">*</span>
         <input type="email" name="email" required autocomplete="email" />
@@ -157,6 +171,9 @@
         <input type="text" name="display_name" required maxlength="40" placeholder="e.g. Niko, or Niko G." autocomplete="nickname" />
         <span class="field-hint">Shown on the forum when you post publicly. If you choose to post anonymously, a random Georgian alias is generated for you.</span>
       </label>
+
+      <!-- Cloudflare Turnstile widget ⚠️  Replace data-sitekey with your real key -->
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAADW05F-q9YRbHKC0" data-theme="light" id="turnstile-widget"></div>
 
       <button type="submit" class="btn btn-primary"><span class="en">Create account</span><span class="ka">რეგისტრაცია</span></button>
     </form>
@@ -200,51 +217,98 @@
   // If already logged in, bounce to account
   AUTH.getUser().then(u => { if (u) location.href = 'account.html'; });
 
-  // Submit
+  // ── Throwaway email domain blocklist ─────────────────────────────────────────
+  const BLOCKED_DOMAINS = [
+    'mailinator.com','guerrillamail.com','guerrillamail.info','guerrillamail.biz',
+    'guerrillamail.de','guerrillamail.net','guerrillamail.org','sharklasers.com',
+    'grr.la','spam4.me','trashmail.com','trashmail.at','trashmail.io',
+    'trashmail.me','trashmail.net','trashmail.fr','dispostable.com',
+    'maildrop.cc','yopmail.com','yopmail.fr','fakeinbox.com','tempr.email',
+    'discard.email','spambox.us','10minutemail.com','tempinbox.com',
+    'getairmail.com','filzmail.com','throwaway.email','mailtemp.info',
+    'inboxclean.com','mailscrap.com','temp-mail.org','fake-email.pp.ua',
+    'mailnull.com','anonbox.net','throwam.com','spamgourmet.com',
+    'spamgourmet.net','spamgourmet.org','tempemail.net',
+  ];
+
+  // ── Submit ────────────────────────────────────────────────────────────────────
   const form = document.getElementById('signup-form');
   const msg  = document.getElementById('msg');
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.innerHTML = '';
-    const fd = new FormData(form);
-    const email = fd.get('email').trim();
+
+    // 1. Honeypot check — bots fill the hidden #hp-website field; real users don't
+    if (document.getElementById('hp-website').value) return; // silent reject
+
+    const fd      = new FormData(form);
+    const email   = fd.get('email').trim();
     const password = fd.get('password');
-    const display = fd.get('display_name').trim();
+    const display  = fd.get('display_name').trim();
+
+    // 2. Email domain blocklist
+    const domain = email.split('@')[1]?.toLowerCase() || '';
+    if (BLOCKED_DOMAINS.includes(domain)) {
+      msg.innerHTML = `<div class="auth-msg error">Please use a real email address — temporary/throwaway email services are not allowed.</div>`;
+      return;
+    }
+
+    // 3. Grab Turnstile token (the widget populates a hidden input named "cf-turnstile-response")
+    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
+    if (!turnstileToken) {
+      msg.innerHTML = `<div class="auth-msg error">Please complete the human verification above.</div>`;
+      return;
+    }
 
     const submitBtn = form.querySelector('button[type=submit]');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Creating…';
 
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: { data: { display_name: display } }
+    // 4. Call the signup-check Edge Function (handles Turnstile validation + IP check + user creation)
+    const { data: result, error: fnErr } = await sb.functions.invoke('signup-check', {
+      body: { email, password, display_name: display, turnstile_token: turnstileToken }
     });
 
-    if (error) {
-      msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create account';
+    // Handle Edge Function invocation failure
+    if (fnErr) {
+      let errMsg = 'An error occurred. Please try again.';
+      try { const b = await fnErr.context?.json?.(); if (b?.error) errMsg = b.error; } catch {}
+      msg.innerHTML = `<div class="auth-msg error">${errMsg}</div>`;
+      submitBtn.disabled = false; submitBtn.innerHTML = '<span class="en">Create account</span><span class="ka">რეგისტრაცია</span>';
+      // Reset Turnstile so the user can try again
+      if (window.turnstile) window.turnstile.reset();
       return;
     }
 
-    // Insert profile row — incognito_name stays NULL until first incognito post
-    if (data.user) {
-      await sb.from('profiles').upsert({
-        id: data.user.id,
-        email,
-        display_name: display
-      });
+    // Handle application-level errors returned in the response body
+    if (result?.error) {
+      msg.innerHTML = `<div class="auth-msg error">${result.error}</div>`;
+      submitBtn.disabled = false; submitBtn.innerHTML = '<span class="en">Create account</span><span class="ka">რეგისტრაცია</span>';
+      if (window.turnstile) window.turnstile.reset();
+      return;
     }
 
-    if (!data.session) {
-      // Email confirmation required
+    const { user, session } = result;
+
+    // 5. If a session was returned, activate it in the Supabase client
+    if (session) {
+      await sb.auth.setSession({ access_token: session.access_token, refresh_token: session.refresh_token });
+    }
+
+    // 6. Upsert profile row (incognito_name stays NULL until first incognito post)
+    if (user) {
+      await sb.from('profiles').upsert({ id: user.id, email, display_name: display });
+    }
+
+    if (!session) {
+      // Email confirmation required — show success, stay on page
       msg.innerHTML = `<div class="auth-msg success">Check your email to confirm your account, then log in.</div>`;
       submitBtn.textContent = 'Account created';
       return;
     }
 
-    // Logged in — bounce to wherever they wanted to go, or account
+    // Logged in immediately — bounce to wherever they wanted to go
     const next = new URLSearchParams(location.search).get('next') || 'account.html';
     location.href = next;
   });

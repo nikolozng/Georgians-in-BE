@@ -11,7 +11,11 @@
   <meta property="og:url" content="https://geosin.be/services.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Cloudflare Turnstile ⚠️  Replace data-sitekey in the widget below with your real key -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
+    /* Honeypot: invisible to real users */
+    .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; overflow: hidden; pointer-events: none; }
     .services-layout {
       display: grid;
       grid-template-columns: 220px 1fr;
@@ -502,6 +506,11 @@
     <div class="form-card" id="register-form-card">
       <div class="form-error-banner" id="form-error-banner"></div>
       <form id="register-form" onsubmit="submitForm(event)" novalidate>
+        <!-- Honeypot: hidden from real users, bots fill it → submission rejected -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp-url">Leave this empty</label>
+          <input type="text" id="hp-url" name="url" tabindex="-1" autocomplete="off" />
+        </div>
         <!-- Hidden field tracking whether this is an offering or a request -->
         <input type="hidden" id="f-listing-type" value="offering" />
 
@@ -597,7 +606,10 @@
 
         </div>
 
-        <div style="margin-top:28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <!-- Cloudflare Turnstile ⚠️  Replace data-sitekey with your real key -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADW05F-q9YRbHKC0" data-theme="light" style="margin-top:20px" id="services-turnstile"></div>
+
+        <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
           <button type="submit" class="btn btn-primary" id="submit-btn">
             <span data-lang-block="en" id="submit-btn-en">Submit listing</span>
             <span data-lang-block="ka" class="ka" id="submit-btn-ka">განცხადების გაგზავნა</span>
@@ -1136,6 +1148,20 @@
     const errorBanner = document.getElementById('form-error-banner');
     const submitBtn   = document.getElementById('submit-btn');
 
+    // Honeypot check — bots fill #hp-url; real users never see it
+    if (document.getElementById('hp-url').value) return; // silent reject
+
+    // Turnstile check — must be completed before submission
+    const tsToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
+    if (!tsToken) {
+      errorBanner.textContent = currentLang === 'ka'
+        ? 'გთხოვთ გაიაროთ ადამიანის ვერიფიკაცია.'
+        : 'Please complete the human verification above.';
+      errorBanner.style.display = 'block';
+      errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     errorBanner.style.display = 'none';
 
     const required = form.querySelectorAll('[required]');
@@ -1182,6 +1208,18 @@
     submitBtn.disabled = true;
     const originalLabel = submitBtn.innerHTML;
     submitBtn.innerHTML = currentLang === 'ka' ? 'იგზავნება…' : 'Submitting…';
+
+    // Server-side Turnstile validation via Edge Function
+    const { data: tsResult } = await sb.functions.invoke('verify-turnstile', { body: { token: tsToken } });
+    if (!tsResult?.success) {
+      errorBanner.textContent = currentLang === 'ka'
+        ? 'ადამიანის ვერიფიკაცია ვერ მოხდა. გთხოვთ სცადოთ თავიდან.'
+        : 'Human verification failed. Please reload the page and try again.';
+      errorBanner.style.display = 'block'; errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      submitBtn.disabled = false; submitBtn.innerHTML = originalLabel;
+      if (window.turnstile) window.turnstile.reset();
+      return;
+    }
 
     const fName    = document.getElementById('f-name').value.trim();
     const fService = document.getElementById('f-service').value.trim();
