@@ -83,34 +83,46 @@
       width: 100%;
       background: none;
     }
-    /* Listing type toggle */
+    /* Listing type switch */
+    .listing-type-switch {
+      margin: -6px 0 28px;
+    }
     .listing-type-toggle {
       display: flex;
-      background: var(--surface);
-      border-radius: var(--r-sm);
-      padding: 3px;
-      margin-bottom: 20px;
-      gap: 2px;
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-md);
+      padding: 6px;
+      box-shadow: 0 14px 36px rgba(15,17,23,0.08);
+      gap: 6px;
     }
     .ltype-btn {
       flex: 1;
-      padding: 8px 6px;
-      font-size: 13px;
-      font-weight: 600;
+      min-height: 72px;
+      padding: 16px 18px;
+      font-size: clamp(18px, 2vw, 25px);
+      font-weight: 700;
       border: none;
-      border-radius: calc(var(--r-sm) - 2px);
+      border-radius: calc(var(--r-md) - 6px);
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      background: transparent;
-      color: var(--muted);
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s, transform 0.15s;
+      background: var(--surface);
+      color: var(--ink);
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .ltype-btn:hover { transform: translateY(-1px); }
+    .ltype-btn:focus-visible {
+      outline: 2px solid var(--rausch);
+      outline-offset: 3px;
     }
     .ltype-btn.active {
-      background: var(--canvas);
-      color: var(--ink);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(15,17,23,0.16);
     }
+    .ltype-btn .ka { font-size: clamp(17px, 2vw, 23px); }
     .results-header {
       display: flex;
       align-items: center;
@@ -302,6 +314,13 @@
       .service-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 560px) {
+      .listing-type-switch { margin-bottom: 24px; }
+      .listing-type-toggle { flex-direction: column; }
+      .ltype-btn {
+        min-height: 62px;
+        padding: 14px;
+        font-size: 21px;
+      }
       .service-card-grid { grid-template-columns: 1fr; }
       .service-card-toggle {
         grid-template-columns: 1fr auto;
@@ -386,6 +405,17 @@
 <!-- MAIN CONTENT -->
 <section class="section">
   <div class="container">
+    <div class="listing-type-switch">
+      <div class="listing-type-toggle" aria-label="Listing type">
+        <button type="button" class="ltype-btn active" data-type="offering" onclick="setListingType(this,'offering')">
+          <span class="en">Offer a service</span><span class="ka">ვთავაზობ სერვისს</span>
+        </button>
+        <button type="button" class="ltype-btn" data-type="looking" onclick="setListingType(this,'looking')">
+          <span class="en">Request a service</span><span class="ka">ვეძებ სერვისს</span>
+        </button>
+      </div>
+    </div>
+
     <div class="services-layout">
 
       <!-- SIDEBAR -->
@@ -399,16 +429,6 @@
         <div class="search-bar-sm">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#929292" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" id="search-input" placeholder="Search services…" data-placeholder-en="Search services…" data-placeholder-ka="მოძებნეთ სერვისი..." oninput="filterCards()" />
-        </div>
-
-        <!-- Offering / Looking for toggle -->
-        <div class="listing-type-toggle">
-          <button class="ltype-btn active" data-type="offering" onclick="setListingType(this,'offering')">
-            <span class="en">Offering</span><span class="ka">ვთავაზობ</span>
-          </button>
-          <button class="ltype-btn" data-type="looking" onclick="setListingType(this,'looking')">
-            <span class="en">Looking for</span><span class="ka">ვეძებ</span>
-          </button>
         </div>
 
         <h5><span class="en">Category</span><span class="ka">კატეგორია</span></h5>
