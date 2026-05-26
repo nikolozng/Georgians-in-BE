@@ -352,7 +352,7 @@
             <span class="job-tag">${escapeHtml(j.city)}</span>
             <span class="job-tag lang">${escapeHtml(j.language_required)}</span>
             ${j.contract_type ? `<span class="job-tag">${escapeHtml(j.contract_type)}</span>` : ''}
-            ${j.salary_range ? `<span class="job-tag">${escapeHtml(j.salary_range)}</span>` : ''}
+            ${j.salary_range ? `<span class="job-tag">${j.salary_range.startsWith('€') ? '' : '€'}${escapeHtml(j.salary_range)}</span>` : ''}
           </div>
         </button>
         <div class="job-card-panel">
