@@ -190,7 +190,11 @@
       if (error) {
         msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
       } else {
-        msg.innerHTML = `<div class="auth-msg success">Check your email for a password reset link.</div>`;
+        const lang = localStorage.getItem('geosin-lang') || 'en';
+        const spamNote = lang === 'ka'
+          ? 'გთხოვთ შეამოწმოთ სპამის საქაღალდეც.'
+          : 'If you don\'t see it, please check your spam folder.';
+        msg.innerHTML = `<div class="auth-msg success">Check your email for a password reset link. ${spamNote}</div>`;
       }
       return;
     }
