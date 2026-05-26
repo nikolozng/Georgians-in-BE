@@ -909,6 +909,7 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
   .nav-mobile-open .nav-links {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     position: fixed;
     top: var(--nav-h);
     left: 0; right: 0;
