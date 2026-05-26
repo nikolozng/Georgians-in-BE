@@ -397,7 +397,8 @@
 
     const filtered = allJobs.filter(j => {
       if (cities.length === 0 || !cities.includes(j.city)) return false;
-      if (langs.length === 0 || !langs.includes(j.language_required)) return false;
+      const jobLangs = j.language_required ? j.language_required.split(',').map(l => l.trim()) : [];
+      if (langs.length === 0 || !jobLangs.some(l => langs.includes(l))) return false;
       if (urgentOnly && !j.urgent) return false;
       if (q) {
         const hay = [j.title, j.company, j.description, j.city, j.language_required].join(' ').toLowerCase();
