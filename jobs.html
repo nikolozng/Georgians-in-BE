@@ -226,11 +226,14 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="j-lang"><span class="en">Language required</span><span class="ka">სავალდებულო ენა</span><span class="req">*</span></label>
-            <select class="form-select" id="j-lang" required>
-              <option value="">Select…</option>
-              <option>English only</option><option>Georgian</option><option>Dutch</option><option>French</option><option>Other</option>
-            </select>
+            <label class="form-label"><span class="en">Language(s) required</span><span class="ka">სავალდებულო ენა/ენები</span><span class="req">*</span></label>
+            <div id="j-lang-group" style="display:flex;flex-wrap:wrap;gap:8px 16px;padding:6px 0">
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--body-text);cursor:pointer"><input type="checkbox" name="j-lang-cb" value="English" style="accent-color:var(--rausch);width:15px;height:15px"> English</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--body-text);cursor:pointer"><input type="checkbox" name="j-lang-cb" value="Georgian" style="accent-color:var(--rausch);width:15px;height:15px"> Georgian</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--body-text);cursor:pointer"><input type="checkbox" name="j-lang-cb" value="Dutch" style="accent-color:var(--rausch);width:15px;height:15px"> Dutch</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--body-text);cursor:pointer"><input type="checkbox" name="j-lang-cb" value="French" style="accent-color:var(--rausch);width:15px;height:15px"> French</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--body-text);cursor:pointer"><input type="checkbox" name="j-lang-cb" value="Other" style="accent-color:var(--rausch);width:15px;height:15px"> Other</label>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label" for="j-contract"><span class="en">Contract type</span><span class="ka">კონტრაქტის ტიპი</span></label>
@@ -242,18 +245,20 @@
           <div class="form-group">
             <label class="form-label" for="j-salary"><span class="en">Salary range (optional)</span><span class="ka">ხელფასის დიაპაზონი</span></label>
             <input class="form-input" id="j-salary" type="text" placeholder="e.g. €2,500–€3,500/month" maxlength="80" />
+            <span class="form-hint" style="font-size:12px;color:var(--muted)">Amount in € (euros)</span>
           </div>
           <div class="form-group span-2">
             <label class="form-label" for="j-desc">Description<span class="req">*</span></label>
-            <textarea class="form-textarea" id="j-desc" required maxlength="1500" placeholder="What does the role involve? Required experience? Key benefits?"></textarea>
+            <textarea class="form-textarea" id="j-desc" required minlength="10" maxlength="1500" placeholder="What does the role involve? Required experience? Key benefits?"></textarea>
           </div>
           <div class="form-group">
             <label class="form-label" for="j-email"><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
-            <input class="form-input" id="j-email" type="email" required maxlength="120" />
+            <input class="form-input" id="j-email" type="email" required maxlength="120" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Enter a valid email: something@something.something" />
           </div>
           <div class="form-group">
             <label class="form-label" for="j-phone"><span class="en">Contact phone (optional)</span><span class="ka">საკონტაქტო ტელეფონი</span></label>
-            <input class="form-input" id="j-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" />
+            <input class="form-input" id="j-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" pattern="(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})" title="Format: +32 xxx xxx xxx or 04xx xxx xxx" />
+            <span class="form-hint" style="font-size:12px;color:var(--muted)">Format: +32 xxx xxx xxx or 04xx xxx xxx</span>
           </div>
           <div class="form-group">
             <label class="form-label" for="j-link"><span class="en">Application link (optional)</span><span class="ka">განაცხადის ბმული</span></label>
@@ -464,8 +469,41 @@
     form.querySelectorAll('[required]').forEach(el => {
       if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
     });
+
+    // Language checkboxes — at least one must be checked
+    const checkedLangs = [...document.querySelectorAll('[name="j-lang-cb"]:checked')];
+    const langGroup = document.getElementById('j-lang-group');
+    if (checkedLangs.length === 0) {
+      langGroup.style.outline = '2px solid var(--error)';
+      langGroup.style.borderRadius = '6px';
+      valid = false;
+    } else {
+      langGroup.style.outline = '';
+    }
+
     console.log('submitJob: validation =', valid, '| sb =', !!sb, '| AUTH =', !!window.AUTH);
-    if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    if (!valid) { errBox.textContent = 'Please fill in all required fields (including at least one language).'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+    // Extra format validation
+    const emailEl = document.getElementById('j-email');
+    const phoneEl = document.getElementById('j-phone');
+    const descEl  = document.getElementById('j-desc');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+      emailEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Email must be in the format: something@something.something';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    const phoneVal = phoneEl.value.trim();
+    if (phoneVal && !/^(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})$/.test(phoneVal)) {
+      phoneEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Phone must be: +32 xxx xxx xxx or 04xx xxx xxx';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    if (descEl.value.trim().length < 10) {
+      descEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Description must be at least 10 characters.';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
     console.log('submitJob: calling AUTH.getUser()…');
@@ -482,7 +520,7 @@
       company: document.getElementById('j-company').value.trim(),
       description: document.getElementById('j-desc').value.trim(),
       city: document.getElementById('j-city').value,
-      language_required: document.getElementById('j-lang').value,
+      language_required: [...document.querySelectorAll('[name="j-lang-cb"]:checked')].map(cb => cb.value).join(', '),
       contract_type: document.getElementById('j-contract').value || null,
       salary_range: document.getElementById('j-salary').value.trim() || null,
       contact_email: document.getElementById('j-email').value.trim(),

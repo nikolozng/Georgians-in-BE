@@ -232,7 +232,7 @@
           </div>
           <div class="form-group span-2">
             <label class="form-label" for="h-desc">Description<span class="req">*</span></label>
-            <textarea class="form-textarea" id="h-desc" required maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…"></textarea>
+            <textarea class="form-textarea" id="h-desc" required minlength="10" maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…"></textarea>
           </div>
           <div class="form-group span-2 checkbox-row">
             <input type="checkbox" id="h-furnished" style="accent-color:var(--rausch);width:16px;height:16px" />
@@ -244,11 +244,12 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="h-email"><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
-            <input class="form-input" id="h-email" type="email" required maxlength="120" />
+            <input class="form-input" id="h-email" type="email" required maxlength="120" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Enter a valid email: something@something.something" />
           </div>
           <div class="form-group span-2">
             <label class="form-label" for="h-phone"><span class="en">Phone (optional)</span><span class="ka">ტელეფონი</span></label>
-            <input class="form-input" id="h-phone" type="tel" maxlength="40" />
+            <input class="form-input" id="h-phone" type="tel" maxlength="40" placeholder="+32 470 000 000" pattern="(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})" title="Format: +32 xxx xxx xxx or 04xx xxx xxx" />
+            <span style="font-size:12px;color:var(--muted)">Format: +32 xxx xxx xxx or 04xx xxx xxx</span>
           </div>
         </div>
         <div style="margin-top:24px"><button type="submit" class="btn btn-primary" id="h-submit">Submit listing</button></div>
@@ -388,6 +389,28 @@
       if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
     });
     if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+    // Extra format validation
+    const emailEl = document.getElementById('h-email');
+    const phoneEl = document.getElementById('h-phone');
+    const descEl  = document.getElementById('h-desc');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+      emailEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Email must be in the format: something@something.something';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    const phoneVal = phoneEl.value.trim();
+    if (phoneVal && !/^(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})$/.test(phoneVal)) {
+      phoneEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Phone must be: +32 xxx xxx xxx or 04xx xxx xxx';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    if (descEl.value.trim().length < 10) {
+      descEl.style.borderColor = 'var(--error)';
+      errBox.textContent = 'Description must be at least 10 characters.';
+      errBox.style.display = 'block'; errBox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; return; }
 
     const user = await AUTH.getUser();

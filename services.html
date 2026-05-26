@@ -518,14 +518,15 @@
             <label class="form-label" for="f-email">
               <span class="en">Email</span><span class="ka">ელ.ფოსტა</span><span class="req">*</span>
             </label>
-            <input class="form-input" id="f-email" type="email" placeholder="nino@example.com" required maxlength="120" />
+            <input class="form-input" id="f-email" type="email" placeholder="nino@example.com" required maxlength="120" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Enter a valid email: something@something.something" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="f-phone">
               <span class="en">Phone / WhatsApp</span><span class="ka">ტელეფონი</span>
             </label>
-            <input class="form-input" id="f-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" />
+            <input class="form-input" id="f-phone" type="tel" placeholder="+32 470 000 000" maxlength="40" pattern="(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})" title="Format: +32 xxx xxx xxx or 04xx xxx xxx" />
+            <span class="form-hint"><span class="en">Format: +32 xxx xxx xxx or 04xx xxx xxx</span><span class="ka" style="font-family:var(--font-georgian)">ფორმატი: +32 xxx xxx xxx ან 04xx xxx xxx</span></span>
           </div>
 
           <div class="form-group">
@@ -582,7 +583,7 @@
             <label class="form-label" for="f-desc">
               <span class="en">Description</span><span class="ka">აღწერა</span><span class="req">*</span>
             </label>
-            <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-en="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-ka="მოუყევით საზოგადოებას, რას სთავაზობთ, თქვენი კვალიფიკაცია და საკონტაქტო ინფორმაცია." required maxlength="500"></textarea>
+            <textarea class="form-textarea" id="f-desc" placeholder="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-en="Tell the community what you offer, your qualifications, and how to contact you." data-placeholder-ka="მოუყევით საზოგადოებას, რას სთავაზობთ, თქვენი კვალიფიკაცია და საკონტაქტო ინფორმაცია." required minlength="10" maxlength="500"></textarea>
             <span class="form-hint"><span class="en">Please write in English or Georgian (or both). Max 500 characters.</span><span class="ka" style="font-family:var(--font-georgian)">გთხოვთ დაწეროთ ქართულად ან ინგლისურად. მაქს. 500 სიმბოლო.</span></span>
           </div>
 
@@ -1154,6 +1155,28 @@
       errorBanner.style.display = 'block';
       errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
+    }
+
+    // Extra format validation
+    const emailEl = document.getElementById('f-email');
+    const phoneEl = document.getElementById('f-phone');
+    const descEl  = document.getElementById('f-desc');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+    if (!emailOk) {
+      emailEl.style.borderColor = 'var(--error)';
+      errorBanner.textContent = currentLang === 'ka' ? 'მეილი უნდა იყოს ფორმატში: something@something.something' : 'Email must be in the format: something@something.something';
+      errorBanner.style.display = 'block'; errorBanner.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    const phoneVal = phoneEl.value.trim();
+    if (phoneVal && !/^(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})$/.test(phoneVal)) {
+      phoneEl.style.borderColor = 'var(--error)';
+      errorBanner.textContent = currentLang === 'ka' ? 'ტელეფონი: +32 xxx xxx xxx ან 04xx xxx xxx' : 'Phone must be: +32 xxx xxx xxx or 04xx xxx xxx';
+      errorBanner.style.display = 'block'; errorBanner.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+    }
+    if (descEl.value.trim().length < 10) {
+      descEl.style.borderColor = 'var(--error)';
+      errorBanner.textContent = currentLang === 'ka' ? 'აღწერა უნდა შეიცავდეს მინიმუმ 10 სიმბოლოს.' : 'Description must be at least 10 characters.';
+      errorBanner.style.display = 'block'; errorBanner.scrollIntoView({ behavior:'smooth', block:'center' }); return;
     }
 
     submitBtn.disabled = true;

@@ -631,7 +631,7 @@
         </div>
         <div class="field">
           <label>Description<span class="req">*</span></label>
-          <textarea name="description" maxlength="1500" required placeholder="What is it? Who is it for? What should people bring?"></textarea>
+          <textarea name="description" maxlength="1500" minlength="10" required placeholder="What is it? Who is it for? What should people bring?"></textarea>
         </div>
       </div>
 
@@ -644,7 +644,7 @@
           </div>
           <div class="field">
             <label>Time</label>
-            <input type="text" name="event_time" placeholder="19:00 or 'All day'" />
+            <input type="time" name="event_time" />
           </div>
         </div>
         <div class="field">
@@ -678,12 +678,12 @@
       <div class="submit-step" data-step="3">
         <div class="row2">
           <div class="field">
-            <label>Price</label>
+            <label>Price <span class="hint">use € for amounts</span></label>
             <input type="text" name="price" placeholder="Free, €10, Donation…" />
           </div>
           <div class="field">
             <label><span class="en">Contact email</span><span class="ka">საკონტაქტო ელ.ფოსტა</span><span class="req">*</span></label>
-            <input type="email" name="contact_email" required />
+            <input type="email" name="contact_email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Enter a valid email: something@something.something" />
           </div>
         </div>
         <div class="field">
@@ -1019,12 +1019,16 @@
     if (step === 1) {
       if (!fd.get('title')?.trim())       errors.push('English title is required.');
       if (!fd.get('category'))            errors.push('Category is required.');
-      if (!fd.get('description')?.trim()) errors.push('Description is required.');
+      const desc = fd.get('description')?.trim() || '';
+      if (!desc)                          errors.push('Description is required.');
+      else if (desc.length < 10)          errors.push('Description must be at least 10 characters.');
     } else if (step === 2) {
       if (!fd.get('event_date')) errors.push('Date is required.');
       if (!fd.get('city'))       errors.push('City is required.');
     } else if (step === 3) {
-      if (!fd.get('contact_email')?.trim()) errors.push('Contact email is required.');
+      const email = fd.get('contact_email')?.trim() || '';
+      if (!email) errors.push('Contact email is required.');
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Email must be in the format: something@something.something');
     }
     return errors;
   }
