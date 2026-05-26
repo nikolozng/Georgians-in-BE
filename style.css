@@ -192,6 +192,7 @@ body {
   height: 2px;
   background: var(--ink);
   border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease, background 0.2s ease;
 }
 
 /* ── NAV DROPDOWNS (grouped menu items) ── */
@@ -863,81 +864,138 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 0; }
   /* Bigger tap targets */
   .btn, .btn-sm, .lang-btn, button, a.btn { min-height: 44px; }
 
-  /* ───── MOBILE NAV ─────
-     Single full-screen drawer:
-       - logo + hamburger stay in top bar
-       - nav-links scrolls in middle
-       - nav-actions (lang toggle + auth buttons) docked at bottom
+  /* ───── MOBILE NAV — FULLSCREEN OVERLAY ─────
+     Lang toggle sits in the nav bar next to the hamburger at all times.
+     When open: dark full-screen panel, nav bar turns dark, auth buttons dock at bottom.
   */
-  .nav-links, .nav-actions { display: none; }
+  .nav-links { display: none; }
   .nav-hamburger { display: flex; }
 
+  /* Nav-actions stays in the nav bar on mobile — compact, pushed to the right */
+  .nav-actions {
+    min-width: 0 !important;   /* override the desktop 280px reservation */
+    margin-left: auto;         /* push lang+hamburger group to the right */
+    gap: 6px;
+  }
+  .nav-hamburger { margin-left: 0; }   /* remove its own auto-margin; nav-actions handles it */
+  /* Keep lang buttons small enough to sit in the 72px nav bar */
+  .nav-actions .lang-btn {
+    min-height: 0 !important;
+    padding: 5px 9px !important;
+    font-size: 11px !important;
+  }
+  /* Hide auth block from the nav bar — it shows inside the overlay bottom instead */
+  .nav-actions [data-auth-block] { display: none !important; }
+
+  /* ── Nav bar turns dark when overlay is open ── */
+  .nav-mobile-open {
+    background: #0f1117;
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+  .nav-mobile-open .nav-logo-text { color: #fff; }
+  .nav-mobile-open .nav-logo-text span { color: var(--rausch); }
+  /* Lang buttons flip to white in the dark nav bar */
+  .nav-mobile-open .nav-actions .lang-btn { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }
+  .nav-mobile-open .nav-actions .lang-btn.active { color: #fff; border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.08); }
+
+  /* ── Hamburger → X when open ── */
+  .nav-mobile-open .nav-hamburger span { background: #fff; }
+  .nav-mobile-open .nav-hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-mobile-open .nav-hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-mobile-open .nav-hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── The overlay panel ── */
   .nav-mobile-open .nav-links {
     display: flex;
     flex-direction: column;
     position: fixed;
     top: var(--nav-h);
     left: 0; right: 0;
-    bottom: 88px;                      /* leave room for the docked action bar */
-    background: var(--canvas);
-    padding: 18px 24px 24px;
-    gap: 4px;
+    bottom: 0;
+    background: #0f1117;
+    padding: 28px 28px 90px;
+    gap: 0;
     z-index: 99;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .nav-mobile-open .nav-links a {
-    padding: 14px 12px;
-    font-size: 17px;
-    border-radius: var(--r-sm);
-  }
 
-  /* Grouped dropdowns inside the mobile drawer: expand inline instead of floating */
-  .nav-mobile-open .nav-dropdown { width: 100%; }
+  /* ── Main links ── */
+  .nav-mobile-open .nav-links > a {
+    font-size: clamp(17px, 5vw, 22px);
+    font-weight: 500;
+    color: #fff;
+    padding: 14px 0;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .nav-mobile-open .nav-links > a:hover,
+  .nav-mobile-open .nav-links > a.active { color: var(--rausch); }
+
+  /* ── Grouped dropdowns (Community, Guides) ── */
+  .nav-mobile-open .nav-dropdown { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .nav-mobile-open .nav-dropdown-toggle {
     width: 100%;
     justify-content: space-between;
-    padding: 14px 12px;
-    font-size: 17px;
-    border-radius: var(--r-sm);
+    padding: 14px 0;
+    font-size: clamp(17px, 5vw, 22px);
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    letter-spacing: -0.01em;
   }
+  .nav-mobile-open .nav-dropdown-toggle:hover { color: #fff; }
+  .nav-mobile-open .nav-dropdown-toggle .nav-caret { stroke: currentColor; }
   .nav-mobile-open .nav-dropdown-menu {
     position: static;
     min-width: 0;
     border: none;
     box-shadow: none;
-    padding: 2px 0 6px 14px;
+    background: transparent;
+    padding: 0 0 12px 18px;
     gap: 0;
   }
-  .nav-mobile-open .nav-dropdown-menu a { font-size: 16px; color: var(--muted); }
+  .nav-mobile-open .nav-dropdown-menu a {
+    font-size: clamp(14px, 4vw, 17px);
+    color: rgba(255,255,255,0.45);
+    padding: 9px 0;
+    border-radius: 0;
+    border: none;
+  }
+  .nav-mobile-open .nav-dropdown-menu a:hover { color: rgba(255,255,255,0.85); }
 
+  /* ── Auth buttons — docked at bottom, sign in + sign up only ── */
   .nav-mobile-open .nav-actions {
     display: flex;
     position: fixed;
     left: 0; right: 0;
     bottom: 0;
-    background: var(--canvas);
-    border-top: 1px solid var(--hairline);
-    padding: 14px 20px max(14px, env(safe-area-inset-bottom)) 20px;
+    background: #0f1117;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 28px max(14px, env(safe-area-inset-bottom)) 28px;
     z-index: 100;
-    flex-wrap: wrap;
-    gap: 10px;
     align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
-  }
-  /* The auth-block injected by auth.js — keep its buttons compact */
-  .nav-mobile-open .nav-actions [data-auth-block] {
-    margin-left: 0 !important;
-    flex: 1;
     justify-content: flex-end;
+    gap: 10px;
+  }
+  /* Hide lang toggle from the docked bottom bar — it stays in the nav bar */
+  .nav-mobile-open .nav-actions .lang-toggle { display: none; }
+  /* Show and style auth block */
+  .nav-mobile-open .nav-actions [data-auth-block] {
+    display: flex !important;
+    margin-left: 0 !important;
+    gap: 8px;
   }
   .nav-mobile-open .nav-actions [data-auth-block] .btn {
-    padding: 10px 14px !important;
+    padding: 10px 18px !important;
     font-size: 14px !important;
   }
 
-  /* When the drawer is open, lock the body so background doesn't scroll */
+  /* Lock background scroll when overlay is open */
   body.has-mobile-nav-open { overflow: hidden; }
 
   .feature-grid  { grid-template-columns: 1fr; }
