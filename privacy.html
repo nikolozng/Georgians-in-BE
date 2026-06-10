@@ -21,30 +21,7 @@
 </head>
 <body>
 
-<nav class="site-nav" id="site-nav">
-  <div class="container nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="nav-logo-mark">G</div>
-      <span class="nav-logo-text">geosin<span>.be</span></span>
-    </a>
-    <div class="nav-links" id="nav-links">
-      <a href="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
-      <a href="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
-      <a href="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
-      <a href="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a>
-      <a href="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
-    </div>
-    <div class="nav-actions" id="nav-actions">
-      <div class="lang-toggle">
-        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
-      </div>
-    </div>
-    <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </div>
-  </div>
-</nav>
+<nav class="site-nav" id="site-nav" data-nav></nav>
 
 <div class="privacy-wrap">
   <h1><span class="en">Privacy policy</span><span class="ka">კონფიდენციალურობის პოლიტიკა</span></h1>
@@ -77,30 +54,12 @@
   <p><span class="en">Questions about this policy: <a href="mailto:hello@geosin.be">hello@geosin.be</a>.</span><span class="ka">კითხვები ამ პოლიტიკის შესახებ: <a href="mailto:hello@geosin.be">hello@geosin.be</a>.</span></p>
 </div>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-bottom">
-      <span><span class="en">&copy; 2026 geosin.be — made with care for the Georgian community in Belgium</span><span class="ka">&copy; 2026 geosin.be — სიყვარულით შექმნილი ბელგიის ქართული თემისთვის.</span></span>
-      <span style="display:flex;gap:16px"><a href="privacy.html"><span class="en">Privacy</span><span class="ka">კონფიდენციალურობა</span></a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
-    </div>
-  </div>
-</footer>
+<footer class="site-footer" data-footer="simple"></footer>
 
+<script src="/shared.js?v=1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
-  function setLang(lang) {
-    localStorage.setItem('geosin-lang', lang);
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-    document.querySelectorAll('.en').forEach(el => { el.style.display = lang === 'en' ? '' : 'none'; });
-    document.querySelectorAll('.ka').forEach(el => { el.style.display = lang === 'ka' ? '' : 'none'; });
-    document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
-  }
-  function toggleMobileNav() {
-    const nav = document.getElementById('site-nav');
-    const opened = nav.classList.toggle('nav-mobile-open');
-    document.body.classList.toggle('has-mobile-nav-open', opened);
-  }
   setLang(localStorage.getItem('geosin-lang') || 'en');
 </script>
 
