@@ -1097,6 +1097,68 @@ html[lang="ka"] .en { display: none !important; }
 [data-theme="dark"] .job-card,
 [data-theme="dark"] .housing-card { background: var(--surface); }
 
+/* Fix: active/selected buttons use background:var(--ink) + color:#fff
+   In dark mode --ink is light, so text becomes white-on-white. Flip text to dark. */
+[data-theme="dark"] .ltype-btn.active,
+[data-theme="dark"] .sidebar-link.active,
+[data-theme="dark"] .cat-btn.active,
+[data-theme="dark"] .cl-tab.active { color: #141414 !important; }
+
+/* Fix: auth-gate boxes have hardcoded cream/orange backgrounds */
+[data-theme="dark"] #auth-gate {
+  background: #1e160a !important;
+  border-color: #4a3010 !important;
+}
+
+/* Fix: warn-banner (scams) and event-post hero have hardcoded light gradients */
+[data-theme="dark"] .warn-banner {
+  background: #1e1010 !important;
+  border-color: #4a1020 !important;
+}
+[data-theme="dark"] .ev-post-hero {
+  background: #101418 !important;
+}
+
+/* Fix: error/success banners with hardcoded light bg */
+[data-theme="dark"] .form-error-banner {
+  background: #2a1010 !important;
+  border-color: #5a2020 !important;
+}
+[data-theme="dark"] .ev-price.free {
+  background: #0d2010 !important;
+  color: #4ade80 !important;
+}
+[data-theme="dark"] .ev-error-banner,
+[data-theme="dark"] [class*="error-banner"] {
+  background: #2a1010 !important;
+  border-color: #5a2020 !important;
+}
+
+/* Fix: btn-outline has hardcoded background:#fff */
+[data-theme="dark"] .btn-outline {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+
+/* Fix: auth/status message banners with hardcoded light backgrounds */
+[data-theme="dark"] .auth-msg.error {
+  background: #2a1015 !important;
+  color: #f87171 !important;
+  border-color: #5a2030 !important;
+}
+[data-theme="dark"] .post-card .badge.pending {
+  background: #2a1a05 !important;
+  color: #fb923c !important;
+}
+
+/* Fix: light gradient boxes in scams.html (.warn-banner) and about.html (.cta-box) */
+[data-theme="dark"] .warn-banner,
+[data-theme="dark"] .cta-box {
+  background: var(--surface) !important;
+  border-color: var(--hairline) !important;
+}
+
 /* Theme toggle button */
 .theme-toggle {
   width: 36px;
