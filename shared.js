@@ -57,6 +57,30 @@
     btn.closest('.faq-item').classList.toggle('open');
   };
 
+  /* ────────── Theme (dark / light) ────────── */
+
+  function applyTheme (theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const moon = document.getElementById('theme-icon-moon');
+    const sun  = document.getElementById('theme-icon-sun');
+    if (moon) moon.style.display = theme === 'dark' ? 'none'  : '';
+    if (sun)  sun.style.display  = theme === 'dark' ? ''      : 'none';
+  }
+
+  window.toggleTheme = function () {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('geosin-theme', next);
+    applyTheme(next);
+  };
+
+  // Apply saved theme immediately (before any paint) to avoid flash
+  (function () {
+    const saved = localStorage.getItem('geosin-theme');
+    // If user explicitly chose a theme, honour it; otherwise respect OS preference
+    const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+
   /* ────────── Navbar ────────── */
   // Root-relative hrefs (/jobs.html) so links also work from the 404 page
   // at any URL depth. data-page is used to highlight the current page.
@@ -98,6 +122,10 @@
         <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
         <button class="lang-btn" data-lang="ka" onclick="setLang('ka')">KA</button>
       </div>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
     </div>
     <div class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -186,6 +214,10 @@
     }
     // Apply the saved language to everything, including what we just injected
     window.setLang(localStorage.getItem('geosin-lang') || 'en');
+    // Sync theme icon with the already-applied theme
+    const savedTheme = localStorage.getItem('geosin-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
   }
 
   if (document.readyState === 'loading') {
