@@ -6,6 +6,7 @@
   <title>Forum — geosin.be</title>
   <meta name="description" content="Community forum for Georgians in Belgium — ask questions, share answers, help each other." />
   <meta property="og:title" content="Forum — geosin.be" />
+  <meta property="og:image" content="https://geosin.be/assets/hero-bruges.jpg" />
   <meta property="og:description" content="Community forum for Georgians in Belgium." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/forum.html" />
@@ -305,7 +306,7 @@
         <li><a href="index.html#faq"><span class="en">FAQ</span><span class="ka">ხშირად დასმული კითხვები</span></a></li>
       </ul></div>
     </div>
-    <div class="footer-bottom"><span><span class="en">&copy; 2026 geosin.be</span><span class="ka">&copy; 2026 geosin.be</span></span><span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
+    <div class="footer-bottom"><span><span class="en">&copy; 2026 geosin.be</span><span class="ka">&copy; 2026 geosin.be</span></span><span style="display:flex;gap:16px"><a href="privacy.html"><span class="en">Privacy</span><span class="ka">კონფიდენციალურობა</span></a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span></div>
   </div>
 </footer>
 
@@ -578,7 +579,6 @@
       thread_id: threadId,
       user_id: user.id,
       author_name,
-      author_email: incognito ? null : user.email,
       body,
       incognito
     });
@@ -645,7 +645,6 @@
       body,
       user_id: user.id,
       author_name,
-      author_email: incognito ? null : user.email,
       incognito
     }).select().single();
     submitBtn.disabled = false; submitBtn.textContent = 'Post thread';

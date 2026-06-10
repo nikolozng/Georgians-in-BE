@@ -116,8 +116,8 @@
 <footer class="site-footer">
   <div class="container">
     <div class="footer-bottom">
-      <span><span class="en">&copy; 2025 geosin.be</span><span class="ka">&copy; 2025 geosin.be</span></span>
-      <span><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+      <span><span class="en">&copy; 2026 geosin.be</span><span class="ka">&copy; 2026 geosin.be</span></span>
+      <span style="display:flex;gap:16px"><a href="privacy.html"><span class="en">Privacy</span><span class="ka">კონფიდენციალურობა</span></a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
 </footer>
@@ -138,7 +138,14 @@
   }
   setLang(localStorage.getItem('geosin-lang') || 'en');
 
-  AUTH.getUser().then(u => { if (u) location.href = new URLSearchParams(location.search).get('next') || 'account.html'; });
+  // Only allow same-site relative redirects — blocks login.html?next=https://evil.com phishing.
+  function safeNext() {
+    const next = new URLSearchParams(location.search).get('next') || '';
+    if (next && !next.startsWith('//') && !/^[a-z][a-z0-9+.-]*:/i.test(next)) return next;
+    return 'account.html';
+  }
+
+  AUTH.getUser().then(u => { if (u) location.href = safeNext(); });
 
   const form      = document.getElementById('login-form');
   const msg       = document.getElementById('msg');
@@ -211,7 +218,7 @@
       submitBtn.innerHTML = '<span class="en">Log in</span><span class="ka">შესვლა</span>';
       return;
     }
-    location.href = new URLSearchParams(location.search).get('next') || 'account.html';
+    location.href = safeNext();
   });
 </script>
 

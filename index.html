@@ -6,6 +6,7 @@
   <title>geosin.be — Georgians in Belgium</title>
   <meta name="description" content="The practical hub for Georgians living in Belgium — jobs, housing, services, checklists, scam protection and a community forum." />
   <meta property="og:title" content="geosin.be — Georgians in Belgium" />
+  <meta property="og:image" content="https://geosin.be/assets/hero-bruges.jpg" />
   <meta property="og:description" content="The practical hub for Georgians living in Belgium." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/" />
@@ -35,7 +36,7 @@
     @media (max-width: 760px) {
       .hero-v2 { height: auto; min-height: 480px; }
     }
-    /* Background image — Brussels, Grand-Place (Belgium) */
+    /* Background image — Bruges canal at dusk (Belgium) */
     .hero-bg {
       position: absolute; inset: 0;
       z-index: 0;
@@ -607,11 +608,11 @@
 ════════════════════════════════════════════════════════════ -->
 <section class="hero-v2">
   <div class="hero-bg" aria-hidden="true">
-    <!-- Bruges, Rozenhoedkaai canal at dusk (Belgium) — local optimized photo. Wikimedia Grand-Place shots are automatic fallbacks. -->
+    <!-- Bruges, Rozenhoedkaai canal at dusk — local photo. Wikimedia Brussels Grand-Place shots are automatic fallbacks. -->
     <img
-      src="assets/hero-bruges.jpg"
+      src="assets/hero-bruges.webp"
       alt="Canal houses in Bruges, Belgium, lit up at dusk"
-      data-fallbacks="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG/1600px-La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG|https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Bruxelles_Grand_Place.JPG/1600px-Bruxelles_Grand_Place.JPG"
+      data-fallbacks="assets/hero-bruges.jpg|https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG/1600px-La_Grand-Place_de_Bruxelles_vue_depuis_le_Hard_Rock_Cafe_Brussels.JPG|https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Bruxelles_Grand_Place.JPG/1600px-Bruxelles_Grand_Place.JPG"
       onerror="var f=(this.dataset.fallbacks||'').split('|').filter(Boolean);if(f.length){this.src=f.shift();this.dataset.fallbacks=f.join('|');}else{this.onerror=null;}"
       loading="eager"
     />
@@ -1058,8 +1059,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span><span class="en">&copy; 2025 geosin.be — made with care for the Georgian community in Belgium</span><span class="ka">&copy; 2025 geosin.be — სიყვარულით შექმნილი ბელგიის ქართული თემისთვის. კონფიდენციალურობა.</span></span>
-      <span style="display:flex;gap:16px"><a href="#">Privacy</a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
+      <span><span class="en">&copy; 2026 geosin.be — made with care for the Georgian community in Belgium</span><span class="ka">&copy; 2026 geosin.be — სიყვარულით შექმნილი ბელგიის ქართული თემისთვის. კონფიდენციალურობა.</span></span>
+      <span style="display:flex;gap:16px"><a href="privacy.html">Privacy</a><a href="mailto:hello@geosin.be">hello@geosin.be</a></span>
     </div>
   </div>
 </footer>
@@ -1145,10 +1146,9 @@
       .eq('approved', true)
       .order('rating', { ascending: false, nullsFirst: false })
       .limit(3);
-    if (error || !data) return;
 
     const grid = document.getElementById('spotlight-grid');
-    if (!data.length) {
+    if (error || !data || !data.length) {
       grid.innerHTML = '<div class="spot-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No services listed yet — <a href="services.html#register" style="color:var(--rausch)">be the first to add yours</a>.</div>';
       return;
     }
@@ -1180,7 +1180,10 @@
       `;
     }).join('');
   }
-  loadSpotlight();
+  loadSpotlight().catch(() => {
+    document.getElementById('spotlight-grid').innerHTML =
+      '<div class="spot-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">Couldn\'t load services right now — <a href="services.html" style="color:var(--rausch)">browse the directory</a>.</div>';
+  });
 
   /* ── Forum live stats + recent threads ── */
   async function loadForumStats() {
@@ -1220,7 +1223,15 @@
       </a>
     `).join('');
   }
-  loadForumStats();
+  loadForumStats().catch(() => {
+    // Never leave the homepage looking half-loaded if the database is unreachable.
+    ['stat-threads', 'stat-replies', 'stat-week'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.textContent === '—') el.textContent = '0';
+    });
+    document.getElementById('recent-threads-list').innerHTML =
+      '<div class="recent-thread"><div class="rt-title" style="color:var(--muted)">No threads yet — <a href="forum.html?new=1" style="color:var(--rausch)">be the first</a>.</div></div>';
+  });
 </script>
 
 </body>
