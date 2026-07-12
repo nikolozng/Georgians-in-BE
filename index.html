@@ -27,10 +27,10 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      /* FIXED height (not min-height) so the photo is the exact same size in EN
-         and KA — the longer Georgian text just centres inside the same box.
-         min-height let the longer language push the hero taller. */
-      height: 560px;
+      /* min-height (not fixed height): the longer Georgian text needs room to
+         grow — a fixed height clipped the eyebrow bubble at the top in KA. */
+      height: auto;
+      min-height: 560px;
     }
     /* Phones: let the hero grow to fit so longer Georgian text is never clipped. */
     @media (max-width: 760px) {
@@ -146,12 +146,8 @@
 
     .hero-actions-v2 { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
     .hero-actions-v2 .btn { padding: 13px 22px; font-size: 14px; font-weight: 600; }
-    .btn-outline-v2 {
-      background: transparent;
-      border: 1.5px solid var(--ink);
-      color: var(--ink);
-    }
-    .btn-outline-v2:hover { background: var(--ink); color: #fff; }
+    /* (duplicate .btn-outline-v2 block removed — it overrode the white
+       on-photo style above and made the button invisible on the hero) */
 
     /* Floating search bar */
     .hero-search {
