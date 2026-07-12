@@ -110,6 +110,7 @@
         <div class="nav-dropdown-menu">
           <a href="/events.html" data-page="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
           <a href="/forum.html" data-page="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
+          <a href="/places.html" data-page="places.html"><span class="en">Places</span><span class="ka">ადგილები</span></a>
         </div>
       </div>
       <div class="nav-dropdown">
@@ -118,6 +119,7 @@
           <svg class="nav-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="nav-dropdown-menu">
+          <a href="/guides.html" data-page="guides.html"><span class="en">Q&amp;A — Life in Belgium</span><span class="ka">კითხვა-პასუხი</span></a>
           <a href="/checklists.html" data-page="checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a>
           <a href="/scams.html" data-page="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
         </div>
@@ -175,7 +177,7 @@
         <ul>
           <li><a href="/checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a></li>
           <li><a href="/scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a></li>
-          <li><a href="/index.html#faq"><span class="en">FAQ</span><span class="ka">ხშირად დასმული კითხვები</span></a></li>
+          <li><a href="/guides.html"><span class="en">Guides / FAQ</span><span class="ka">გზამკვლევები</span></a></li>
           <li><a href="/about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li>
         </ul>
       </div>
@@ -231,4 +233,103 @@
   } else {
     inject();
   }
+
+  /* ────────── "New since your last visit" nav badges ──────────
+     Counts approved posts newer than your previous visit and shows a
+     small badge on the nav links. No account or emails needed.
+     Throttled: results are cached for 1 hour in localStorage. */
+  (function () {
+    var TABLES = [
+      { table: 'jobs',          page: 'jobs.html' },
+      { table: 'housing',       page: 'housing.html' },
+      { table: 'events',        page: 'events.html' },
+      { table: 'forum_threads', page: 'forum.html' },
+      { table: 'places',        page: 'places.html' }
+    ];
+    function lsGet (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function lsSet (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    // A "visit" = one browser session. On a new session, the previous
+    // session's start time becomes the comparison point.
+    var now = new Date().toISOString();
+    try {
+      if (!sessionStorage.getItem('geosin-visit')) {
+        sessionStorage.setItem('geosin-visit', '1');
+        var cur = lsGet('geosin-seen-now');
+        if (cur) lsSet('geosin-seen-prev', cur);
+        lsSet('geosin-seen-now', now);
+      }
+    } catch (e) {}
+
+    // Being ON a section page marks it as seen (clears its badge).
+    var here = location.pathname.split('/').pop() || 'index.html';
+    TABLES.forEach(function (t) { if (t.page === here) lsSet('geosin-seen-' + t.table, now); });
+
+    var prev = lsGet('geosin-seen-prev');
+    if (!prev) return; // first-ever visit — nothing to compare against
+
+    function baselineFor (t) {
+      var seen = lsGet('geosin-seen-' + t.table);
+      return (seen && seen > prev) ? seen : prev;
+    }
+
+    function renderBadges (counts) {
+      TABLES.forEach(function (t) {
+        var link = document.querySelector('#nav-links a[data-page="' + t.page + '"]');
+        if (!link) return;
+        var old = link.querySelector('.nav-new-badge');
+        if (old) old.remove();
+        var n = counts[t.table] || 0;
+        if (n > 0) {
+          var b = document.createElement('span');
+          b.className = 'nav-new-badge';
+          b.textContent = n > 9 ? '9+' : String(n);
+          link.style.position = 'relative';
+          link.appendChild(b);
+          // Links inside a dropdown also get a dot on the dropdown toggle
+          var dd = link.closest('.nav-dropdown');
+          if (dd) {
+            var tg = dd.querySelector('.nav-dropdown-toggle');
+            if (tg && !tg.querySelector('.nav-new-dot')) {
+              var d = document.createElement('span');
+              d.className = 'nav-new-dot';
+              tg.style.position = 'relative';
+              tg.appendChild(d);
+            }
+          }
+        }
+      });
+    }
+
+    function check () {
+      if (!window.sb) return;
+      var key = TABLES.map(baselineFor).join('|');
+      var cached = null;
+      try { cached = JSON.parse(lsGet('geosin-new-cache') || 'null'); } catch (e) {}
+      if (cached && cached.key === key && (Date.now() - cached.ts) < 3600000) {
+        renderBadges(cached.counts);
+        return;
+      }
+      Promise.all(TABLES.map(function (t) {
+        return window.sb.from(t.table)
+          .select('id', { count: 'exact', head: true })
+          .eq('approved', true)
+          .gt('created_at', baselineFor(t))
+          .then(function (r) { return r.count || 0; }, function () { return 0; });
+      })).then(function (nums) {
+        var counts = {};
+        TABLES.forEach(function (t, i) { counts[t.table] = nums[i]; });
+        lsSet('geosin-new-cache', JSON.stringify({ ts: Date.now(), key: key, counts: counts }));
+        renderBadges(counts);
+      }).catch(function () {});
+    }
+
+    // Wait until both the nav is injected and auth.js has created window.sb
+    var tries = 0;
+    var iv = setInterval(function () {
+      tries++;
+      if (window.sb && document.querySelector('#nav-links')) { clearInterval(iv); check(); }
+      else if (tries > 40) clearInterval(iv); // give up quietly after ~10s
+    }, 250);
+  })();
 })();

@@ -77,6 +77,7 @@
   .pill.forum{background:#f3eefe;color:#534ab7}
   .pill.event{background:#faece7;color:#993c1d}
   .pill.service{background:#fbeaf0;color:#993556}
+  .pill.place{background:#e8f0e0;color:#3b6d11}
   .pill.live{background:var(--green-light);color:var(--green)}
   .row .body{flex:1;min-width:0}
   .row .ttl{font-weight:600;color:var(--ink);font-size:14.5px;margin-bottom:3px}
@@ -170,6 +171,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M11 12H3"/><path d="M16 6H3"/><path d="M16 18H3"/></svg>
         <span>Checklists</span>
       </div>
+      <div class="nav-item" data-page="guides">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Guides (Q&amp;A)</span>
+      </div>
     </aside>
 
     <main class="main">
@@ -204,6 +209,7 @@
           <div class="chip" data-f="forum">Forum</div>
           <div class="chip" data-f="event">Events</div>
           <div class="chip" data-f="service">Services</div>
+          <div class="chip" data-f="place">Places</div>
         </div>
         <div class="card" id="queueCard"></div>
       </section>
@@ -219,6 +225,7 @@
           <div class="chip" data-f="forum">Forum</div>
           <div class="chip" data-f="event">Events</div>
           <div class="chip" data-f="service">Services</div>
+          <div class="chip" data-f="place">Places</div>
         </div>
         <div class="card" id="manageCard"></div>
       </section>
@@ -242,6 +249,24 @@
         </div>
         <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="addCL()">+ Add step</button></div>
         <div id="clList"><div class="empty">Loading…</div></div>
+      </section>
+
+      <!-- GUIDES Q&A -->
+      <section class="page" id="page-guides">
+        <h1 class="page-title">Guides (Q&amp;A)</h1>
+        <p class="page-sub">The questions on your public Guides page. Edits go live immediately. Basic HTML (links) allowed in answers. Items marked [TODO: verify] need your fact-check.</p>
+        <div class="chips" id="gChips">
+          <div class="chip on" data-g="arrival">Arrival</div>
+          <div class="chip" data-g="housing">Housing</div>
+          <div class="chip" data-g="work">Work</div>
+          <div class="chip" data-g="healthcare">Healthcare</div>
+          <div class="chip" data-g="schools">Schools</div>
+          <div class="chip" data-g="money">Money</div>
+          <div class="chip" data-g="driving">Driving</div>
+          <div class="chip" data-g="language">Language</div>
+        </div>
+        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="addGuide()">+ Add question</button></div>
+        <div id="guideList"><div class="empty">Loading…</div></div>
       </section>
     </main>
   </div>
@@ -271,6 +296,7 @@ const TABLES=[
   {key:'forum',table:'forum_threads',pill:'Forum',title:r=>r.title,sub:r=>r.category||'',excerpt:r=>r.body},
   {key:'event',table:'events',pill:'Event',title:r=>r.title,sub:r=>[r.city,r.event_date].filter(Boolean).join(' · '),excerpt:r=>r.description},
   {key:'service',table:'services',pill:'Service',title:r=>r.name||'Service',sub:r=>[r.category,r.region].filter(Boolean).join(' · '),excerpt:r=>r.description},
+  {key:'place',table:'places',pill:'Place',title:r=>r.name||'Place',sub:r=>[r.type,r.city].filter(Boolean).join(' · '),excerpt:r=>r.description},
 ];
 const T = Object.fromEntries(TABLES.map(t=>[t.key,t]));
 function findCfg(table){return TABLES.find(t=>t.table===table);}
@@ -291,7 +317,7 @@ async function boot(){
 
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='';
-  loadQueue(); loadLive(); loadStats(); loadScams(); loadCL();
+  loadQueue(); loadLive(); loadStats(); loadScams(); loadCL(); loadGuides();
 }
 function showDenied(email){
   document.getElementById('gate-spin').style.display='none';
@@ -576,6 +602,74 @@ async function moveCL(i,dir){
 document.querySelectorAll('#clChips .chip').forEach(c=>c.addEventListener('click',()=>{
   document.querySelectorAll('#clChips .chip').forEach(x=>x.classList.remove('on'));
   c.classList.add('on'); clKey=c.dataset.l; loadCL();
+}));
+
+/* ---------- guides Q&A ---------- */
+let gItems=[], gKey='arrival';
+async function loadGuides(){
+  const {data,error}=await sb.from('guide_items').select('*').eq('category',gKey).order('position',{ascending:true});
+  if(error){document.getElementById('guideList').innerHTML='<div class="empty">Could not load: '+esc(error.message)+' — has SETUP_GUIDES.sql been run?</div>';return;}
+  gItems=data||[]; renderGuides();
+}
+function renderGuides(){
+  const el=document.getElementById('guideList');
+  if(!gItems.length){el.innerHTML='<div class="empty">No questions in this topic yet. Click “Add question”.</div>';return;}
+  el.innerHTML=gItems.map((s,i)=>'<div class="ed" id="gd-'+s.id+'">'+
+    '<div class="head"><span class="num">'+(i+1)+'</span>'+
+      '<div style="margin-left:auto;display:flex;gap:4px">'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveGuide('+i+',-1)"'+(i===0?' disabled':'')+'>↑</button>'+
+        '<button class="btn btn-ghost btn-sm" style="padding:4px 9px" onclick="moveGuide('+i+',1)"'+(i===gItems.length-1?' disabled':'')+'>↓</button>'+
+      '</div></div>'+
+    '<div class="view"><div class="ttl">'+esc(s.question_en)+'</div>'+
+      (s.question_ka?'<div class="ka" style="font-size:14px;margin-top:2px">'+esc(s.question_ka)+'</div>':'')+
+      '<p>'+(s.answer_en||'')+'</p>'+
+      (s.answer_ka?'<p class="ka">'+(s.answer_ka)+'</p>':'')+
+      '<div class="editrow"><button class="btn btn-ghost btn-sm" onclick="editGuide('+s.id+')">Edit</button></div></div>'+
+    '<div class="fields">'+
+      '<label>Question (English)</label><input id="ge-qen-'+s.id+'" value="'+esc(s.question_en)+'">'+
+      '<label>Question (Georgian)</label><input class="ka-in" id="ge-qka-'+s.id+'" value="'+esc(s.question_ka)+'" placeholder="optional">'+
+      '<label>Answer (English)</label><textarea id="ge-aen-'+s.id+'">'+esc(s.answer_en)+'</textarea>'+
+      '<label>Answer (Georgian)</label><textarea class="ka-in" id="ge-aka-'+s.id+'">'+esc(s.answer_ka)+'</textarea>'+
+      '<div class="editrow"><button class="btn btn-danger btn-sm" style="margin-right:auto" onclick="delGuide('+s.id+')">Delete</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="renderGuides()">Cancel</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="saveGuide('+s.id+')">Save changes</button></div>'+
+    '</div></div>').join('');
+}
+function editGuide(id){document.getElementById('gd-'+id).classList.add('editing');}
+async function saveGuide(id){
+  const patch={
+    question_en:document.getElementById('ge-qen-'+id).value.trim(),
+    question_ka:document.getElementById('ge-qka-'+id).value.trim()||null,
+    answer_en:document.getElementById('ge-aen-'+id).value.trim(),
+    answer_ka:document.getElementById('ge-aka-'+id).value.trim()||null
+  };
+  if(!patch.question_en||!patch.answer_en)return toast('English question and answer are required','err');
+  const {error}=await sb.from('guide_items').update(patch).eq('id',id);
+  if(error)return toast('Could not save: '+error.message,'err');
+  toast('Saved — live on the Guides page','ok'); loadGuides();
+}
+async function delGuide(id){
+  if(!confirm('Delete this question?'))return;
+  const {error}=await sb.from('guide_items').delete().eq('id',id);
+  if(error)return toast('Could not delete: '+error.message,'err');
+  toast('Deleted'); loadGuides();
+}
+async function addGuide(){
+  const pos=gItems.length?Math.max.apply(null,gItems.map(s=>s.position||0))+1:1;
+  const {error}=await sb.from('guide_items').insert({category:gKey,position:pos,question_en:'New question',answer_en:'Write the answer here.'});
+  if(error)return toast('Could not add: '+error.message,'err');
+  loadGuides();
+}
+async function moveGuide(i,dir){
+  const j=i+dir; if(j<0||j>=gItems.length)return;
+  const a=gItems[i],b=gItems[j];
+  await sb.from('guide_items').update({position:b.position}).eq('id',a.id);
+  await sb.from('guide_items').update({position:a.position}).eq('id',b.id);
+  loadGuides();
+}
+document.querySelectorAll('#gChips .chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#gChips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); gKey=c.dataset.g; loadGuides();
 }));
 
 /* ---------- shared refresh ---------- */

@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
   <style>
     /* Override style.css default that hides all [data-lang-block] until JS adds .active */
     [data-lang-block] { display: revert; }
@@ -30,7 +30,7 @@
       /* FIXED height (not min-height) so the photo is the exact same size in EN
          and KA — the longer Georgian text just centres inside the same box.
          min-height let the longer language push the hero taller. */
-      height: 640px;
+      height: 560px;
     }
     /* Phones: let the hero grow to fit so longer Georgian text is never clipped. */
     @media (max-width: 760px) {
@@ -227,15 +227,10 @@
       isolation: isolate;
     }
     .bento-card:hover {
-      transform: scale(1.03);
-      border-color: transparent;
-      box-shadow: 0 14px 36px rgba(0,0,0,0.08);
-      z-index: 2;
+      transform: translateY(-2px);
+      border-color: var(--rausch);
+      box-shadow: 0 6px 18px rgba(255,56,92,0.08);
     }
-    .bento-card.tone-rausch:hover  { background: linear-gradient(135deg, #fff 0%, #fff0f3 100%); }
-    .bento-card.tone-blue:hover    { background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%); }
-    .bento-card.tone-amber:hover   { background: linear-gradient(135deg, #fff 0%, #fff7ed 100%); }
-    .bento-card.tone-green:hover   { background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%); }
 
     .bento-icon {
       width: 44px; height: 44px;
@@ -323,208 +318,56 @@
     }
 
     /* ────────────────────────────────────────
-       SERVICE SPOTLIGHT
+       LATEST — live posts from the database
     ──────────────────────────────────────── */
-    .spotlight-grid {
+    .latest-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 14px;
     }
-    @media (max-width: 900px) { .spotlight-grid { grid-template-columns: 1fr; } }
-    .spot-card {
-      background: var(--canvas);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-md);
-      padding: 22px 24px;
-      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-      text-decoration: none;
-      color: inherit;
-      display: flex; flex-direction: column;
-    }
-    .spot-card:hover { border-color: var(--rausch); box-shadow: 0 6px 18px rgba(255,56,92,0.08); transform: translateY(-2px); }
-    .spot-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .spot-card .city { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-    .spot-card p { font-size: 13px; color: var(--body-text); line-height: 1.55; margin-bottom: 14px; flex: 1; }
-    .spot-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .spot-tag {
-      font-size: 11px; font-weight: 600; color: var(--muted);
-      background: var(--surface);
-      padding: 3px 9px; border-radius: var(--r-full);
-    }
-    .spot-tag.cat { color: var(--rausch); background: rgba(255,56,92,0.08); }
-
-    .spot-rating { display: flex; align-items: center; gap: 4px; font-size: 13px; }
-    .spot-rating .star { color: #ffc107; }
-    .spot-rating .num { color: var(--muted); font-weight: 600; margin-left: 4px; font-size: 12px; }
-
-    /* ────────────────────────────────────────
-       TRUST & SAFETY
-    ──────────────────────────────────────── */
-    .trust-section {
-      background: linear-gradient(135deg, #fff7ed 0%, #fffbf5 100%);
-      border-top: 1px solid #fed7aa;
-      border-bottom: 1px solid #fed7aa;
-    }
-    .trust-flex {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
-      align-items: center;
-    }
-    @media (max-width: 800px) { .trust-flex { grid-template-columns: 1fr; gap: 24px; } }
-    .trust-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 12px;
-      background: rgba(217,119,6,0.10);
-      color: #c2410c;
-      border-radius: var(--r-full);
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 0.04em;
-      margin-bottom: 16px;
-    }
-    .trust-flex h2 {
-      font-size: clamp(26px, 3.6vw, 38px);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 14px;
-    }
-    .trust-flex .trust-lead { color: var(--body-text); margin-bottom: 22px; line-height: 1.65; }
-    .trust-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-amber {
-      background: #c2410c; color: #fff;
-      border: none; padding: 12px 20px;
-      border-radius: var(--r-sm);
-      font-weight: 600; font-size: 14px; cursor: pointer;
-      text-decoration: none;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-amber:hover { background: #9a3412; }
-    .btn-amber-outline {
-      background: transparent; color: #c2410c;
-      border: 1.5px solid #c2410c; padding: 12px 20px;
-      border-radius: var(--r-sm);
-      font-weight: 600; font-size: 14px;
-      text-decoration: none;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: background 0.15s;
-    }
-    .btn-amber-outline:hover { background: rgba(217,119,6,0.06); }
-
-    .trust-stats {
-      background: #fff;
-      border: 1px solid #fed7aa;
-      border-radius: var(--r-md);
-      padding: 26px 28px;
-    }
-    .trust-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #fff1e0; }
-    .trust-stat-row:last-child { border-bottom: none; }
-    .trust-stat-row .label { font-size: 13px; color: var(--body-text); }
-    .trust-stat-row .num   { font-size: 18px; font-weight: 800; color: #c2410c; }
-
-    /* ────────────────────────────────────────
-       COMMUNITY / FORUM — live stats
-    ──────────────────────────────────────── */
-    .comm-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 32px;
-      align-items: stretch;
-    }
-    @media (max-width: 900px) { .comm-grid { grid-template-columns: 1fr; } }
-
-    .comm-card {
-      background: var(--ink);
-      color: #fff;
-      border-radius: var(--r-md);
-      padding: 36px 36px 32px;
-      position: relative; overflow: hidden;
-    }
-    .comm-card::before {
-      content: ""; position: absolute; right: -80px; top: -80px;
-      width: 260px; height: 260px;
-      background: radial-gradient(circle, rgba(255,56,92,0.30), transparent 70%);
-      filter: blur(20px);
-    }
-    .comm-card > * { position: relative; z-index: 1; }
-
-    .live-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 5px 12px;
-      background: rgba(255,56,92,0.18);
-      color: #ffb6c4;
-      border-radius: var(--r-full);
-      font-size: 12px; font-weight: 700;
-      margin-bottom: 18px;
-    }
-    .live-badge .live-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #ff385c;
-      box-shadow: 0 0 0 0 rgba(255,56,92,0.7);
-      animation: live-pulse 2s ease-out infinite;
-    }
-    @keyframes live-pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(255,56,92,0.7); }
-      70%  { box-shadow: 0 0 0 10px rgba(255,56,92,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,56,92,0); }
-    }
-
-    .comm-card h2 {
-      color: #fff;
-      font-size: clamp(24px, 3vw, 34px);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-      line-height: 1.2;
-    }
-    .comm-card p { color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 24px; }
-
-    .live-stats { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; }
-    .live-stat .n { font-size: 30px; font-weight: 800; color: #fff; line-height: 1; }
-    .live-stat .l { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
-
-    .comm-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-on-dark-primary {
-      background: var(--rausch); color: #fff; border: none;
-      padding: 12px 20px; border-radius: var(--r-sm);
-      font-weight: 700; font-size: 14px; cursor: pointer;
-      text-decoration: none;
-    }
-    .btn-on-dark-primary:hover { background: #e21d4d; }
-    .btn-on-dark-ghost {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.18);
-      padding: 12px 20px; border-radius: var(--r-sm);
-      font-weight: 600; font-size: 14px; text-decoration: none;
-    }
-    .btn-on-dark-ghost:hover { background: rgba(255,255,255,0.14); }
-
-    .recent-threads {
+    @media (max-width: 900px) { .latest-grid { grid-template-columns: 1fr; } }
+    .latest-col {
       background: var(--canvas);
       border: 1px solid var(--hairline);
       border-radius: var(--r-md);
       padding: 8px;
       display: flex; flex-direction: column;
     }
-    .recent-threads-header {
-      padding: 12px 18px 10px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--muted);
+    .latest-col-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px 8px;
     }
-    .recent-thread {
-      padding: 12px 16px;
+    .latest-col-head .t { font-size: 13px; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.05em; }
+    .latest-col-head a { font-size: 12px; font-weight: 600; color: var(--rausch); text-decoration: none; }
+    .latest-col-head a:hover { text-decoration: underline; }
+    .latest-sub-head { border-top: 1px solid var(--hairline); margin-top: 8px; padding-top: 12px; }
+    .latest-row {
+      display: block;
+      padding: 10px 14px;
       border-radius: var(--r-sm);
       text-decoration: none; color: inherit;
-      display: flex; flex-direction: column;
-      gap: 4px;
       transition: background 0.12s;
     }
-    .recent-thread:hover { background: var(--surface); }
-    .recent-thread .rt-title { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.4; }
-    .recent-thread .rt-meta { font-size: 11px; color: var(--muted); }
-    .recent-thread .rt-meta .cat { color: #0066cc; font-weight: 600; }
+    .latest-row:hover { background: var(--surface); }
+    .latest-row .lt { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 2px; }
+    .latest-row .lm { font-size: 12px; color: var(--muted); }
+    .latest-row .lm .hl { color: var(--rausch); font-weight: 600; }
+    .latest-empty { padding: 16px 14px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .latest-empty a { color: var(--rausch); font-weight: 600; }
+
+    /* Slim safety strip (replaces the old full-width trust section) */
+    .safety-strip {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: rgba(217,119,6,0.08);
+      border: 1px solid rgba(217,119,6,0.25);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      margin-bottom: 36px;
+      font-size: 14px; color: var(--body-text);
+    }
+    .safety-strip svg { color: #c2410c; flex-shrink: 0; }
+    .safety-strip a { color: #c2410c; font-weight: 700; text-decoration: none; }
+    .safety-strip a:hover { text-decoration: underline; }
 
     /* ────────────────────────────────────────
        FAQ — preserved at bottom (lighter prominence)
@@ -638,16 +481,16 @@
         <span class="arrow">Browse →</span>
       </a>
 
-      <a href="checklists.html" class="bento-card tone-blue">
+      <a href="guides.html" class="bento-card tone-blue">
         <div class="bento-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/><polyline points="20 12 13 19 11 17" opacity="0.4"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
         <h3>
-          <span data-lang-block="en">Checklists</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჩეკლისტები</span>
+          <span data-lang-block="en">Guides</span>
+          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">გზამკვლევები</span>
         </h3>
-        <p data-lang-block="en">Step-by-step guides for arrival, jobs and starting a business.</p>
-        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ეტაპობრივი გზამკვლევები ჩამოსვლის, მუშაობის დაწყებისა და ბიზნესის გახსნისთვის.</p>
+        <p data-lang-block="en">30+ practical answers — visas, housing, healthcare, taxes. In Georgian and English.</p>
+        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">30+ პრაქტიკული პასუხი — ვიზები, საცხოვრებელი, ჯანდაცვა, გადასახადები. ქართულად და ინგლისურად.</p>
         <span class="arrow">Open →</span>
       </a>
 
@@ -683,7 +526,7 @@
 <!-- ════════════════════════════════════════════════════════════
      3. JOURNEY PREVIEW — 3 checklists with progress bars
 ════════════════════════════════════════════════════════════ -->
-<section class="h-section" style="background:var(--surface)">
+<section class="h-section">
   <div class="container">
     <div class="section-head">
       <span class="section-eyebrow-h">
@@ -754,132 +597,54 @@
 </section>
 
 <!-- ════════════════════════════════════════════════════════════
-     4. SERVICE SPOTLIGHT
+     4. LATEST — live from the database
 ════════════════════════════════════════════════════════════ -->
 <section class="h-section">
   <div class="container">
-    <div class="section-head" style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap">
-      <div>
-        <span class="section-eyebrow-h">
-          <span data-lang-block="en">Featured</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">გამორჩეული</span>
-        </span>
-        <h2>
-          <span data-lang-block="en">Top-rated services this week</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ამ კვირის საუკეთესო სერვისები</span>
-        </h2>
-      </div>
-      <a href="services.html" class="btn btn-ghost btn-sm">
-        <span data-lang-block="en">See all →</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყველას ნახვა →</span>
-      </a>
+    <div class="section-head">
+      <span class="section-eyebrow-h">
+        <span data-lang-block="en">Fresh today</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">სიახლეები</span>
+      </span>
+      <h2>
+        <span data-lang-block="en">Latest on geosin.be</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ბოლო განცხადებები</span>
+      </h2>
+      <p class="section-sub" data-lang-block="en">Real posts from the community — updated live.</p>
+      <p class="section-sub ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">საზოგადოების რეალური განცხადებები — ახლდება ავტომატურად.</p>
     </div>
 
-    <div class="spotlight-grid" id="spotlight-grid">
-      <div class="spot-card" style="opacity:0.5">
-        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
-        <p style="height:60px"></p>
-      </div>
-      <div class="spot-card" style="opacity:0.5">
-        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
-        <p style="height:60px"></p>
-      </div>
-      <div class="spot-card" style="opacity:0.5">
-        <h4 style="height:18px;background:var(--hairline);border-radius:4px;width:60%;margin-bottom:12px"></h4>
-        <p style="height:60px"></p>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="latest-grid">
 
-<!-- ════════════════════════════════════════════════════════════
-     5. TRUST & SAFETY
-════════════════════════════════════════════════════════════ -->
-<section class="trust-section h-section">
-  <div class="container">
-    <div class="trust-flex">
-      <div>
-        <span class="trust-eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span data-lang-block="en">Stay safe</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">დაიცავი თავი</span>
-        </span>
-        <h2>
-          <span data-lang-block="en">Newcomers are the #1 target. We help you spot the patterns.</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">დაიცავით თავი. ახალჩამოსულები თაღლითების მთავარი სამიზნეები არიან. ჩვენ დაგეხმარებით მათ ამოცნობაში.</span>
-        </h2>
-        <p class="trust-lead" data-lang-block="en">
-          Apartment deposits before viewing, "cousin who'll bring you the keys", fake job offers — the same scams repeat every year. Read the patterns, share warnings, and report what you see.
-        </p>
-        <p class="trust-lead ka" data-lang-block="ka" style="font-family:var(--font-georgian);display:none">
-          ბინის დეპოზიტის მოთხოვნა ნახვამდე, 'ნათესავი, რომელიც გასაღებს მოგიტანთ', ყალბი სამუშაო შეთავაზებები — ერთი და იგივე სქემები ყოველწლიურად მეორდება. გაეცანით ამ მეთოდებს, გააფრთხილეთ სხვები და შეგვატყობინეთ საეჭვო შემთხვევების შესახებ.
-        </p>
-        <div class="trust-actions">
-          <a href="scams.html" class="btn-amber">
-            <span data-lang-block="en">Read warnings</span>
-            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">გაფრთხილებების ნახვა</span>
-          </a>
-          <a href="scams.html#report" class="btn-amber-outline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
-            <span data-lang-block="en">Report a scam</span>
-            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თაღლითობის შეტყობინება</span>
-          </a>
+      <div class="latest-col">
+        <div class="latest-col-head">
+          <span class="t"><span class="en">Newest jobs</span><span class="ka">ვაკანსიები</span></span>
+          <a href="jobs.html"><span class="en">All →</span><span class="ka">ყველა →</span></a>
         </div>
+        <div id="latest-jobs"><div class="latest-empty"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div></div>
       </div>
 
-      <div class="trust-stats">
-        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Apartment deposit scams</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თაღლითობა ბინის ქირაობისას</span></span><span class="num">#1</span></div>
-        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Fake job offers</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყალბი სამუშაო შეთავაზებები</span></span><span class="num">#2</span></div>
-        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">"Help with paperwork" fees</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საბუთების მოგვარების საფასური</span></span><span class="num">#3</span></div>
-        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Police emergency</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პოლიციის ცხელი ხაზი</span></span><a href="tel:101" class="num" style="text-decoration:none">101</a></div>
-        <div class="trust-stat-row"><span class="label"><span data-lang-block="en">Scam helpline</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">დახმარება თაღლითობის შემთხვევაში</span></span><a href="tel:080012033" class="num" style="text-decoration:none">0800 120 33</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════
-     6. COMMUNITY / FORUM — live stats
-════════════════════════════════════════════════════════════ -->
-<section class="h-section">
-  <div class="container">
-    <div class="comm-grid">
-      <div class="comm-card">
-        <span class="live-badge"><span class="live-dot"></span><span id="live-text">Live</span></span>
-        <h2>
-          <span data-lang-block="en">The community is talking right now</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">რაზე საუბრობს საზოგადოება?</span>
-        </h2>
-        <p data-lang-block="en">Real questions, real answers, from Georgians who already navigated what you're going through. Anonymous posting available.</p>
-        <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">რეალური კითხვები და პასუხები ქართველებისგან, რომლებმაც უკვე გაიარეს ის, რასაც თქვენ ახლა გადიხართ. შესაძლებელია ანონიმურად პოსტვა.</p>
-
-        <div class="live-stats">
-          <div class="live-stat"><div class="n" id="stat-threads">—</div><div class="l"><span data-lang-block="en">Threads</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თემა</span></div></div>
-          <div class="live-stat"><div class="n" id="stat-replies">—</div><div class="l"><span data-lang-block="en">Replies</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">პასუხი</span></div></div>
-          <div class="live-stat"><div class="n" id="stat-week">—</div><div class="l"><span data-lang-block="en">This week</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ამ კვირას</span></div></div>
+      <div class="latest-col">
+        <div class="latest-col-head">
+          <span class="t"><span class="en">Newest housing</span><span class="ka">საცხოვრებელი</span></span>
+          <a href="housing.html"><span class="en">All →</span><span class="ka">ყველა →</span></a>
         </div>
-
-        <div class="comm-actions">
-          <a href="forum.html?new=1" class="btn-on-dark-primary">
-            <span data-lang-block="en">Ask the community</span>
-            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ჰკითხეთ საზოგადოებას</span>
-          </a>
-          <a href="forum.html" class="btn-on-dark-ghost">
-            <span data-lang-block="en">Browse threads</span>
-            <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">თემების დათვალიერება</span>
-          </a>
-        </div>
+        <div id="latest-housing"><div class="latest-empty"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div></div>
       </div>
 
-      <div class="recent-threads">
-        <div class="recent-threads-header">
-          <span data-lang-block="en">Recent activity</span>
-          <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ბოლო აქტივობა</span>
+      <div class="latest-col">
+        <div class="latest-col-head">
+          <span class="t"><span class="en">Next events</span><span class="ka">ღონისძიებები</span></span>
+          <a href="events.html"><span class="en">All →</span><span class="ka">ყველა →</span></a>
         </div>
-        <div id="recent-threads-list">
-          <div class="recent-thread"><div class="rt-title" style="color:var(--muted)">Loading…</div></div>
+        <div id="latest-events"><div class="latest-empty"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div></div>
+        <div class="latest-col-head latest-sub-head">
+          <span class="t"><span class="en">Forum</span><span class="ka">ფორუმი</span></span>
+          <a href="forum.html"><span class="en">All →</span><span class="ka">ყველა →</span></a>
         </div>
+        <div id="latest-threads"><div class="latest-empty"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div></div>
       </div>
+
     </div>
   </div>
 </section>
@@ -889,6 +654,13 @@
 ════════════════════════════════════════════════════════════ -->
 <section class="home-faq" id="faq">
   <div class="container">
+    <div class="safety-strip">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>
+        <span data-lang-block="en"><strong>Stay safe:</strong> newcomers are scammers' #1 target. <a href="scams.html">Read the 8 common patterns →</a></span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none"><strong>დაიცავით თავი:</strong> ახალჩამოსულები თაღლითების მთავარი სამიზნეა. <a href="scams.html">გაეცანით 8 გავრცელებულ სქემას →</a></span>
+      </span>
+    </div>
     <span class="section-eyebrow-h"><span data-lang-block="en">Common questions</span><span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">საერთო კითხვები</span></span>
     <h2>
       <span data-lang-block="en">Living in Belgium — quick answers</span>
@@ -956,9 +728,9 @@
 
     </div>
     <div style="text-align:center;margin-top:24px">
-      <a href="about.html" class="btn btn-ghost btn-sm">
-        <span data-lang-block="en">More questions? Read about us →</span>
-        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">მეტი კითხვა გაქვთ? წაიკითხეთ ჩვენს შესახებ →</span>
+      <a href="guides.html" class="btn btn-ghost btn-sm">
+        <span data-lang-block="en">See all guides — 30+ answers →</span>
+        <span data-lang-block="ka" class="ka" style="font-family:var(--font-georgian);display:none">ყველა გზამკვლევი — 30+ პასუხი →</span>
       </a>
     </div>
   </div>
@@ -969,7 +741,7 @@
 ════════════════════════════════════════════════════════════ -->
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=2"></script>
+<script src="/shared.js?v=5"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -1025,92 +797,73 @@
   }
   updateJourneyProgress();
 
-  /* ── Service spotlight (top 3 by rating) ── */
-  async function loadSpotlight() {
+  /* ── Latest on geosin.be — live lists from the database ── */
+  async function loadLatest() {
     if (!window.sb) return;
-    const { data, error } = await window.sb
-      .from('services')
-      .select('*')
-      .eq('approved', true)
-      .order('rating', { ascending: false, nullsFirst: false })
-      .limit(3);
+    const sbc = window.sb;
+    const isKa = document.documentElement.lang === 'ka';
+    const today = new Date(); today.setHours(0, 0, 0, 0);
 
-    const grid = document.getElementById('spotlight-grid');
-    if (error || !data || !data.length) {
-      grid.innerHTML = '<div class="spot-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No services listed yet — <a href="services.html#register" style="color:var(--rausch)">be the first to add yours</a>.</div>';
-      return;
-    }
-    function renderRating(r) {
-      if (r == null) return '<span class="spot-tag" style="background:#fff0f3;color:var(--rausch)">New</span>';
-      const stars = Math.round(r);
-      let s = '';
-      for (let i = 0; i < 5; i++) s += `<span class="star" style="color:${i < stars ? '#ffc107' : '#e0e0e0'}">★</span>`;
-      return `<span class="spot-rating">${s}<span class="num">${Number(r).toFixed(1)}</span></span>`;
-    }
-
-    grid.innerHTML = data.map(s => {
-      // The DB column is `link`, and only allow real http(s) URLs (safeUrl in shared.js)
-      const site = safeUrl(s.link);
-      const href = site || (s.email ? 'mailto:' + s.email : 'services.html');
-      return `
-        <a href="${escapeHtml(href)}" class="spot-card" target="${site ? '_blank' : '_self'}" rel="noopener">
-          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:8px">
-            <h4>${escapeHtml(s.name)}</h4>
-            ${renderRating(s.rating)}
-          </div>
-          <div class="city">${escapeHtml(s.city || '')}${s.city && s.region ? ' · ' : ''}${escapeHtml(s.region || '')}</div>
-          <p>${escapeHtml((s.description || '').slice(0, 140))}${(s.description || '').length > 140 ? '…' : ''}</p>
-          <div class="spot-tags">
-            ${s.category ? `<span class="spot-tag cat">#${escapeHtml(s.category)}</span>` : ''}
-            ${s.languages ? `<span class="spot-tag">${escapeHtml(s.languages)}</span>` : ''}
-          </div>
-        </a>
-      `;
-    }).join('');
-  }
-  loadSpotlight().catch(() => {
-    document.getElementById('spotlight-grid').innerHTML =
-      '<div class="spot-card" style="grid-column:1/-1;text-align:center;color:var(--muted)">Couldn\'t load services right now — <a href="services.html" style="color:var(--rausch)">browse the directory</a>.</div>';
-  });
-
-  /* ── Forum live stats + recent threads ── */
-  async function loadForumStats() {
-    if (!window.sb) return;
-    const sb = window.sb;
-    const oneWeekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
-
-    const [threadsRes, repliesRes, weekRes, recentRes] = await Promise.all([
-      sb.from('forum_threads').select('id', { count: 'exact', head: true }).eq('approved', true),
-      sb.from('forum_replies').select('id', { count: 'exact', head: true }).eq('approved', true),
-      sb.from('forum_threads').select('id', { count: 'exact', head: true }).eq('approved', true).gte('created_at', oneWeekAgo),
-      sb.from('forum_threads').select('id, title, category, created_at, author_name').eq('approved', true).order('created_at', { ascending: false }).limit(5)
+    const [jobs, housing, events, threads] = await Promise.all([
+      sbc.from('jobs').select('id,title,company,city,created_at').eq('approved', true).order('created_at', { ascending: false }).limit(3),
+      sbc.from('housing').select('id,listing_type,city,monthly_rent,created_at').eq('approved', true).order('created_at', { ascending: false }).limit(3),
+      sbc.from('events').select('id,title,title_ka,city,event_date').eq('approved', true).gte('event_date', today.toISOString().split('T')[0]).order('event_date', { ascending: true }).limit(2),
+      sbc.from('forum_threads').select('id,title,category,created_at').eq('approved', true).order('created_at', { ascending: false }).limit(3)
     ]);
 
-    document.getElementById('stat-threads').textContent = threadsRes.count ?? 0;
-    document.getElementById('stat-replies').textContent = repliesRes.count ?? 0;
-    document.getElementById('stat-week').textContent   = weekRes.count ?? 0;
-
-    const list = document.getElementById('recent-threads-list');
-    if (recentRes.error || !recentRes.data || recentRes.data.length === 0) {
-      list.innerHTML = '<div class="recent-thread"><div class="rt-title" style="color:var(--muted)">No threads yet — <a href="forum.html?new=1" style="color:var(--rausch)">be the first</a>.</div></div>';
-      return;
+    const jl = document.getElementById('latest-jobs');
+    if (jl) {
+      jl.innerHTML = (jobs.data && jobs.data.length)
+        ? jobs.data.map(j => `
+            <a class="latest-row" href="jobs.html">
+              <div class="lt">${escapeHtml(j.title)}</div>
+              <div class="lm">${escapeHtml(j.company)} · ${escapeHtml(j.city)} · ${timeAgo(j.created_at)}</div>
+            </a>`).join('')
+        : `<div class="latest-empty">${isKa ? 'ვაკანსიები ჯერ არ არის —' : 'No jobs yet —'} <a href="jobs.html#post">${isKa ? 'გამოაქვეყნეთ პირველი' : 'post the first one'}</a></div>`;
     }
-    list.innerHTML = recentRes.data.map(t => `
-      <a href="forum.html?thread=${t.id}" class="recent-thread">
-        <div class="rt-title">${escapeHtml(t.title)}</div>
-        <div class="rt-meta"><span class="cat">#${escapeHtml(t.category)}</span> · ${escapeHtml(t.author_name || '')} · ${timeAgo(t.created_at)}</div>
-      </a>
-    `).join('');
+
+    const hl = document.getElementById('latest-housing');
+    if (hl) {
+      hl.innerHTML = (housing.data && housing.data.length)
+        ? housing.data.map(h => `
+            <a class="latest-row" href="housing.html">
+              <div class="lt">${escapeHtml(h.listing_type)} · ${escapeHtml(h.city)}</div>
+              <div class="lm"><span class="hl">€${h.monthly_rent}/mo</span> · ${timeAgo(h.created_at)}</div>
+            </a>`).join('')
+        : `<div class="latest-empty">${isKa ? 'განცხადებები ჯერ არ არის —' : 'No listings yet —'} <a href="housing.html#post">${isKa ? 'გამოაქვეყნეთ პირველი' : 'post the first one'}</a></div>`;
+    }
+
+    const el = document.getElementById('latest-events');
+    if (el) {
+      el.innerHTML = (events.data && events.data.length)
+        ? events.data.map(e => `
+            <a class="latest-row" href="events.html">
+              <div class="lt">${escapeHtml(isKa && e.title_ka ? e.title_ka : e.title)}</div>
+              <div class="lm">${new Date(e.event_date).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })} · ${escapeHtml(e.city)}</div>
+            </a>`).join('')
+        : `<div class="latest-empty">${isKa ? 'ღონისძიებები ჯერ არ არის —' : 'No upcoming events —'} <a href="events.html">${isKa ? 'დაამატეთ პირველი' : 'post one'}</a></div>`;
+    }
+
+    const tl = document.getElementById('latest-threads');
+    if (tl) {
+      tl.innerHTML = (threads.data && threads.data.length)
+        ? threads.data.map(t => `
+            <a class="latest-row" href="forum.html?thread=${t.id}">
+              <div class="lt">${escapeHtml(t.title)}</div>
+              <div class="lm"><span class="hl">#${escapeHtml(t.category)}</span> · ${timeAgo(t.created_at)}</div>
+            </a>`).join('')
+        : `<div class="latest-empty">${isKa ? 'თემები ჯერ არ არის —' : 'No threads yet —'} <a href="forum.html?new=1">${isKa ? 'დაიწყეთ პირველი' : 'start the first one'}</a></div>`;
+    }
   }
-  loadForumStats().catch(() => {
-    // Never leave the homepage looking half-loaded if the database is unreachable.
-    ['stat-threads', 'stat-replies', 'stat-week'].forEach(id => {
+  loadLatest().catch(() => {
+    ['latest-jobs', 'latest-housing', 'latest-events', 'latest-threads'].forEach(id => {
       const el = document.getElementById(id);
-      if (el && el.textContent === '—') el.textContent = '0';
+      if (el) el.innerHTML = '<div class="latest-empty">—</div>';
     });
-    document.getElementById('recent-threads-list').innerHTML =
-      '<div class="recent-thread"><div class="rt-title" style="color:var(--muted)">No threads yet — <a href="forum.html?new=1" style="color:var(--rausch)">be the first</a>.</div></div>';
   });
+
+  /* Re-render the live lists in the right language when the toggle is used */
+  window.onLangChange = function () { loadLatest().catch(function () {}); };
 </script>
 
 </body>

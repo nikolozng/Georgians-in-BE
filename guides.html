@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guides — Life in Belgium — geosin.be</title>
+  <meta name="description" content="Searchable answers for Georgians in Belgium — arrival, housing, work, healthcare, schools, taxes, driving and language, in Georgian and English." />
+  <meta property="og:title" content="Guides — Life in Belgium — geosin.be" />
+  <meta property="og:image" content="https://geosin.be/assets/hero-bruges.jpg" />
+  <meta property="og:description" content="Searchable answers for Georgians in Belgium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/guides.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css?v=4" />
+  <style>
+    .guides-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 900px) { .guides-layout { grid-template-columns: 1fr; } .g-sidebar { position: static !important; } }
+
+    .g-sidebar {
+      position: sticky; top: calc(var(--nav-h) + 24px);
+      background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 18px;
+    }
+    .g-sidebar h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; }
+    .cat-list { display: flex; flex-direction: column; gap: 2px; }
+    .cat-btn {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 10px; border-radius: var(--r-sm); font-size: 14px; color: var(--body-text);
+      cursor: pointer; transition: background 0.12s, color 0.12s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .cat-btn:hover { background: var(--surface); color: var(--ink); }
+    .cat-btn.active { background: var(--ink); color: #fff; }
+    .cat-btn .num { font-size: 11px; background: var(--hairline); color: var(--muted); padding: 2px 7px; border-radius: var(--r-full); flex-shrink: 0; }
+    .cat-btn.active .num { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+
+    .g-search {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-sm);
+      padding: 12px 16px; margin-bottom: 18px; transition: border-color 0.15s;
+    }
+    .g-search:focus-within { border-color: var(--rausch); }
+    .g-search svg { color: var(--muted); flex-shrink: 0; }
+    .g-search input { border: none; outline: none; font: inherit; font-size: 15px; width: 100%; background: none; color: var(--ink); }
+
+    .g-count { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+    .g-cat-heading {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--rausch); margin: 26px 0 10px;
+    }
+    .g-cat-heading:first-child { margin-top: 0; }
+
+    .empty-state {
+      background: var(--canvas); border: 1px dashed var(--hairline); border-radius: var(--r-md);
+      padding: 48px 24px; text-align: center; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" id="site-nav" data-nav></nav>
+
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px"><span class="en">Knowledge base</span><span class="ka">ცოდნის ბაზა</span></p>
+    <h1>
+      <span data-lang-block="en">Guides — Life in Belgium</span>
+      <span data-lang-block="ka" class="ka" style="display:none">გზამკვლევები — ცხოვრება ბელგიაში</span>
+    </h1>
+    <p class="sub">კითხვა-პასუხი · Questions &amp; answers</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="guides-layout">
+
+      <aside class="g-sidebar">
+        <h5><span class="en">Topic</span><span class="ka">თემა</span></h5>
+        <div class="cat-list" id="cat-list"></div>
+      </aside>
+
+      <div>
+        <div class="g-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="g-search" autocomplete="off"
+                 placeholder="Search all questions…"
+                 data-placeholder-en="Search all questions…"
+                 data-placeholder-ka="მოძებნეთ კითხვა..."
+                 oninput="renderList()" />
+        </div>
+        <div class="g-count" id="g-count"></div>
+        <div id="g-list">
+          <div class="empty-state"><span class="en">Loading guides…</span><span class="ka">იტვირთება…</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" data-footer="full"></footer>
+
+<script src="/shared.js?v=5"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth.js?v=9"></script>
+<script>
+  const sb = window.sb || null;
+
+  const CATEGORIES = [
+    { key: 'all',        en: 'All questions',        ka: 'ყველა კითხვა' },
+    { key: 'arrival',    en: 'Arrival & paperwork',  ka: 'ჩამოსვლა და დოკუმენტები' },
+    { key: 'housing',    en: 'Housing',              ka: 'საცხოვრებელი' },
+    { key: 'work',       en: 'Work',                 ka: 'სამუშაო' },
+    { key: 'healthcare', en: 'Healthcare',           ka: 'ჯანდაცვა' },
+    { key: 'schools',    en: 'Schools & kids',       ka: 'სკოლები და ბავშვები' },
+    { key: 'money',      en: 'Money & taxes',        ka: 'ფინანსები და გადასახადები' },
+    { key: 'driving',    en: 'Driving & transport',  ka: 'ტრანსპორტი' },
+    { key: 'language',   en: 'Language learning',    ka: 'ენის სწავლა' }
+  ];
+  const CAT_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c]));
+
+  let allItems = [];
+  let currentCat = 'all';
+
+  function isKa() { return document.documentElement.lang === 'ka'; }
+
+  function renderSidebar() {
+    const counts = { all: allItems.length };
+    allItems.forEach(it => { counts[it.category] = (counts[it.category] || 0) + 1; });
+    document.getElementById('cat-list').innerHTML = CATEGORIES.map(c => `
+      <button class="cat-btn${c.key === currentCat ? ' active' : ''}" data-cat="${c.key}" onclick="setCat('${c.key}')">
+        <span>${isKa() ? c.ka : c.en}</span><span class="num">${counts[c.key] || 0}</span>
+      </button>
+    `).join('');
+  }
+
+  function setCat(key) {
+    currentCat = key;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === key));
+    renderList();
+  }
+
+  function itemHtml(it) {
+    const q = isKa() ? (it.question_ka || it.question_en) : it.question_en;
+    const a = isKa() ? (it.answer_ka || it.answer_en) : it.answer_en;
+    return `
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">${escapeHtml(q)}</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">${a}</div>
+      </div>
+    `;
+  }
+
+  function renderList() {
+    const list = document.getElementById('g-list');
+    const countEl = document.getElementById('g-count');
+    const q = (document.getElementById('g-search').value || '').toLowerCase().trim();
+
+    let filtered = currentCat === 'all' ? allItems : allItems.filter(it => it.category === currentCat);
+    if (q) {
+      filtered = filtered.filter(it =>
+        [it.question_en, it.question_ka, it.answer_en, it.answer_ka].join(' ').toLowerCase().includes(q));
+    }
+
+    countEl.textContent = isKa()
+      ? `${filtered.length} კითხვა`
+      : `${filtered.length} question${filtered.length === 1 ? '' : 's'}`;
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state">${isKa() ? 'კითხვა ვერ მოიძებნა. სცადეთ სხვა სიტყვა.' : 'No questions match. Try a different search.'}</div>`;
+      return;
+    }
+
+    if (currentCat === 'all' && !q) {
+      // Grouped by category with headings
+      let html = '';
+      CATEGORIES.slice(1).forEach(c => {
+        const items = filtered.filter(it => it.category === c.key);
+        if (!items.length) return;
+        html += `<div class="g-cat-heading">${isKa() ? c.ka : c.en}</div>`;
+        html += `<div class="faq-list">${items.map(itemHtml).join('')}</div>`;
+      });
+      list.innerHTML = html;
+    } else {
+      list.innerHTML = `<div class="faq-list">${filtered.map(itemHtml).join('')}</div>`;
+    }
+  }
+
+  async function loadGuides() {
+    if (!sb) {
+      document.getElementById('g-list').innerHTML = '<div class="empty-state">Could not load. Please refresh.</div>';
+      return;
+    }
+    const { data, error } = await sb.from('guide_items')
+      .select('*').order('category').order('position', { ascending: true });
+    if (error) {
+      document.getElementById('g-list').innerHTML =
+        '<div class="empty-state">Could not load guides. Has SETUP_GUIDES.sql been run in Supabase?</div>';
+      console.error(error);
+      return;
+    }
+    allItems = data || [];
+    renderSidebar();
+    renderList();
+  }
+
+  window.onLangChange = function () { if (allItems.length) { renderSidebar(); renderList(); } };
+
+  (function () {
+    setLang(localStorage.getItem('geosin-lang') || 'en');
+    // Deep link: guides.html?cat=housing
+    const cat = new URLSearchParams(location.search).get('cat');
+    if (cat && CAT_LABEL[cat]) currentCat = cat;
+    loadGuides();
+  })();
+</script>
+</body>
+</html>
