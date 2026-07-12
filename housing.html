@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/housing.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <style>
     .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; overflow: hidden; pointer-events: none; }
     .listing-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
@@ -34,8 +34,22 @@
 
     .housing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     @media (max-width: 600px) { .housing-grid { grid-template-columns: 1fr; } }
-    .h-card { border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 22px 24px; background: var(--canvas); transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; }
+    .h-card { border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); transition: border-color 0.15s, box-shadow 0.15s; overflow: hidden; align-self: start; }
     .h-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
+    .h-card-toggle { width: 100%; display: block; border: 0; padding: 22px 24px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .h-card-toggle:focus-visible { outline: 2px solid var(--rausch); outline-offset: -4px; }
+    .h-card-panel { display: none; padding: 0 24px 20px; }
+    .h-card.is-open .h-card-panel { display: block; }
+    .h-desc-wrap { border-top: 1px solid var(--hairline); padding-top: 14px; }
+    .h-desc-label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .h-desc-full { font-size: 14px; color: var(--body-text); line-height: 1.55; margin: 0; white-space: pre-line; }
+    .h-contacts { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; }
+    .h-contact-name { font-size: 13px; font-weight: 600; color: var(--body-text); }
+    .contact-reveal { border: 0; padding: 0; background: none; color: var(--rausch); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .contact-reveal:hover { text-decoration: underline; }
+    .contact-reveal:focus-visible { outline: 2px solid var(--rausch); outline-offset: 3px; }
+    .contact-value { display: none; flex-basis: 100%; font-size: 13px; color: var(--body-text); line-height: 1.4; overflow-wrap: anywhere; }
+    .contact-value.is-visible { display: block; }
     .h-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
     .h-type-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(0,53,102,0.08); color: var(--be-blue, #0066cc); padding: 3px 9px; border-radius: var(--r-full); }
     .h-rent { font-size: 20px; font-weight: 800; color: var(--ink); white-space: nowrap; }
@@ -67,7 +81,7 @@
 
 <div class="page-header">
   <div class="container">
-    <p class="section-eyebrow" style="margin-bottom:8px">Housing board</p>
+    <p class="section-eyebrow" style="margin-bottom:8px"><span class="en">Housing board</span><span class="ka">საცხოვრებელი</span></p>
     <h1>
       <span data-lang-block="en">Rooms, apartments, roommates</span>
       <span data-lang-block="ka" class="ka" style="display:none">საცხოვრებელი, ბინები, ოთახის თანამცხოვრები</span>
@@ -80,7 +94,8 @@
   <div class="container">
 
     <div class="scam-warning">
-      <strong>Quick reminder:</strong> never pay a deposit before viewing in person. Demand the blocked-account procedure. <a href="scams.html">See common housing scams →</a>
+      <span class="en"><strong>Quick reminder:</strong> never pay a deposit before viewing in person. Demand the blocked-account procedure. <a href="scams.html">See common housing scams →</a></span>
+      <span class="ka" style="font-family:var(--font-georgian)"><strong>შეხსენება:</strong> არასოდეს გადაიხადოთ დეპოზიტი ბინის პირადად ნახვამდე. მოითხოვეთ დაბლოკილი ანგარიშის პროცედურა (huurwaarborg / garantie locative). <a href="scams.html">იხილეთ გავრცელებული თაღლითობები →</a></span>
     </div>
 
     <div class="listing-layout">
@@ -129,7 +144,7 @@
         <div class="results-header">
           <p class="results-count" id="results-count">Loading…</p>
         </div>
-        <div class="housing-grid" id="h-list"><p class="loading-state">Loading housing listings…</p></div>
+        <div class="housing-grid" id="h-list"><p class="loading-state"><span class="en">Loading housing listings…</span><span class="ka">იტვირთება…</span></p></div>
       </div>
 
     </div>
@@ -230,7 +245,7 @@
 
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -243,22 +258,57 @@
   let allListings = [];
 
   function renderCard(h) {
-    const cleanLink = 'mailto:' + h.contact_email;
+    const isKa = document.documentElement.lang === 'ka';
+    const emailLabel = isKa ? 'მეილი' : 'Email';
+    const phoneLabel = isKa ? 'ტელეფონი' : 'Phone';
+    const callLabel  = isKa ? 'დარეკვა' : 'Call';
+    const descLabel  = isKa ? 'აღწერა' : 'Description';
+    const contacts = [
+      `<button class="contact-reveal" type="button" data-contact-label="${emailLabel}" data-contact-value="${escapeHtml(h.contact_email)}">${emailLabel}</button>`,
+      h.contact_phone ? `<button class="contact-reveal" type="button" data-contact-label="${phoneLabel}" data-contact-value="${escapeHtml(h.contact_phone)}">${callLabel}</button>` : ''
+    ].filter(Boolean).join('');
     return `
-      <article class="h-card" data-href="${escapeHtml(cleanLink)}">
-        <div class="h-card-head">
-          <span class="h-type-badge">${escapeHtml(h.listing_type)}</span>
-          <span class="h-rent">€${h.monthly_rent}<span class="per">/mo</span></span>
-        </div>
-        <h3>${escapeHtml(h.city)}${h.neighborhood ? ' · ' + escapeHtml(h.neighborhood) : ''}</h3>
-        <p class="desc">${escapeHtml(h.description.length > 200 ? h.description.slice(0, 200) + '…' : h.description)}</p>
-        <div class="h-tags">
-          ${h.bedrooms ? `<span class="h-tag">${h.bedrooms} bed${h.bedrooms === 1 ? '' : 's'}</span>` : ''}
-          ${h.furnished ? '<span class="h-tag furnished">Furnished</span>' : ''}
-          ${h.available_from ? `<span class="h-tag">From ${escapeHtml(h.available_from)}</span>` : ''}
+      <article class="h-card">
+        <button class="h-card-toggle" type="button" aria-expanded="false">
+          <div class="h-card-head">
+            <span class="h-type-badge">${escapeHtml(h.listing_type)}</span>
+            <span class="h-rent">€${h.monthly_rent}<span class="per">/mo</span></span>
+          </div>
+          <h3>${escapeHtml(h.city)}${h.neighborhood ? ' · ' + escapeHtml(h.neighborhood) : ''}</h3>
+          <p class="desc">${escapeHtml(h.description.length > 200 ? h.description.slice(0, 200) + '…' : h.description)}</p>
+          <div class="h-tags">
+            ${h.bedrooms ? `<span class="h-tag">${h.bedrooms} bed${h.bedrooms === 1 ? '' : 's'}</span>` : ''}
+            ${h.furnished ? `<span class="h-tag furnished">${isKa ? 'ავეჯით' : 'Furnished'}</span>` : ''}
+            ${h.available_from ? `<span class="h-tag">${isKa ? 'თარიღიდან: ' : 'From '}${escapeHtml(h.available_from)}</span>` : ''}
+          </div>
+        </button>
+        <div class="h-card-panel">
+          <div class="h-desc-wrap">
+            <span class="h-desc-label">${descLabel}</span>
+            <p class="h-desc-full">${escapeHtml(h.description)}</p>
+            <div class="h-contacts">
+              ${h.contact_name ? `<span class="h-contact-name">${escapeHtml(h.contact_name)}</span>` : ''}
+              ${contacts}
+            </div>
+          </div>
         </div>
       </article>
     `;
+  }
+
+  function toggleHCard(toggle) {
+    const card = toggle.closest('.h-card');
+    const list = document.getElementById('h-list');
+    if (!card || !list) return;
+    const willOpen = !card.classList.contains('is-open');
+    list.querySelectorAll('.h-card.is-open').forEach(openCard => {
+      if (openCard === card) return;
+      openCard.classList.remove('is-open');
+      const t = openCard.querySelector('.h-card-toggle');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+    card.classList.toggle('is-open', willOpen);
+    toggle.setAttribute('aria-expanded', String(willOpen));
   }
 
   function getChecked(id) { return [...document.querySelectorAll('#' + id + ' input:checked')].map(i => i.value); }
@@ -284,9 +334,13 @@
       return true;
     });
 
-    if (filtered.length === 0) { list.innerHTML = '<p class="no-results">No listings match your filters.</p>'; }
-    else { list.innerHTML = filtered.map(renderCard).join(''); }
-    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> of ${allListings.length} listing${allListings.length === 1 ? '' : 's'}`;
+    const isKa = document.documentElement.lang === 'ka';
+    if (filtered.length === 0) {
+      list.innerHTML = `<p class="no-results">${isKa ? 'განცხადება ვერ მოიძებნა ამ ფილტრებით.' : 'No listings match your filters.'}</p>`;
+    } else { list.innerHTML = filtered.map(renderCard).join(''); }
+    countEl.innerHTML = isKa
+      ? `ნაჩვენებია <strong>${filtered.length}</strong> / ${allListings.length}`
+      : `Showing <strong>${filtered.length}</strong> of ${allListings.length} listing${allListings.length === 1 ? '' : 's'}`;
   }
 
   async function loadListings() {
@@ -298,19 +352,45 @@
     }
     allListings = data || [];
     if (allListings.length === 0) {
-      document.getElementById('h-list').innerHTML = '<p class="no-results">No listings yet. Be the first — post below.</p>';
-      document.getElementById('results-count').innerHTML = '<strong>0</strong> listings yet';
+      const isKa = document.documentElement.lang === 'ka';
+      document.getElementById('h-list').innerHTML = `<p class="no-results">${isKa ? 'განცხადებები ჯერ არ არის. იყავით პირველი — გამოაქვეყნეთ ქვემოთ.' : 'No listings yet. Be the first — post below.'}</p>`;
+      document.getElementById('results-count').innerHTML = isKa ? 'ჯერ <strong>0</strong> განცხადება' : '<strong>0</strong> listings yet';
       return;
     }
     applyFilter();
   }
 
+  // Card expansion + click-to-reveal contacts (same pattern as jobs.html —
+  // contacts stay hidden from scrapers until a human clicks)
   document.addEventListener('click', function(e) {
-    if (e.target.closest('a, button, input, label')) return;
-    const card = e.target.closest('.h-card');
-    if (!card || !card.dataset.href) return;
-    window.location.href = card.dataset.href;
+    const contact = e.target.closest('.contact-reveal');
+    if (contact) {
+      const wrap = contact.closest('.h-contacts');
+      if (!wrap) return;
+      let value = wrap.querySelector('.contact-value');
+      if (!value) {
+        value = document.createElement('span');
+        value.className = 'contact-value';
+        wrap.appendChild(value);
+      }
+      value.textContent = `${contact.dataset.contactLabel}: ${contact.dataset.contactValue}`;
+      value.classList.add('is-visible');
+      return;
+    }
+
+    const toggle = e.target.closest('.h-card-toggle');
+    if (toggle) { toggleHCard(toggle); return; }
+
+    if (e.target.closest('.h-card')) return;
+    document.querySelectorAll('.h-card.is-open').forEach(openCard => {
+      openCard.classList.remove('is-open');
+      const t = openCard.querySelector('.h-card-toggle');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
   });
+
+  // Re-render cards in the right language when the toggle is used
+  window.onLangChange = function () { if (allListings.length) applyFilter(); };
 
   async function submitHousing(e) {
     e.preventDefault();

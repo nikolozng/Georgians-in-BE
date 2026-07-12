@@ -6,7 +6,7 @@
   <title>Sign up — geosin.be</title>
   <meta name="description" content="Create a free geosin.be account to post jobs, housing, and join the forum." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <!-- Cloudflare Turnstile — human verification widget -->
   <!-- ⚠️  Replace the data-sitekey below with your REAL site key from:      -->
   <!--     Cloudflare Dashboard → Turnstile → Add Site → copy "Site Key"     -->
@@ -147,14 +147,22 @@
 <!-- FOOTER -->
 <footer class="site-footer" data-footer="simple"></footer>
 
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
   setLang(localStorage.getItem('geosin-lang') || 'en');
 
-  // If already logged in, bounce to account
-  AUTH.getUser().then(u => { if (u) location.href = 'account.html'; });
+  // Only allow same-site relative redirects — blocks signup.html?next=https://evil.com phishing.
+  // (Same guard as login.html.)
+  function safeNext() {
+    const next = new URLSearchParams(location.search).get('next') || '';
+    if (next && !next.startsWith('//') && !/^[a-z][a-z0-9+.-]*:/i.test(next)) return next;
+    return 'account.html';
+  }
+
+  // If already logged in, bounce onward
+  AUTH.getUser().then(u => { if (u) location.href = safeNext(); });
 
   // ── Throwaway email domain blocklist ─────────────────────────────────────────
   const BLOCKED_DOMAINS = [
@@ -247,9 +255,8 @@
       return;
     }
 
-    // Logged in immediately — bounce to wherever they wanted to go
-    const next = new URLSearchParams(location.search).get('next') || 'account.html';
-    location.href = next;
+    // Logged in immediately — bounce to wherever they wanted to go (same-site only)
+    location.href = safeNext();
   });
 </script>
 

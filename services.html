@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/services.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <!-- Cloudflare Turnstile ⚠️  Replace data-sitekey in the widget below with your real key -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
@@ -585,7 +585,7 @@
 <footer class="site-footer" data-footer="full"></footer>
 
 <!-- Supabase JavaScript client library + shared auth -->
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 
@@ -766,6 +766,10 @@
     { value: 'Finance & tax',     en: 'Finance & tax',       ka: 'ფინანსები' },
     { value: 'Other',             en: 'Other',               ka: 'სხვა' }
   ];
+  const SORT_OPTIONS = [
+    { value: 'newest', en: 'Newest first', ka: 'ჯერ ახლები' },
+    { value: 'alpha',  en: 'A – Z',        ka: 'ანბანით' }
+  ];
   function updateSelectOptions(lang) {
     const isKa = lang === 'ka';
     function rebuildSelect(sel, opts) {
@@ -777,6 +781,7 @@
     }
     rebuildSelect(document.getElementById('f-city'), CITY_OPTIONS);
     rebuildSelect(document.getElementById('f-cat'),  CAT_OPTIONS);
+    rebuildSelect(document.getElementById('sort-select'), SORT_OPTIONS);
   }
 
   /* ========== Mobile nav ========== */
@@ -851,7 +856,8 @@
     const contacts = [];
     if (s.email) contacts.push(`<button class="contact-reveal" type="button" data-contact-label="${isKa ? 'მეილი' : 'Email'}" data-contact-value="${escapeHtml(s.email)}">${isKa ? 'მეილი' : 'Email'}</button>`);
     if (s.phone) contacts.push(`<button class="contact-reveal" type="button" data-contact-label="${isKa ? 'ტელეფონი' : 'Phone'}" data-contact-value="${escapeHtml(s.phone)}">${isKa ? 'დარეკვა' : 'Call'}</button>`);
-    if (s.link) contacts.push(`<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener">${isKa ? 'ვებგვერდი' : 'Website'}</a>`);
+    const siteUrl = safeUrl(s.link);
+    if (siteUrl) contacts.push(`<a href="${escapeHtml(siteUrl)}" target="_blank" rel="noopener">${isKa ? 'ვებგვერდი' : 'Website'}</a>`);
 
     return `
       <div class="service-card" data-cat="${catSlug}" data-city="${citySlug}">

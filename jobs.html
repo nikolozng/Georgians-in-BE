@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/jobs.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <style>
     .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; overflow: hidden; pointer-events: none; }
     .listing-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
@@ -85,7 +85,7 @@
 
 <div class="page-header">
   <div class="container">
-    <p class="section-eyebrow" style="margin-bottom:8px">Job board</p>
+    <p class="section-eyebrow" style="margin-bottom:8px"><span class="en">Job board</span><span class="ka">ვაკანსიები</span></p>
     <h1>
       <span data-lang-block="en">English-friendly jobs in Belgium</span>
       <span data-lang-block="ka" class="ka" style="display:none">სამუშაოები ბელგიაში</span>
@@ -110,7 +110,7 @@
 
         <label class="urgent-toggle" style="margin-bottom:14px">
           <input type="checkbox" id="urgent-only" onchange="applyFilter()" />
-          <span>Show urgent only</span>
+          <span><span class="en">Show urgent only</span><span class="ka">მხოლოდ სასწრაფო</span></span>
         </label>
 
         <hr class="sidebar-divider" />
@@ -138,9 +138,9 @@
 
       <div>
         <div class="results-header">
-          <p class="results-count" id="results-count">Loading jobs…</p>
+          <p class="results-count" id="results-count"><span class="en">Loading jobs…</span><span class="ka">იტვირთება…</span></p>
         </div>
-        <div class="job-list" id="job-list"><p class="loading-state">Loading jobs…</p></div>
+        <div class="job-list" id="job-list"><p class="loading-state"><span class="en">Loading jobs…</span><span class="ka">იტვირთება…</span></p></div>
       </div>
 
     </div>
@@ -152,8 +152,8 @@
     <div class="post-intro">
       <p class="section-eyebrow">For employers</p>
       <h2>
-        <span data-lang-block="en">Post a job — free, reviewed in 48h</span>
-        <span data-lang-block="ka" class="ka" style="display:none">ვაკანსიის გამოქვეყნება</span>
+        <span data-lang-block="en">Post a job — free, goes live instantly</span>
+        <span data-lang-block="ka" class="ka" style="display:none">ვაკანსიის გამოქვეყნება — უფასოდ, მაშინვე ქვეყნდება</span>
       </h2>
       <p data-lang-block="en">Hiring? Post your opening here. You'll need a free account so you can edit or remove your post later.</p>
       <p data-lang-block="ka" class="ka" style="font-family:var(--font-georgian)">გჭირდებათ თანამშრომელი? გამოაქვეყნეთ აქ. დაგჭირდებათ უფასო ანგარიში, რათა მოგვიანებით შეცვალოთ ან წაშალოთ პოსტი.</p>
@@ -247,7 +247,7 @@
 
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -269,10 +269,11 @@
     const callLabel = document.documentElement.lang === 'ka' ? 'დარეკვა' : 'Call';
     const applyLabel = document.documentElement.lang === 'ka' ? 'განაცხადის ბმული' : 'Apply';
     const phone = j.contact_phone || j.phone || '';
+    const applyUrl = safeUrl(j.application_link);
     const contactActions = [
       `<button class="contact-reveal" type="button" data-contact-label="${emailLabel}" data-contact-value="${escapeAttr(j.contact_email)}">${emailLabel}</button>`,
       phone ? `<button class="contact-reveal" type="button" data-contact-label="${phoneLabel}" data-contact-value="${escapeAttr(phone)}">${callLabel}</button>` : '',
-      j.application_link ? `<a href="${escapeAttr(j.application_link)}" target="_blank" rel="noopener">${applyLabel}</a>` : ''
+      applyUrl ? `<a href="${escapeAttr(applyUrl)}" target="_blank" rel="noopener">${applyLabel}</a>` : ''
     ].filter(Boolean).join('');
 
     return `
@@ -342,9 +343,13 @@
       return true;
     });
 
-    if (filtered.length === 0) { list.innerHTML = '<p class="no-results">No jobs match your filters.</p>'; }
-    else { list.innerHTML = filtered.map(renderJob).join(''); }
-    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> of ${allJobs.length} job${allJobs.length === 1 ? '' : 's'}`;
+    const isKa = document.documentElement.lang === 'ka';
+    if (filtered.length === 0) {
+      list.innerHTML = `<p class="no-results">${isKa ? 'ვაკანსია ვერ მოიძებნა ამ ფილტრებით.' : 'No jobs match your filters.'}</p>`;
+    } else { list.innerHTML = filtered.map(renderJob).join(''); }
+    countEl.innerHTML = isKa
+      ? `ნაჩვენებია <strong>${filtered.length}</strong> / ${allJobs.length}`
+      : `Showing <strong>${filtered.length}</strong> of ${allJobs.length} job${allJobs.length === 1 ? '' : 's'}`;
   }
 
   async function loadJobs() {
@@ -356,8 +361,9 @@
     }
     allJobs = data || [];
     if (allJobs.length === 0) {
-      document.getElementById('job-list').innerHTML = '<p class="no-results">No jobs posted yet. Be the first — post one below.</p>';
-      document.getElementById('results-count').innerHTML = '<strong>0</strong> jobs yet';
+      const isKa = document.documentElement.lang === 'ka';
+      document.getElementById('job-list').innerHTML = `<p class="no-results">${isKa ? 'ვაკანსიები ჯერ არ არის. იყავით პირველი — გამოაქვეყნეთ ქვემოთ.' : 'No jobs posted yet. Be the first — post one below.'}</p>`;
+      document.getElementById('results-count').innerHTML = isKa ? 'ჯერ <strong>0</strong> ვაკანსია' : '<strong>0</strong> jobs yet';
       return;
     }
     applyFilter();
@@ -396,7 +402,6 @@
 
   async function submitJob(e) {
     e.preventDefault();
-    console.log('submitJob: started');
     const form = document.getElementById('job-form');
     const errBox = document.getElementById('form-error');
     const submitBtn = document.getElementById('j-submit');
@@ -421,7 +426,6 @@
       langGroup.style.outline = '';
     }
 
-    console.log('submitJob: validation =', valid, '| sb =', !!sb, '| AUTH =', !!window.AUTH);
     if (!valid) { errBox.textContent = 'Please fill in all required fields (including at least one language).'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
     // Extra format validation
@@ -446,9 +450,7 @@
     }
     if (!sb) { errBox.textContent = 'Database connection unavailable.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
-    console.log('submitJob: calling AUTH.getUser()…');
     const user = await AUTH.getUser();
-    console.log('submitJob: user =', user);
     if (!user) {
       location.href = 'login.html?next=' + encodeURIComponent('jobs.html#post');
       return;

@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/events.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <style>
     [data-lang-block] { display: revert; }
 
@@ -681,7 +681,7 @@
 <!-- FOOTER -->
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -714,6 +714,7 @@
 
   /* ── Render one card ── */
   function renderCard(e) {
+    const isKa = document.documentElement.lang === 'ka';
     const today = isToday(e.event_date);
     const badges = [];
     if (today)        badges.push('<span class="ev-badge today">Today</span>');
@@ -749,11 +750,11 @@
             </div>
             <div class="ev-meta-row">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>${escapeHtml(e.city)}${e.venue ? ' — ' + escapeHtml(e.venue) : ''}${e.map_url ? `<a class="map-link" href="${escapeHtml(e.map_url)}" target="_blank" rel="noopener">View on Map</a>` : ''}</span>
+              <span>${escapeHtml(e.city)}${e.venue ? ' — ' + escapeHtml(e.venue) : ''}${safeUrl(e.map_url) ? `<a class="map-link" href="${escapeHtml(safeUrl(e.map_url))}" target="_blank" rel="noopener">${isKa ? 'რუკაზე ნახვა' : 'View on Map'}</a>` : ''}</span>
             </div>
             ${e.price ? `<div class="ev-meta-row"><span class="ev-price ${priceClass}">${escapeHtml(e.price)}</span></div>` : ''}
           </div>
-          <button class="ev-action" onclick="openDetail(${e.id})">View details</button>
+          <button class="ev-action" onclick="openDetail(${e.id})">${isKa ? 'დეტალურად' : 'View details'}</button>
         </div>
       </article>
     `;
@@ -782,7 +783,10 @@
     });
 
     const grid = document.getElementById('ev-grid');
-    document.getElementById('ev-count').textContent = `${filtered.length} event${filtered.length === 1 ? '' : 's'}`;
+    const isKa = document.documentElement.lang === 'ka';
+    document.getElementById('ev-count').textContent = isKa
+      ? `${filtered.length} ღონისძიება`
+      : `${filtered.length} event${filtered.length === 1 ? '' : 's'}`;
 
     if (filtered.length === 0) {
       grid.innerHTML = `
@@ -840,6 +844,9 @@
   }
   loadEvents();
 
+  // Re-render cards in the right language when the toggle is used
+  window.onLangChange = function () { if (allEvents.length) applyFilter(); };
+
   /* ── Detail modal ── */
   function openDetail(id) {
     const e = allEvents.find(x => x.id === id);
@@ -866,7 +873,7 @@
         </div>
         <div class="desc">${escapeHtml(e.description)}</div>
         <div class="ev-modal-actions">
-          ${e.map_url ? `<a href="${escapeHtml(e.map_url)}" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">View on Map</a>` : ''}
+          ${safeUrl(e.map_url) ? `<a href="${escapeHtml(safeUrl(e.map_url))}" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">View on Map</a>` : ''}
           ${e.contact_email ? `<a href="mailto:${escapeHtml(e.contact_email)}" class="btn btn-primary btn-sm">Contact organiser</a>` : ''}
         </div>
       </div>

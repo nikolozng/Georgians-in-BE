@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://geosin.be/forum.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
   <style>
     body { background: var(--surface); }
 
@@ -248,7 +248,7 @@
 
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=1"></script>
+<script src="/shared.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -295,7 +295,8 @@
     const countEl = document.getElementById('list-count');
     const titleEl = document.getElementById('list-title');
 
-    titleEl.textContent = currentCat === 'all' ? 'All threads' : currentCat;
+    const isKa = document.documentElement.lang === 'ka';
+    titleEl.textContent = currentCat === 'all' ? (isKa ? 'ყველა თემა' : 'All threads') : currentCat;
 
     const filtered = currentCat === 'all'
       ? allThreads
@@ -309,11 +310,15 @@
     });
 
     if (filtered.length === 0) {
-      list.innerHTML = '<div class="empty">No threads in this category yet. <a href="?new=1">Be the first to post →</a></div>';
+      list.innerHTML = isKa
+        ? '<div class="empty">ამ კატეგორიაში თემები ჯერ არ არის. <a href="?new=1">იყავით პირველი →</a></div>'
+        : '<div class="empty">No threads in this category yet. <a href="?new=1">Be the first to post →</a></div>';
     } else {
       list.innerHTML = filtered.map(renderThreadRow).join('');
     }
-    countEl.textContent = `${filtered.length} thread${filtered.length === 1 ? '' : 's'}`;
+    countEl.textContent = isKa
+      ? `${filtered.length} თემა`
+      : `${filtered.length} thread${filtered.length === 1 ? '' : 's'}`;
   }
 
   function setCat(cat) {
@@ -647,6 +652,9 @@
       incEl.style.fontWeight = '700';
     }
   }
+
+  // Re-render the thread list in the right language when the toggle is used
+  window.onLangChange = function () { if (allThreads.length) applyCategoryFilter(); };
 
   /* ================ INIT ================ */
   (function() {

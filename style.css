@@ -1159,6 +1159,50 @@ html[lang="ka"] .en { display: none !important; }
   border-color: var(--hairline) !important;
 }
 
+/* Fix: forum's log-in gate (hardcoded cream, like #auth-gate) */
+[data-theme="dark"] #new-auth-gate {
+  background: #1e160a !important;
+  border-color: #4a3010 !important;
+}
+
+/* Fix: green success banners with hardcoded light backgrounds */
+[data-theme="dark"] .form-success,
+[data-theme="dark"] .report-success,
+[data-theme="dark"] .auth-msg.success {
+  background: #0d2013 !important;
+  border-color: #1f5c38 !important;
+  color: #4ade80 !important;
+}
+[data-theme="dark"] .report-error {
+  background: #2a1010 !important;
+  border-color: #5a2020 !important;
+}
+
+/* Fix: homepage Trust & Safety section (hardcoded amber gradient + white stats card) */
+[data-theme="dark"] .trust-section {
+  background: #1a1206 !important;
+  border-top-color: #3a2a10 !important;
+  border-bottom-color: #3a2a10 !important;
+}
+[data-theme="dark"] .trust-stats {
+  background: var(--surface) !important;
+  border-color: #3a2a10 !important;
+}
+[data-theme="dark"] .trust-stat-row { border-bottom-color: #2a2010 !important; }
+
+/* Fix: housing scam-warning strip + homepage bento hover gradients (hardcoded white) */
+[data-theme="dark"] .scam-warning { background: rgba(255,56,92,0.08) !important; }
+[data-theme="dark"] .bento-card.tone-rausch:hover,
+[data-theme="dark"] .bento-card.tone-blue:hover,
+[data-theme="dark"] .bento-card.tone-amber:hover,
+[data-theme="dark"] .bento-card.tone-green:hover { background: var(--surface); }
+
+/* Fix: homepage hero-search + h-card panel bits stay readable */
+[data-theme="dark"] .hero-search { background: var(--surface); }
+[data-theme="dark"] .hero-search input { color: var(--ink); }
+[data-theme="dark"] .h-card { background: var(--surface); }
+[data-theme="dark"] .h-tag.furnished { background: #0d2013 !important; color: #4ade80 !important; }
+
 /* Theme toggle button */
 .theme-toggle {
   width: 36px;

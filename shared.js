@@ -24,6 +24,12 @@
   };
   window.escapeHTML = window.escapeHtml; // old alias used by account.html
 
+  // Only allow real web links in user-submitted URLs (blocks javascript: etc.)
+  window.safeUrl = function (u) {
+    u = String(u == null ? '' : u).trim();
+    return /^https?:\/\//i.test(u) ? u : '';
+  };
+
   window.timeAgo = function (iso) {
     const s = (Date.now() - new Date(iso).getTime()) / 1000;
     if (s < 60) return 'just now';
