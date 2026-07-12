@@ -1197,6 +1197,43 @@ html[lang="ka"] .en { display: none !important; }
 [data-theme="dark"] .bento-card.tone-amber:hover,
 [data-theme="dark"] .bento-card.tone-green:hover { background: var(--surface); }
 
+/* Fix: dark-designed cards — pin to a real dark bg so white text stays readable
+   (--ink flips to near-white in dark mode) */
+[data-theme="dark"] .comm-card,
+[data-theme="dark"] .trust-box,
+[data-theme="dark"] .cta-strip,
+[data-theme="dark"] .toast {
+  background: #1a1a1a !important;
+  border: 1px solid var(--hairline);
+}
+[data-theme="dark"] .step-3 .num,
+[data-theme="dark"] .pattern-num,
+[data-theme="dark"] .ev-action,
+[data-theme="dark"] .cat-pill.active { color: #141414 !important; }
+[data-theme="dark"] .ev-action:hover { color: #fff !important; }
+
+/* Fix: dark-blue tags become unreadable on dark cards */
+[data-theme="dark"] .thread-cat-tag,
+[data-theme="dark"] .job-tag.lang,
+[data-theme="dark"] .h-type-badge,
+[data-theme="dark"] .cat-tag,
+[data-theme="dark"] .rt-meta .cat,
+[data-theme="dark"] .ps-card.solution h3,
+[data-theme="dark"] .tone-blue .bento-icon {
+  background: rgba(102,178,255,0.14) !important;
+  color: #85b7eb !important;
+}
+[data-theme="dark"] .ps-card.solution { background: #10161e !important; }
+
+/* Fix: small stragglers */
+[data-theme="dark"] .ev-badge.upcoming { color: #141414 !important; }
+[data-theme="dark"] .post-card .badge.live { background: #0d2013 !important; color: #4ade80 !important; }
+[data-theme="dark"] .ev-thumb-fallback { background: var(--surface) !important; }
+[data-theme="dark"] .ev-modal-close { background: var(--surface) !important; border-color: var(--border-strong) !important; color: var(--ink); }
+[data-theme="dark"] .locked-banner { background: rgba(255,255,255,0.05) !important; }
+[data-theme="dark"] .service-card:hover { border-color: var(--border-strong) !important; }
+[data-theme="dark"] .btn-outline-v2:hover { color: #141414; }
+
 /* Fix: homepage hero-search + h-card panel bits stay readable */
 [data-theme="dark"] .hero-search { background: var(--surface); }
 [data-theme="dark"] .hero-search input { color: var(--ink); }
