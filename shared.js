@@ -211,10 +211,18 @@
     const nav = document.querySelector('nav[data-nav]');
     if (nav) {
       nav.innerHTML = NAV_HTML;
-      // Highlight the current page's link
-      const page = location.pathname.split('/').pop() || 'index.html';
+      // Highlight the current page's link.
+      // Live site serves clean URLs (/services instead of /services.html),
+      // so add the .html back before matching against data-page.
+      let page = location.pathname.split('/').pop() || 'index.html';
+      if (!page.includes('.')) page += '.html';
       const link = nav.querySelector('a[data-page="' + page + '"]');
-      if (link) link.classList.add('active');
+      if (link) {
+        link.classList.add('active');
+        // If the page lives inside a dropdown, highlight the dropdown button too
+        const dropdown = link.closest('.nav-dropdown');
+        if (dropdown) dropdown.querySelector('.nav-dropdown-toggle').classList.add('active');
+      }
     }
     const footer = document.querySelector('footer[data-footer]');
     if (footer) {
@@ -262,7 +270,9 @@
     } catch (e) {}
 
     // Being ON a section page marks it as seen (clears its badge).
+    // Same clean-URL handling as the nav highlight above.
     var here = location.pathname.split('/').pop() || 'index.html';
+    if (here.indexOf('.') === -1) here += '.html';
     TABLES.forEach(function (t) { if (t.page === here) lsSet('geosin-seen-' + t.table, now); });
 
     var prev = lsGet('geosin-seen-prev');
