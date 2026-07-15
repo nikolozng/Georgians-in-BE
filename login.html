@@ -6,6 +6,15 @@
   <title>Log in — geosin.be</title>
   <meta name="description" content="Log in to geosin.be." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    // Apply saved theme + language before first paint to prevent flash
+    (function () {
+      var t = localStorage.getItem('geosin-theme')
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      if (localStorage.getItem('geosin-lang') === 'ka') document.documentElement.lang = 'ka';
+    })();
+  </script>
   <link rel="stylesheet" href="style.css?v=4" />
   <style>
     .auth-page { min-height: calc(100vh - var(--nav-h)); padding: 48px 24px; background: var(--surface); }

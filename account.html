@@ -7,6 +7,15 @@
   <meta name="description" content="Manage your geosin.be account, posts and notifications." />
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    // Apply saved theme + language before first paint to prevent flash
+    (function () {
+      var t = localStorage.getItem('geosin-theme')
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      if (localStorage.getItem('geosin-lang') === 'ka') document.documentElement.lang = 'ka';
+    })();
+  </script>
   <link rel="stylesheet" href="style.css?v=4" />
   <style>
     .dash { padding: 32px 0 64px; background: var(--surface); min-height: calc(100vh - var(--nav-h)); }
