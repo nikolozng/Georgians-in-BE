@@ -64,8 +64,14 @@ body {
 .section-sm { padding: 40px 0; }
 
 /* ── LANGUAGE TOGGLE ── */
-[data-lang-block] { display: none; }
-[data-lang-block].active { display: block; }
+/* Visibility is driven by html[lang], which the inline <head> script sets
+   BEFORE first paint — so the right language shows immediately, no flash.
+   !important beats the inline style="display:none" on ka blocks and the
+   inline styles setLang() toggles later (those become harmless no-ops). */
+[data-lang-block] { display: revert; }
+[data-lang-block="ka"] { display: none !important; }
+html[lang="ka"] [data-lang-block="en"] { display: none !important; }
+html[lang="ka"] [data-lang-block="ka"] { display: revert !important; }
 .lang-pair { display: flex; flex-direction: column; gap: 2px; }
 .lang-pair .ka { font-size: 0.88em; color: var(--muted); }
 
