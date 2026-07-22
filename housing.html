@@ -124,22 +124,22 @@
 
         <h5><span class="en">Type</span><span class="ka">ტიპი</span></h5>
         <div class="check-list" id="type-filter">
-          <label><input type="checkbox" value="Room" onchange="applyFilter()" checked /> Room</label>
-          <label><input type="checkbox" value="Apartment" onchange="applyFilter()" checked /> Apartment</label>
-          <label><input type="checkbox" value="Studio" onchange="applyFilter()" checked /> Studio</label>
-          <label><input type="checkbox" value="House" onchange="applyFilter()" checked /> House</label>
-          <label><input type="checkbox" value="Roommate wanted" onchange="applyFilter()" checked /> Roommate wanted</label>
+          <label><input type="checkbox" value="Room" onchange="applyFilter()" checked /> <span class="en">Room</span><span class="ka">ოთახი</span></label>
+          <label><input type="checkbox" value="Apartment" onchange="applyFilter()" checked /> <span class="en">Apartment</span><span class="ka">ბინა</span></label>
+          <label><input type="checkbox" value="Studio" onchange="applyFilter()" checked /> <span class="en">Studio</span><span class="ka">სტუდიო</span></label>
+          <label><input type="checkbox" value="House" onchange="applyFilter()" checked /> <span class="en">House</span><span class="ka">სახლი</span></label>
+          <label><input type="checkbox" value="Roommate wanted" onchange="applyFilter()" checked /> <span class="en">Roommate wanted</span><span class="ka">იძებნება თანამოსახლე</span></label>
         </div>
 
         <hr class="sidebar-divider" />
         <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="check-list" id="city-filter">
-          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> Brussels</label>
-          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> Antwerp</label>
-          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> Ghent</label>
-          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> Liège</label>
-          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> Bruges</label>
-          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> Other</label>
+          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> <span class="en">Brussels</span><span class="ka">ბრიუსელი</span></label>
+          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> <span class="en">Antwerp</span><span class="ka">ანტვერპენი</span></label>
+          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> <span class="en">Ghent</span><span class="ka">გენტი</span></label>
+          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> <span class="en">Liège</span><span class="ka">ლიეჟი</span></label>
+          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> <span class="en">Bruges</span><span class="ka">ბრიუგე</span></label>
+          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> <span class="en">Other</span><span class="ka">სხვა</span></label>
         </div>
 
         <hr class="sidebar-divider" />
@@ -154,7 +154,7 @@
 
       <div>
         <div class="results-header">
-          <p class="results-count" id="results-count">Loading…</p>
+          <p class="results-count" id="results-count"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></p>
         </div>
         <div class="housing-grid" id="h-list"><p class="loading-state"><span class="en">Loading housing listings…</span><span class="ka">იტვირთება…</span></p></div>
       </div>
@@ -166,7 +166,7 @@
 <section class="section post-section" id="post">
   <div class="container" style="max-width:720px">
     <div class="post-intro">
-      <p class="section-eyebrow">For landlords / current tenants</p>
+      <p class="section-eyebrow"><span class="en">For landlords / current tenants</span><span class="ka">გამქირავებლებისა და მოქირავნეებისთვის</span></p>
       <h2>
         <span data-lang-block="en">Post a housing listing</span>
         <span data-lang-block="ka" class="ka" style="display:none">განცხადების განთავსება ბინის შესახებ</span>
@@ -184,7 +184,7 @@
     </div>
 
     <div class="form-success" id="form-success">
-      <strong>Thanks!</strong> Your listing is now live. Edit or delete it from <a href="account.html"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a>.
+      <span class="en"><strong>Thanks!</strong> Your listing is now live. Edit or delete it from <a href="account.html">My account</a>.</span><span class="ka"><strong>მადლობა!</strong> თქვენი განცხადება გამოქვეყნდა. მისი რედაქტირება ან წაშლა შეგიძლიათ <a href="account.html">ჩემი პროფილიდან</a>.</span>
     </div>
     <div class="form-error-banner" id="form-error"></div>
 
@@ -200,36 +200,36 @@
           <div class="form-group">
             <label class="form-label" for="h-type"><span class="en">Listing type</span><span class="ka">განცხადების ტიპი</span><span class="req">*</span></label>
             <select class="form-select" id="h-type" required>
-              <option value="">Select…</option>
-              <option>Room</option><option>Apartment</option><option>Studio</option><option>House</option><option>Roommate wanted</option>
+              <option value="" data-en="Select…" data-ka="აირჩიეთ…">Select…</option>
+              <option value="Room" data-en="Room" data-ka="ოთახი">Room</option><option value="Apartment" data-en="Apartment" data-ka="ბინა">Apartment</option><option value="Studio" data-en="Studio" data-ka="სტუდიო">Studio</option><option value="House" data-en="House" data-ka="სახლი">House</option><option value="Roommate wanted" data-en="Roommate wanted" data-ka="იძებნება თანამოსახლე">Roommate wanted</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label" for="h-rent"><span class="en">Monthly rent (€)</span><span class="ka">თვიური ქირა (€)</span><span class="req">*</span></label>
-            <input class="form-input" id="h-rent" type="number" min="0" step="10" required placeholder="e.g. 750" />
+            <input class="form-input" id="h-rent" type="number" min="0" step="10" required placeholder="e.g. 750" data-placeholder-en="e.g. 750" data-placeholder-ka="მაგ. 750" />
           </div>
           <div class="form-group">
             <label class="form-label" for="h-city"><span class="en">City</span><span class="ka">ქალაქი</span><span class="req">*</span></label>
             <select class="form-select" id="h-city" required>
-              <option value="">Select…</option>
-              <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Other</option>
+              <option value="" data-en="Select…" data-ka="აირჩიეთ…">Select…</option>
+              <option value="Brussels" data-en="Brussels" data-ka="ბრიუსელი">Brussels</option><option value="Antwerp" data-en="Antwerp" data-ka="ანტვერპენი">Antwerp</option><option value="Ghent" data-en="Ghent" data-ka="გენტი">Ghent</option><option value="Liège" data-en="Liège" data-ka="ლიეჟი">Liège</option><option value="Bruges" data-en="Bruges" data-ka="ბრიუგე">Bruges</option><option value="Other" data-en="Other" data-ka="სხვა">Other</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-neighborhood">Neighborhood (optional)</label>
-            <input class="form-input" id="h-neighborhood" type="text" placeholder="e.g. Schaerbeek, Etterbeek" maxlength="80" />
+            <label class="form-label" for="h-neighborhood"><span class="en">Neighborhood (optional)</span><span class="ka">უბანი (არასავალდებულო)</span></label>
+            <input class="form-input" id="h-neighborhood" type="text" placeholder="e.g. Schaerbeek, Etterbeek" data-placeholder-en="e.g. Schaerbeek, Etterbeek" data-placeholder-ka="მაგ. Schaerbeek, Etterbeek" maxlength="80" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-bedrooms">Bedrooms (optional)</label>
-            <input class="form-input" id="h-bedrooms" type="number" min="0" max="20" placeholder="e.g. 2" />
+            <label class="form-label" for="h-bedrooms"><span class="en">Bedrooms (optional)</span><span class="ka">საძინებლების რაოდენობა (არასავალდებულო)</span></label>
+            <input class="form-input" id="h-bedrooms" type="number" min="0" max="20" placeholder="e.g. 2" data-placeholder-en="e.g. 2" data-placeholder-ka="მაგ. 2" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="h-from">Available from (optional)</label>
+            <label class="form-label" for="h-from"><span class="en">Available from (optional)</span><span class="ka">ხელმისაწვდომია (არასავალდებულო)</span></label>
             <input class="form-input" id="h-from" type="date" />
           </div>
           <div class="form-group span-2">
-            <label class="form-label" for="h-desc">Description<span class="req">*</span></label>
-            <textarea class="form-textarea" id="h-desc" required minlength="10" maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…"></textarea>
+            <label class="form-label" for="h-desc"><span class="en">Description</span><span class="ka">აღწერა</span><span class="req">*</span></label>
+            <textarea class="form-textarea" id="h-desc" required minlength="10" maxlength="1500" placeholder="Size, condition, what's included, deposit amount, who you're looking for…" data-placeholder-en="Size, condition, what's included, deposit amount, who you're looking for…" data-placeholder-ka="ფართი, მდგომარეობა, რა შედის ფასში, დეპოზიტის ოდენობა, ვის ეძებთ…"></textarea>
           </div>
           <div class="form-group span-2 checkbox-row">
             <input type="checkbox" id="h-furnished" style="accent-color:var(--rausch);width:16px;height:16px" />
@@ -246,10 +246,10 @@
           <div class="form-group span-2">
             <label class="form-label" for="h-phone"><span class="en">Phone (optional)</span><span class="ka">ტელეფონი</span></label>
             <input class="form-input" id="h-phone" type="tel" maxlength="40" placeholder="+32 470 000 000" pattern="(\+32\s?\d{3}\s?\d{3}\s?\d{3}|04\d{2}\s?\d{3}\s?\d{3})" title="Format: +32 xxx xxx xxx or 04xx xxx xxx" />
-            <span style="font-size:12px;color:var(--muted)">Format: +32 xxx xxx xxx or 04xx xxx xxx</span>
+            <span style="font-size:12px;color:var(--muted)"><span class="en">Format: +32 xxx xxx xxx or 04xx xxx xxx</span><span class="ka">ფორმატი: +32 xxx xxx xxx ან 04xx xxx xxx</span></span>
           </div>
         </div>
-        <div style="margin-top:24px"><button type="submit" class="btn btn-primary" id="h-submit">Submit listing</button></div>
+        <div style="margin-top:24px"><button type="submit" class="btn btn-primary" id="h-submit"><span class="en">Submit listing</span><span class="ka">განცხადების გამოქვეყნება</span></button></div>
       </form>
     </div>
   </div>
@@ -263,7 +263,7 @@
 <script>
 
   if (typeof window.sb === 'undefined' || !window.sb) {
-    document.getElementById('h-list').innerHTML = '<p class="no-results">Could not load. Please refresh.</p>';
+    document.getElementById('h-list').innerHTML = '<p class="no-results">' + (document.documentElement.lang==='ka' ? 'ჩატვირთვა ვერ მოხერხდა. გთხოვთ, განაახლოთ გვერდი.' : 'Could not load. Please refresh.') + '</p>';
   }
   const sb = window.sb || null;
 
@@ -283,13 +283,13 @@
       <article class="h-card">
         <button class="h-card-toggle" type="button" aria-expanded="false">
           <div class="h-card-head">
-            <span class="h-type-badge">${escapeHtml(h.listing_type)}</span>
-            <span class="h-rent">€${h.monthly_rent}<span class="per">/mo</span></span>
+            <span class="h-type-badge">${escapeHtml(trKa(h.listing_type))}</span>
+            <span class="h-rent">€${h.monthly_rent}<span class="per">${isKa ? '/თვე' : '/mo'}</span></span>
           </div>
-          <h3>${escapeHtml(h.city)}${h.neighborhood ? ' · ' + escapeHtml(h.neighborhood) : ''}</h3>
+          <h3>${escapeHtml(trKa(h.city))}${h.neighborhood ? ' · ' + escapeHtml(h.neighborhood) : ''}</h3>
           <p class="desc">${escapeHtml(h.description.length > 200 ? h.description.slice(0, 200) + '…' : h.description)}</p>
           <div class="h-tags">
-            ${h.bedrooms ? `<span class="h-tag">${h.bedrooms} bed${h.bedrooms === 1 ? '' : 's'}</span>` : ''}
+            ${h.bedrooms ? `<span class="h-tag">${h.bedrooms} ${isKa ? 'საძ.' : 'bed' + (h.bedrooms === 1 ? '' : 's')}</span>` : ''}
             ${h.furnished ? `<span class="h-tag furnished">${isKa ? 'ავეჯით' : 'Furnished'}</span>` : ''}
             ${h.available_from ? `<span class="h-tag">${isKa ? 'თარიღიდან: ' : 'From '}${escapeHtml(h.available_from)}</span>` : ''}
           </div>
@@ -359,7 +359,7 @@
     if (!sb) return;
     const { data, error } = await sb.from('housing').select('*').eq('approved', true).order('created_at', { ascending: false });
     if (error) {
-      document.getElementById('h-list').innerHTML = '<p class="no-results">Could not load listings.</p>';
+      document.getElementById('h-list').innerHTML = '<p class="no-results">' + (document.documentElement.lang==='ka' ? 'განცხადებების ჩატვირთვა ვერ მოხერხდა.' : 'Could not load listings.') + '</p>';
       console.error(error); return;
     }
     allListings = data || [];
@@ -418,7 +418,7 @@
     form.querySelectorAll('[required]').forEach(el => {
       if (!el.value) { el.style.borderColor = 'var(--error)'; valid = false; } else { el.style.borderColor = ''; }
     });
-    if (!valid) { errBox.textContent = 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    if (!valid) { errBox.textContent = document.documentElement.lang==='ka' ? 'გთხოვთ, შეავსოთ ყველა სავალდებულო ველი.' : 'Please fill in all required fields.'; errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
     // Extra format validation
     const emailEl = document.getElementById('h-email');
@@ -456,7 +456,7 @@
       errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
     }
 
-    submitBtn.disabled = true; submitBtn.textContent = 'Submitting…';
+    submitBtn.disabled = true; submitBtn.textContent = document.documentElement.lang==='ka' ? 'იგზავნება…' : 'Submitting…';
     const bedroomsVal = document.getElementById('h-bedrooms').value;
     const fromVal = document.getElementById('h-from').value;
     const row = {
@@ -474,7 +474,7 @@
       user_id: user.id
     };
     const { error } = await sb.from('housing').insert(row);
-    submitBtn.disabled = false; submitBtn.textContent = 'Submit listing';
+    submitBtn.disabled = false; submitBtn.textContent = document.documentElement.lang === 'ka' ? 'განცხადების გამოქვეყნება' : 'Submit listing';
     if (error) {
       console.error(error);
       errBox.textContent = 'Submission failed. Try again.'; errBox.style.display = 'block'; return;

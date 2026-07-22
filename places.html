@@ -128,12 +128,12 @@
         <hr class="sidebar-divider" />
         <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="check-list" id="city-filter">
-          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> Brussels</label>
-          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> Antwerp</label>
-          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> Ghent</label>
-          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> Liège</label>
-          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> Bruges</label>
-          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> Other</label>
+          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> <span class="en">Brussels</span><span class="ka">ბრიუსელი</span></label>
+          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> <span class="en">Antwerp</span><span class="ka">ანტვერპენი</span></label>
+          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> <span class="en">Ghent</span><span class="ka">გენტი</span></label>
+          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> <span class="en">Liège</span><span class="ka">ლიეჟი</span></label>
+          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> <span class="en">Bruges</span><span class="ka">ბრიუგე</span></label>
+          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> <span class="en">Other</span><span class="ka">სხვა</span></label>
         </div>
       </aside>
 
@@ -205,7 +205,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label" for="p-name"><span class="en">Place name</span><span class="ka">დასახელება</span><span class="req">*</span></label>
-            <input class="form-input" id="p-name" type="text" required maxlength="100" placeholder="e.g. Tamada" />
+            <input class="form-input" id="p-name" type="text" required maxlength="100" placeholder="e.g. Tamada" data-placeholder-en="e.g. Tamada" data-placeholder-ka="მაგ. Tamada" />
           </div>
           <div class="form-group">
             <label class="form-label" for="p-name-ka"><span class="en">Name in Georgian (optional)</span><span class="ka">სახელი ქართულად</span></label>
@@ -214,29 +214,29 @@
           <div class="form-group">
             <label class="form-label" for="p-type"><span class="en">Type</span><span class="ka">ტიპი</span><span class="req">*</span></label>
             <select class="form-select" id="p-type" required>
-              <option value="">Select…</option>
-              <option value="restaurant">Restaurant / Café</option>
-              <option value="shop">Shop (Georgian products)</option>
-              <option value="bakery">Bakery</option>
-              <option value="church">Church</option>
-              <option value="community">Community / cultural</option>
-              <option value="other">Other</option>
+              <option value="" data-en="Select…" data-ka="აირჩიეთ…">Select…</option>
+              <option value="restaurant" data-en="Restaurant / Café" data-ka="რესტორანი / კაფე">Restaurant / Café</option>
+              <option value="shop" data-en="Shop (Georgian products)" data-ka="მაღაზია (ქართული პროდუქტი)">Shop (Georgian products)</option>
+              <option value="bakery" data-en="Bakery" data-ka="საცხობი">Bakery</option>
+              <option value="church" data-en="Church" data-ka="ეკლესია">Church</option>
+              <option value="community" data-en="Community / cultural" data-ka="საზოგადოებრივი / კულტურული">Community / cultural</option>
+              <option value="other" data-en="Other" data-ka="სხვა">Other</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label" for="p-city"><span class="en">City</span><span class="ka">ქალაქი</span><span class="req">*</span></label>
             <select class="form-select" id="p-city" required>
-              <option value="">Select…</option>
-              <option>Brussels</option><option>Antwerp</option><option>Ghent</option><option>Liège</option><option>Bruges</option><option>Other</option>
+              <option value="" data-en="Select…" data-ka="აირჩიეთ…">Select…</option>
+              <option value="Brussels" data-en="Brussels" data-ka="ბრიუსელი">Brussels</option><option value="Antwerp" data-en="Antwerp" data-ka="ანტვერპენი">Antwerp</option><option value="Ghent" data-en="Ghent" data-ka="გენტი">Ghent</option><option value="Liège" data-en="Liège" data-ka="ლიეჟი">Liège</option><option value="Bruges" data-en="Bruges" data-ka="ბრიუგე">Bruges</option><option value="Other" data-en="Other" data-ka="სხვა">Other</option>
             </select>
           </div>
           <div class="form-group span-2">
             <label class="form-label" for="p-address"><span class="en">Address</span><span class="ka">მისამართი</span></label>
-            <input class="form-input" id="p-address" type="text" maxlength="200" placeholder="Rue de … 12, 1000 Brussels" />
+            <input class="form-input" id="p-address" type="text" maxlength="200" placeholder="Rue de … 12, 1000 Brussels" data-placeholder-en="Rue de … 12, 1000 Brussels" data-placeholder-ka="მაგ. Rue de … 12, 1000 Brussels" />
           </div>
           <div class="form-group span-2">
             <label class="form-label" for="p-desc"><span class="en">Description</span><span class="ka">აღწერა</span><span class="req">*</span></label>
-            <textarea class="form-textarea" id="p-desc" required minlength="10" maxlength="600" placeholder="What do they have? Khinkali? Borjomi? Georgian service on Sundays? Opening hours if you know them."></textarea>
+            <textarea class="form-textarea" id="p-desc" required minlength="10" maxlength="600" placeholder="What do they have? Khinkali? Borjomi? Georgian service on Sundays? Opening hours if you know them." data-placeholder-en="What do they have? Khinkali? Borjomi? Georgian service on Sundays? Opening hours if you know them." data-placeholder-ka="რა აქვთ? ხინკალი? ბორჯომი? ქართული წირვა კვირაობით? სამუშაო საათები, თუ იცით."></textarea>
           </div>
           <div class="form-group">
             <label class="form-label" for="p-website"><span class="en">Website / Facebook (optional)</span><span class="ka">ვებგვერდი / Facebook</span></label>
@@ -303,7 +303,7 @@
         <span class="p-type-badge pt-${escapeHtml(p.type)}">${isKa() ? t.ka : t.en}</span>
         <h3>${escapeHtml(p.name)}</h3>
         ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
-        <div class="city-line">${escapeHtml(p.city)}${p.address ? ' · ' + escapeHtml(p.address) : ''}</div>
+        <div class="city-line">${escapeHtml(trKa(p.city))}${p.address ? ' · ' + escapeHtml(p.address) : ''}</div>
         <p class="desc">${escapeHtml(desc)}</p>
         ${links.length ? `<div class="p-links">${links.join('')}</div>` : ''}
       </article>
@@ -374,7 +374,7 @@
       renderMarkers();
     };
     js.onerror = () => {
-      document.getElementById('places-map').innerHTML = '<p class="no-results">Could not load the map. Use the grid view instead.</p>';
+      document.getElementById('places-map').innerHTML = '<p class="no-results">' + (isKa() ? 'რუკის ჩატვირთვა ვერ მოხერხდა. გამოიყენეთ ბადის ხედი.' : 'Could not load the map. Use the grid view instead.') + '</p>';
     };
     document.body.appendChild(js);
   }
@@ -388,7 +388,7 @@
     withCoords.forEach(p => {
       const site = safeUrl(p.website);
       const popup = `<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.address || p.city)}` +
-        (site ? `<br><a href="${escapeHtml(site)}" target="_blank" rel="noopener">Website</a>` : '');
+        (site ? `<br><a href="${escapeHtml(site)}" target="_blank" rel="noopener">${isKa() ? 'ვებგვერდი' : 'Website'}</a>` : '');
       L.circleMarker([p.lat, p.lng], {
         radius: 9, weight: 2, color: '#fff',
         fillColor: TYPE_COLOR[p.type] || TYPE_COLOR.other, fillOpacity: 0.95
@@ -403,7 +403,7 @@
     if (!sb) return;
     const { data, error } = await sb.from('places').select('*').eq('approved', true).order('created_at', { ascending: false });
     if (error) {
-      document.getElementById('p-list').innerHTML = '<p class="no-results">Could not load places. Has SETUP_PLACES.sql been run?</p>';
+      document.getElementById('p-list').innerHTML = '<p class="no-results">' + (isKa() ? 'ადგილების ჩატვირთვა ვერ მოხერხდა.' : 'Could not load places. Has SETUP_PLACES.sql been run?') + '</p>';
       console.error(error); return;
     }
     allPlaces = data || [];
@@ -434,7 +434,7 @@
       errBox.textContent = isKa() ? 'გთხოვთ შეავსოთ ყველა სავალდებულო ველი.' : 'Please fill in all required fields (description min 10 characters).';
       errBox.style.display = 'block'; errBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
     }
-    if (!sb) { errBox.textContent = 'Database unavailable.'; errBox.style.display = 'block'; return; }
+    if (!sb) { errBox.textContent = isKa() ? 'ბაზა მიუწვდომელია.' : 'Database unavailable.'; errBox.style.display = 'block'; return; }
 
     const user = await AUTH.getUser();
     if (!user) { location.href = 'login.html?next=' + encodeURIComponent('places.html#post'); return; }

@@ -123,12 +123,12 @@
       </div>
 
       <label>
-        Email<span class="req">*</span>
+        <span class="en">Email</span><span class="ka">ელ.ფოსტა</span><span class="req">*</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
 
       <label>
-        Password<span class="req">*</span>
+        <span class="en">Password</span><span class="ka">პაროლი</span><span class="req">*</span>
         <input type="password" name="password" required minlength="8" autocomplete="new-password" />
         <span class="field-hint"><span class="en">Minimum 8 characters.</span><span class="ka">მინიმუმ 8 სიმბოლო</span></span>
       </label>
@@ -136,7 +136,7 @@
       <label>
         <span class="en">Display name</span><span class="ka">სახელი (რომელიც გამოჩნდება)</span><span class="req">*</span>
         <input type="text" name="display_name" required maxlength="40" placeholder="e.g. Niko, or Niko G." autocomplete="nickname" />
-        <span class="field-hint">Shown on the forum when you post publicly. If you choose to post anonymously, a random Georgian alias is generated for you.</span>
+        <span class="field-hint"><span class="en">Shown on the forum when you post publicly. If you choose to post anonymously, a random Georgian alias is generated for you.</span><span class="ka">ჩანს ფორუმზე, როცა საჯაროდ წერთ. თუ ანონიმურად წერას აირჩევთ, შემთხვევითი ქართული ფსევდონიმი მოგენიჭებათ.</span></span>
       </label>
 
       <!-- Cloudflare Turnstile widget ⚠️  Replace data-sitekey with your real key -->
@@ -206,20 +206,20 @@
     // 2. Email domain blocklist
     const domain = email.split('@')[1]?.toLowerCase() || '';
     if (BLOCKED_DOMAINS.includes(domain)) {
-      msg.innerHTML = `<div class="auth-msg error">Please use a real email address — temporary/throwaway email services are not allowed.</div>`;
+      msg.innerHTML = `<div class="auth-msg error">${document.documentElement.lang==='ka' ? 'გთხოვთ, გამოიყენოთ ნამდვილი ელ.ფოსტა — დროებითი/ერთჯერადი ელ.ფოსტა დაუშვებელია.' : 'Please use a real email address — temporary/throwaway email services are not allowed.'}</div>`;
       return;
     }
 
     // 3. Grab Turnstile token (the widget populates a hidden input named "cf-turnstile-response")
     const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
     if (!turnstileToken) {
-      msg.innerHTML = `<div class="auth-msg error">Please complete the human verification above.</div>`;
+      msg.innerHTML = `<div class="auth-msg error">${document.documentElement.lang==='ka' ? 'გთხოვთ, გაიაროთ ზემოთ მოცემული ვერიფიკაცია.' : 'Please complete the human verification above.'}</div>`;
       return;
     }
 
     const submitBtn = form.querySelector('button[type=submit]');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Creating…';
+    submitBtn.textContent = document.documentElement.lang==='ka' ? 'იქმნება…' : 'Creating…';
 
     // 4. Call the signup-check Edge Function (handles Turnstile validation + IP check + user creation)
     const { data: result, error: fnErr } = await sb.functions.invoke('signup-check', {
@@ -228,7 +228,7 @@
 
     // Handle Edge Function invocation failure
     if (fnErr) {
-      let errMsg = 'An error occurred. Please try again.';
+      let errMsg = document.documentElement.lang==='ka' ? 'დაფიქსირდა შეცდომა. სცადეთ თავიდან.' : 'An error occurred. Please try again.';
       try { const b = await fnErr.context?.json?.(); if (b?.error) errMsg = b.error; } catch {}
       msg.innerHTML = `<div class="auth-msg error">${errMsg}</div>`;
       submitBtn.disabled = false; submitBtn.innerHTML = '<span class="en">Create account</span><span class="ka">რეგისტრაცია</span>';
@@ -259,8 +259,8 @@
 
     if (!session) {
       // Email confirmation required — show success, stay on page
-      msg.innerHTML = `<div class="auth-msg success">Check your email to confirm your account, then log in.</div>`;
-      submitBtn.textContent = 'Account created';
+      msg.innerHTML = `<div class="auth-msg success">${document.documentElement.lang==='ka' ? 'დაადასტურეთ ანგარიში ელ.ფოსტიდან, შემდეგ შედით.' : 'Check your email to confirm your account, then log in.'}</div>`;
+      submitBtn.textContent = document.documentElement.lang==='ka' ? 'ანგარიში შეიქმნა' : 'Account created';
       return;
     }
 

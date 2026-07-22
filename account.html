@@ -171,73 +171,73 @@
   <div class="container">
     <div class="dash-head">
       <div>
-        <h1>My account</h1>
+        <h1><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></h1>
         <div class="me" id="me"></div>
       </div>
-      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
+      <button class="btn btn-ghost btn-sm" id="logout-btn"><span class="en">Log out</span><span class="ka">გასვლა</span></button>
     </div>
 
     <div class="dash-tabs" role="tablist">
-      <button class="dash-tab active" data-tab="notifications">Notifications <span class="count" id="count-notif">0</span></button>
-      <button class="dash-tab" data-tab="threads">Forum threads <span class="count" id="count-threads">0</span></button>
-      <button class="dash-tab" data-tab="replies">Forum replies <span class="count" id="count-replies">0</span></button>
-      <button class="dash-tab" data-tab="jobs">Jobs <span class="count" id="count-jobs">0</span></button>
-      <button class="dash-tab" data-tab="housing">Housing <span class="count" id="count-housing">0</span></button>
-      <button class="dash-tab" data-tab="settings">Settings</button>
+      <button class="dash-tab active" data-tab="notifications"><span class="en">Notifications</span><span class="ka">შეტყობინებები</span> <span class="count" id="count-notif">0</span></button>
+      <button class="dash-tab" data-tab="threads"><span class="en">Forum threads</span><span class="ka">ფორუმის თემები</span> <span class="count" id="count-threads">0</span></button>
+      <button class="dash-tab" data-tab="replies"><span class="en">Forum replies</span><span class="ka">ფორუმის პასუხები</span> <span class="count" id="count-replies">0</span></button>
+      <button class="dash-tab" data-tab="jobs"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span> <span class="count" id="count-jobs">0</span></button>
+      <button class="dash-tab" data-tab="housing"><span class="en">Housing</span><span class="ka">საცხოვრებელი</span> <span class="count" id="count-housing">0</span></button>
+      <button class="dash-tab" data-tab="settings"><span class="en">Settings</span><span class="ka">პარამეტრები</span></button>
     </div>
 
     <section class="panel active" id="panel-notifications">
-      <div id="notifications-list" class="skeleton">Loading notifications…</div>
+      <div id="notifications-list" class="skeleton"><span class="en">Loading notifications…</span><span class="ka">იტვირთება…</span></div>
     </section>
 
     <section class="panel" id="panel-threads">
-      <div id="threads-list" class="skeleton">Loading…</div>
+      <div id="threads-list" class="skeleton"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div>
     </section>
 
     <section class="panel" id="panel-replies">
-      <div id="replies-list" class="skeleton">Loading…</div>
+      <div id="replies-list" class="skeleton"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div>
     </section>
 
     <section class="panel" id="panel-jobs">
-      <div id="jobs-list" class="skeleton">Loading…</div>
+      <div id="jobs-list" class="skeleton"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div>
     </section>
 
     <section class="panel" id="panel-housing">
-      <div id="housing-list" class="skeleton">Loading…</div>
+      <div id="housing-list" class="skeleton"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></div>
     </section>
 
     <section class="panel" id="panel-settings">
       <div class="settings-row">
         <h4><span class="en">Display name</span><span class="ka">სახელი (რომელიც გამოჩნდება)</span></h4>
-        <p>Shown on your forum posts when you post publicly (not anonymously).</p>
+        <p><span class="en">Shown on your forum posts when you post publicly (not anonymously).</span><span class="ka">ჩანს თქვენს ფორუმის პოსტებზე, როცა საჯაროდ წერთ (არა ანონიმურად).</span></p>
         <form id="display-form">
-          <input type="text" name="display_name" id="display-input" maxlength="40" placeholder="e.g. Niko" />
-          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          <input type="text" name="display_name" id="display-input" maxlength="40" placeholder="e.g. Niko" data-placeholder-en="e.g. Niko" data-placeholder-ka="მაგ. ნიკო" />
+          <button type="submit" class="btn btn-primary btn-sm"><span class="en">Save</span><span class="ka">შენახვა</span></button>
         </form>
         <div id="display-msg"></div>
       </div>
 
       <div class="settings-row">
-        <h4>Forum incognito name</h4>
-        <p>Auto-assigned the first time you post anonymously on the forum. You can regenerate it any time.</p>
+        <h4><span class="en">Forum incognito name</span><span class="ka">ფორუმის ინკოგნიტო სახელი</span></h4>
+        <p><span class="en">Auto-assigned the first time you post anonymously on the forum. You can regenerate it any time.</span><span class="ka">ავტომატურად ენიჭება ფორუმზე პირველი ანონიმური პოსტისას. ნებისმიერ დროს შეგიძლიათ განაახლოთ.</span></p>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span id="incognito-display" style="font-size:15px;font-weight:700;color:var(--ink);font-family:var(--font-georgian)">—</span>
-          <button id="regenerate-incognito" class="btn btn-ghost btn-sm" type="button">⟲ Regenerate</button>
+          <button id="regenerate-incognito" class="btn btn-ghost btn-sm" type="button">⟲ <span class="en">Regenerate</span><span class="ka">განახლება</span></button>
         </div>
         <div id="incognito-msg"></div>
       </div>
 
       <div class="settings-row">
-        <h4>Email</h4>
-        <p>The address you signed up with.</p>
+        <h4><span class="en">Email</span><span class="ka">ელ.ფოსტა</span></h4>
+        <p><span class="en">The address you signed up with.</span><span class="ka">მისამართი, რომლითაც დარეგისტრირდით.</span></p>
         <div id="email-display" style="font-size:14px"></div>
       </div>
 
       <div class="settings-row">
-        <h4>Change password</h4>
-        <p>You'll get a reset link by email.</p>
+        <h4><span class="en">Change password</span><span class="ka">პაროლის შეცვლა</span></h4>
+        <p><span class="en">You&#39;ll get a reset link by email.</span><span class="ka">აღდგენის ბმულს მიიღებთ ელ.ფოსტაზე.</span></p>
         <form id="pw-form">
-          <button type="submit" class="btn btn-ghost btn-sm">Send reset email</button>
+          <button type="submit" class="btn btn-ghost btn-sm"><span class="en">Send reset email</span><span class="ka">აღდგენის წერილის გაგზავნა</span></button>
         </form>
         <div id="pw-msg"></div>
       </div>
@@ -276,9 +276,9 @@
   // Helpers
 
   async function deleteRow(table, id, refreshFn) {
-    if (!confirm('Delete this? This cannot be undone.')) return;
+    if (!confirm(document.documentElement.lang==='ka' ? 'წავშალო? ამის დაბრუნება ვეღარ მოხერხდება.' : 'Delete this? This cannot be undone.')) return;
     const { error } = await sb.from(table).delete().eq('id', id);
-    if (error) { alert('Delete failed: ' + error.message); return; }
+    if (error) { alert((document.documentElement.lang==='ka' ? 'წაშლა ვერ მოხერხდა: ' : 'Delete failed: ') + error.message); return; }
     refreshFn();
   }
 
@@ -319,7 +319,7 @@
       const { error } = await sb.from('profiles').update({ display_name: v }).eq('id', user.id);
       const msg = document.getElementById('display-msg');
       if (error) msg.innerHTML = `<div class="auth-msg error">${error.message}</div>`;
-      else      msg.innerHTML = `<div class="auth-msg success">Saved.</div>`;
+      else      msg.innerHTML = `<div class="auth-msg success">${document.documentElement.lang==='ka' ? 'შენახულია.' : 'Saved.'}</div>`;
     });
 
     // Regenerate incognito name (force a new one)
@@ -363,11 +363,11 @@
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(50);
-      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load notifications.</div>`; return; }
+      if (error) { list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'შეტყობინებების ჩატვირთვა ვერ მოხერხდა.' : "Couldn't load notifications."}</div>`; return; }
       document.getElementById('count-notif').textContent = (data || []).filter(n => !n.read).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">No notifications yet. When someone replies to your forum threads, you'll see them here.</div>`;
+        list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჯერ შეტყობინებები არ არის. როცა ვინმე თქვენს თემას უპასუხებს, აქ იხილავთ.' : "No notifications yet. When someone replies to your forum threads, you'll see them here."}</div>`;
         return;
       }
 
@@ -398,7 +398,7 @@
         const btn = document.createElement('button');
         btn.className = 'btn btn-ghost btn-sm';
         btn.style.marginBottom = '12px';
-        btn.textContent = `Mark all as read (${unread.length})`;
+        btn.textContent = (document.documentElement.lang==='ka' ? `ყველას წაკითხულად მონიშვნა (${unread.length})` : `Mark all as read (${unread.length})`);
         btn.addEventListener('click', async () => {
           await sb.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
           loadNotifications();
@@ -415,11 +415,11 @@
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      if (error) { list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჩატვირთვა ვერ მოხერხდა.' : "Couldn't load."}</div>`; return; }
       document.getElementById('count-threads').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't posted any threads yet.<br><a href="forum.html?new=1" class="btn btn-primary btn-sm">Start a thread</a></div>`;
+        list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჯერ არცერთი თემა არ დაგიწერიათ.' : "You haven't posted any threads yet."}<br><a href="forum.html?new=1" class="btn btn-primary btn-sm">${document.documentElement.lang==='ka' ? 'თემის დაწყება' : 'Start a thread'}</a></div>`;
         return;
       }
 
@@ -427,12 +427,12 @@
         <div class="post-card">
           <div class="body">
             <h4><a href="forum.html?thread=${t.id}" style="color:inherit;text-decoration:none">${escapeHTML(t.title)}</a></h4>
-            <div class="meta">${escapeHTML(t.category)} · ${timeAgo(t.created_at)} · ${t.incognito ? 'as incognito' : 'public'}</div>
+            <div class="meta">${escapeHTML(trKa(t.category))} · ${timeAgo(t.created_at)} · ${t.incognito ? (document.documentElement.lang==='ka'?'ინკოგნიტოდ':'as incognito') : (document.documentElement.lang==='ka'?'საჯაროდ':'public')}</div>
             <div class="excerpt">${escapeHTML(t.body.slice(0, 180))}${t.body.length > 180 ? '…' : ''}</div>
           </div>
           <div class="actions">
-            <span class="badge ${t.approved ? 'live' : 'pending'}">${t.approved ? 'live' : 'hidden'}</span>
-            <button class="delete-btn" data-id="${t.id}">Delete</button>
+            <span class="badge ${t.approved ? 'live' : 'pending'}">${t.approved ? (document.documentElement.lang==='ka'?'აქტიური':'live') : (document.documentElement.lang==='ka'?'დამალული':'hidden')}</span>
+            <button class="delete-btn" data-id="${t.id}">${document.documentElement.lang==='ka' ? 'წაშლა' : 'Delete'}</button>
           </div>
         </div>
       `).join('');
@@ -449,23 +449,23 @@
         .select('*, forum_threads(title, id)')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      if (error) { list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჩატვირთვა ვერ მოხერხდა.' : "Couldn't load."}</div>`; return; }
       document.getElementById('count-replies').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't replied to any threads yet.</div>`;
+        list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჯერ არცერთ თემას არ გიპასუხიათ.' : "You haven't replied to any threads yet."}</div>`;
         return;
       }
 
       list.innerHTML = data.map(r => `
         <div class="post-card">
           <div class="body">
-            <h4>Reply on: <a href="forum.html?thread=${r.thread_id}" style="color:inherit;text-decoration:none">${escapeHTML(r.forum_threads?.title || 'thread')}</a></h4>
-            <div class="meta">${timeAgo(r.created_at)} · ${r.incognito ? 'as incognito' : 'public'}</div>
+            <h4>${document.documentElement.lang==='ka' ? 'პასუხი თემაზე:' : 'Reply on:'} <a href="forum.html?thread=${r.thread_id}" style="color:inherit;text-decoration:none">${escapeHTML(r.forum_threads?.title || (document.documentElement.lang==='ka'?'თემა':'thread'))}</a></h4>
+            <div class="meta">${timeAgo(r.created_at)} · ${r.incognito ? (document.documentElement.lang==='ka'?'ინკოგნიტოდ':'as incognito') : (document.documentElement.lang==='ka'?'საჯაროდ':'public')}</div>
             <div class="excerpt">${escapeHTML(r.body.slice(0, 180))}${r.body.length > 180 ? '…' : ''}</div>
           </div>
           <div class="actions">
-            <button class="delete-btn" data-id="${r.id}">Delete</button>
+            <button class="delete-btn" data-id="${r.id}">${document.documentElement.lang==='ka' ? 'წაშლა' : 'Delete'}</button>
           </div>
         </div>
       `).join('');
@@ -482,11 +482,11 @@
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      if (error) { list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჩატვირთვა ვერ მოხერხდა.' : "Couldn't load."}</div>`; return; }
       document.getElementById('count-jobs').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't posted any jobs yet.<br><a href="jobs.html#post" class="btn btn-primary btn-sm"><span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a></div>`;
+        list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჯერ არცერთი ვაკანსია არ გამოგიქვეყნებიათ.' : "You haven't posted any jobs yet."}<br><a href="jobs.html#post" class="btn btn-primary btn-sm"><span class="en">Post a job</span><span class="ka">ვაკანსიის გამოქვეყნება</span></a></div>`;
         return;
       }
 
@@ -494,12 +494,12 @@
         <div class="post-card">
           <div class="body">
             <h4>${escapeHTML(j.title)} <span style="color:var(--muted);font-weight:400">@ ${escapeHTML(j.company)}</span></h4>
-            <div class="meta">${escapeHTML(j.city)} · ${escapeHTML(j.contract_type || '—')} · ${timeAgo(j.created_at)}</div>
+            <div class="meta">${escapeHTML(trKa(j.city))} · ${escapeHTML(j.contract_type ? trKa(j.contract_type) : '—')} · ${timeAgo(j.created_at)}</div>
             <div class="excerpt">${escapeHTML(j.description.slice(0, 180))}${j.description.length > 180 ? '…' : ''}</div>
           </div>
           <div class="actions">
-            <span class="badge ${j.approved ? 'live' : 'pending'}">${j.approved ? 'live' : 'hidden'}</span>
-            <button class="delete-btn" data-id="${j.id}">Delete</button>
+            <span class="badge ${j.approved ? 'live' : 'pending'}">${j.approved ? (document.documentElement.lang==='ka'?'აქტიური':'live') : (document.documentElement.lang==='ka'?'დამალული':'hidden')}</span>
+            <button class="delete-btn" data-id="${j.id}">${document.documentElement.lang==='ka' ? 'წაშლა' : 'Delete'}</button>
           </div>
         </div>
       `).join('');
@@ -516,24 +516,24 @@
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      if (error) { list.innerHTML = `<div class="empty-state">Couldn't load.</div>`; return; }
+      if (error) { list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჩატვირთვა ვერ მოხერხდა.' : "Couldn't load."}</div>`; return; }
       document.getElementById('count-housing').textContent = (data || []).length;
 
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class="empty-state">You haven't posted any housing listings yet.<br><a href="housing.html#post" class="btn btn-primary btn-sm"><span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a></div>`;
+        list.innerHTML = `<div class="empty-state">${document.documentElement.lang==='ka' ? 'ჯერ არცერთი განცხადება არ გამოგიქვეყნებიათ.' : "You haven't posted any housing listings yet."}<br><a href="housing.html#post" class="btn btn-primary btn-sm"><span class="en">Post a housing listing</span><span class="ka">განცხადების განთავსება ბინის შესახებ</span></a></div>`;
         return;
       }
 
       list.innerHTML = data.map(h => `
         <div class="post-card">
           <div class="body">
-            <h4>${escapeHTML(h.listing_type)} in ${escapeHTML(h.city)} — €${h.monthly_rent}/mo</h4>
-            <div class="meta">${escapeHTML(h.neighborhood || '')} · ${h.bedrooms ?? '?'} bed · ${timeAgo(h.created_at)}</div>
+            <h4>${escapeHTML(trKa(h.listing_type))} ${document.documentElement.lang==='ka'?'·':'in'} ${escapeHTML(trKa(h.city))} — €${h.monthly_rent}${document.documentElement.lang==='ka'?'/თვე':'/mo'}</h4>
+            <div class="meta">${escapeHTML(h.neighborhood || '')} · ${h.bedrooms ?? '?'} ${document.documentElement.lang==='ka'?'საძ.':'bed'} · ${timeAgo(h.created_at)}</div>
             <div class="excerpt">${escapeHTML(h.description.slice(0, 180))}${h.description.length > 180 ? '…' : ''}</div>
           </div>
           <div class="actions">
-            <span class="badge ${h.approved ? 'live' : 'pending'}">${h.approved ? 'live' : 'hidden'}</span>
-            <button class="delete-btn" data-id="${h.id}">Delete</button>
+            <span class="badge ${h.approved ? 'live' : 'pending'}">${h.approved ? (document.documentElement.lang==='ka'?'აქტიური':'live') : (document.documentElement.lang==='ka'?'დამალული':'hidden')}</span>
+            <button class="delete-btn" data-id="${h.id}">${document.documentElement.lang==='ka' ? 'წაშლა' : 'Delete'}</button>
           </div>
         </div>
       `).join('');

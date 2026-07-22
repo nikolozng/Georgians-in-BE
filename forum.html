@@ -153,17 +153,17 @@
         <aside class="forum-sidebar">
           <h5><span class="en">Category</span><span class="ka">კატეგორია</span></h5>
           <div class="cat-list" id="cat-list">
-            <button class="cat-btn active" data-cat="all" onclick="setCat('all')">All <span class="num" data-count="all">0</span></button>
-            <button class="cat-btn" data-cat="General" onclick="setCat('General')">General <span class="num" data-count="General">0</span></button>
-            <button class="cat-btn" data-cat="Arrival & paperwork" onclick="setCat('Arrival & paperwork')">Arrival &amp; paperwork <span class="num" data-count="Arrival & paperwork">0</span></button>
-            <button class="cat-btn" data-cat="Housing" onclick="setCat('Housing')">Housing <span class="num" data-count="Housing">0</span></button>
-            <button class="cat-btn" data-cat="Jobs & work" onclick="setCat('Jobs & work')">Jobs &amp; work <span class="num" data-count="Jobs & work">0</span></button>
-            <button class="cat-btn" data-cat="Healthcare" onclick="setCat('Healthcare')">Healthcare <span class="num" data-count="Healthcare">0</span></button>
-            <button class="cat-btn" data-cat="Schools & kids" onclick="setCat('Schools & kids')">Schools &amp; kids <span class="num" data-count="Schools & kids">0</span></button>
-            <button class="cat-btn" data-cat="Language learning" onclick="setCat('Language learning')">Language learning <span class="num" data-count="Language learning">0</span></button>
-            <button class="cat-btn" data-cat="Recommendations" onclick="setCat('Recommendations')">Recommendations <span class="num" data-count="Recommendations">0</span></button>
-            <button class="cat-btn" data-cat="Lost & found" onclick="setCat('Lost & found')">Lost &amp; found <span class="num" data-count="Lost & found">0</span></button>
-            <button class="cat-btn" data-cat="Events" onclick="setCat('Events')">Events <span class="num" data-count="Events">0</span></button>
+            <button class="cat-btn active" data-cat="all" onclick="setCat('all')"><span class="en">All</span><span class="ka">ყველა</span> <span class="num" data-count="all">0</span></button>
+            <button class="cat-btn" data-cat="General" onclick="setCat('General')"><span class="en">General</span><span class="ka">ზოგადი</span> <span class="num" data-count="General">0</span></button>
+            <button class="cat-btn" data-cat="Arrival & paperwork" onclick="setCat('Arrival & paperwork')"><span class="en">Arrival &amp; paperwork</span><span class="ka">ჩამოსვლა და საბუთები</span> <span class="num" data-count="Arrival & paperwork">0</span></button>
+            <button class="cat-btn" data-cat="Housing" onclick="setCat('Housing')"><span class="en">Housing</span><span class="ka">საცხოვრებელი</span> <span class="num" data-count="Housing">0</span></button>
+            <button class="cat-btn" data-cat="Jobs & work" onclick="setCat('Jobs & work')"><span class="en">Jobs &amp; work</span><span class="ka">სამსახური და სამუშაო</span> <span class="num" data-count="Jobs & work">0</span></button>
+            <button class="cat-btn" data-cat="Healthcare" onclick="setCat('Healthcare')"><span class="en">Healthcare</span><span class="ka">ჯანდაცვა</span> <span class="num" data-count="Healthcare">0</span></button>
+            <button class="cat-btn" data-cat="Schools & kids" onclick="setCat('Schools & kids')"><span class="en">Schools &amp; kids</span><span class="ka">სკოლები და ბავშვები</span> <span class="num" data-count="Schools & kids">0</span></button>
+            <button class="cat-btn" data-cat="Language learning" onclick="setCat('Language learning')"><span class="en">Language learning</span><span class="ka">ენის სწავლა</span> <span class="num" data-count="Language learning">0</span></button>
+            <button class="cat-btn" data-cat="Recommendations" onclick="setCat('Recommendations')"><span class="en">Recommendations</span><span class="ka">რეკომენდაციები</span> <span class="num" data-count="Recommendations">0</span></button>
+            <button class="cat-btn" data-cat="Lost & found" onclick="setCat('Lost & found')"><span class="en">Lost &amp; found</span><span class="ka">დაკარგული და ნაპოვნი</span> <span class="num" data-count="Lost & found">0</span></button>
+            <button class="cat-btn" data-cat="Events" onclick="setCat('Events')"><span class="en">Events</span><span class="ka">ღონისძიებები</span> <span class="num" data-count="Events">0</span></button>
           </div>
           <hr class="sidebar-divider" />
           <a href="?new=1" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:var(--r-sm)">+ <span class="en">Start a thread</span><span class="ka">თემის დაწყება</span></a>
@@ -171,14 +171,14 @@
 
         <div>
           <div class="forum-header-bar">
-            <h2 id="list-title">All threads</h2>
-            <span class="meta" id="list-count">Loading…</span>
+            <h2 id="list-title"><span class="en">All threads</span><span class="ka">ყველა თემა</span></h2>
+            <span class="meta" id="list-count"><span class="en">Loading…</span><span class="ka">იტვირთება…</span></span>
           </div>
           <div class="rules-mini">
             <span class="en"><strong>Quick rules:</strong> stay on topic, no doxxing, no scam promotion, no political fights. Be helpful — newcomers are reading. Threads go live immediately. Spam will be removed.</span><span class="ka"><strong>მოკლე წესები:</strong> დაიცავით თემატიკა, ნუ გაამჟღავნებთ სხვის პირად მონაცემებს (doxxing), ნუ გაუწევთ პოპულარიზაციას თაღლითობას, მოერიდეთ პოლიტიკურ დაპირისპირებას. იყავით დამხმარე.</span>
           </div>
           <div class="thread-list" id="thread-list">
-            <div class="loading-state">Loading threads…</div>
+            <div class="loading-state"><span class="en">Loading threads…</span><span class="ka">იტვირთება…</span></div>
           </div>
         </div>
       </div>
@@ -186,50 +186,50 @@
 
     <!-- =========== THREAD DETAIL VIEW =========== -->
     <div class="view" id="view-thread">
-      <button class="back-link" onclick="showList()">← Back to all threads</button>
+      <button class="back-link" onclick="showList()"><span class="en">← Back to all threads</span><span class="ka">← ყველა თემასთან დაბრუნება</span></button>
       <div id="thread-detail-container"></div>
     </div>
 
     <!-- =========== NEW THREAD VIEW =========== -->
     <div class="view" id="view-new">
-      <button class="back-link" onclick="showList()">← Back to all threads</button>
+      <button class="back-link" onclick="showList()"><span class="en">← Back to all threads</span><span class="ka">← ყველა თემასთან დაბრუნება</span></button>
 
       <div class="form-error-banner" id="new-error"></div>
       <div class="form-success" id="new-success">
-        <strong>Thanks!</strong> Your thread is live.
+        <span class="en"><strong>Thanks!</strong> Your thread is live.</span><span class="ka"><strong>მადლობა!</strong> თქვენი თემა გამოქვეყნდა.</span>
       </div>
 
       <div class="new-thread-card" id="new-thread-card">
         <h2><span class="en">Start a thread</span><span class="ka">თემის დაწყება</span></h2>
-        <p class="lead">Ask the community something. Be specific — "How do I do X in Brussels?" works better than "help me".</p>
+        <p class="lead"><span class="en">Ask the community something. Be specific — "How do I do X in Brussels?" works better than "help me".</span><span class="ka">ჰკითხეთ საზოგადოებას. იყავით კონკრეტული — „როგორ გავაკეთო X ბრიუსელში?" უკეთ მუშაობს, ვიდრე „მიშველეთ".</span></p>
 
         <form id="new-thread-form" novalidate>
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-cat">Category<span class="req">*</span></label>
+            <label class="form-label" for="t-cat"><span class="en">Category</span><span class="ka">კატეგორია</span><span class="req">*</span></label>
             <select class="form-select" id="t-cat" required>
-              <option value="">Select…</option>
-              <option>General</option>
-              <option>Arrival &amp; paperwork</option>
-              <option>Housing</option>
-              <option>Jobs &amp; work</option>
-              <option>Healthcare</option>
-              <option>Schools &amp; kids</option>
-              <option>Language learning</option>
-              <option>Recommendations</option>
-              <option>Lost &amp; found</option>
-              <option>Events</option>
+              <option value="" data-en="Select…" data-ka="აირჩიეთ…">Select…</option>
+              <option value="General" data-en="General" data-ka="ზოგადი">General</option>
+              <option value="Arrival & paperwork" data-en="Arrival &amp; paperwork" data-ka="ჩამოსვლა და საბუთები">Arrival &amp; paperwork</option>
+              <option value="Housing" data-en="Housing" data-ka="საცხოვრებელი">Housing</option>
+              <option value="Jobs & work" data-en="Jobs &amp; work" data-ka="სამსახური და სამუშაო">Jobs &amp; work</option>
+              <option value="Healthcare" data-en="Healthcare" data-ka="ჯანდაცვა">Healthcare</option>
+              <option value="Schools & kids" data-en="Schools &amp; kids" data-ka="სკოლები და ბავშვები">Schools &amp; kids</option>
+              <option value="Language learning" data-en="Language learning" data-ka="ენის სწავლა">Language learning</option>
+              <option value="Recommendations" data-en="Recommendations" data-ka="რეკომენდაციები">Recommendations</option>
+              <option value="Lost & found" data-en="Lost &amp; found" data-ka="დაკარგული და ნაპოვნი">Lost &amp; found</option>
+              <option value="Events" data-en="Events" data-ka="ღონისძიებები">Events</option>
             </select>
           </div>
 
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-title">Title<span class="req">*</span></label>
-            <input class="form-input" id="t-title" type="text" required maxlength="140" placeholder="One sentence — keep it specific" />
+            <label class="form-label" for="t-title"><span class="en">Title</span><span class="ka">სათაური</span><span class="req">*</span></label>
+            <input class="form-input" id="t-title" type="text" required maxlength="140" placeholder="One sentence — keep it specific" data-placeholder-en="One sentence — keep it specific" data-placeholder-ka="ერთი წინადადება — იყავით კონკრეტული" />
           </div>
 
           <div class="form-group" style="margin-bottom:16px">
-            <label class="form-label" for="t-body">Body<span class="req">*</span></label>
-            <textarea class="form-textarea" id="t-body" required maxlength="3000" placeholder="What's the situation? What have you already tried? Any details that matter (city, deadline, etc.)?" style="min-height:160px"></textarea>
-            <span class="form-hint">Max 3000 characters. Plain text — no HTML.</span>
+            <label class="form-label" for="t-body"><span class="en">Body</span><span class="ka">ტექსტი</span><span class="req">*</span></label>
+            <textarea class="form-textarea" id="t-body" required maxlength="3000" placeholder="What's the situation? What have you already tried? Any details that matter (city, deadline, etc.)?" data-placeholder-en="What's the situation? What have you already tried? Any details that matter (city, deadline, etc.)?" data-placeholder-ka="რა ხდება? რა უკვე სცადეთ? მნიშვნელოვანი დეტალები (ქალაქი, ვადა და ა.შ.)?" style="min-height:160px"></textarea>
+            <span class="form-hint"><span class="en">Max 3000 characters. Plain text — no HTML.</span><span class="ka">მაქსიმუმ 3000 სიმბოლო. მხოლოდ ტექსტი — HTML-ის გარეშე.</span></span>
           </div>
 
           <div class="form-group" style="margin-bottom:24px">
@@ -237,16 +237,16 @@
               <input type="checkbox" id="t-incognito" style="margin-top:2px" onchange="onThreadIncognitoToggle(this)" />
               <span>
                 <strong><span class="en">Post anonymously</span><span class="ka">ანონიმურად პოსტვა</span></strong>
-                <span class="form-hint" style="display:block;margin-top:4px">Posts as <span id="t-incognito-name" style="font-family:var(--font-georgian);color:var(--ink);font-weight:700">a random Georgian alias</span> instead of your display name. Other people won't see your real name or email.</span>
+                <span class="form-hint" style="display:block;margin-top:4px"><span class="en">Posts as <span id="t-incognito-name" style="font-family:var(--font-georgian);color:var(--ink);font-weight:700">a random Georgian alias</span> instead of your display name. Other people won't see your real name or email.</span><span class="ka">გამოქვეყნდება ფსევდონიმით <span style="color:var(--ink);font-weight:700">შემთხვევითი ქართული ფსევდონიმი</span>, თქვენი სახელის ნაცვლად. სხვები ვერ ნახავენ თქვენს ნამდვილ სახელს ან ელ.ფოსტას.</span></span>
               </span>
             </label>
           </div>
 
-          <button type="submit" class="btn btn-primary" id="t-submit">Post thread</button>
+          <button type="submit" class="btn btn-primary" id="t-submit"><span class="en">Post thread</span><span class="ka">თემის გამოქვეყნება</span></button>
         </form>
 
         <div id="new-auth-gate" style="display:none; padding:20px 24px; background:#fff7ed; border:1px solid #fed7aa; border-radius:var(--r-md);">
-          <strong>Log in to start a thread.</strong>
+          <strong><span class="en">Log in to start a thread.</span><span class="ka">თემის დასაწყებად გაიარეთ ავტორიზაცია.</span></strong>
           <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
             <a href="login.html?next=forum.html%3Fnew%3D1" class="btn btn-primary btn-sm"><span class="en">Log in</span><span class="ka">შესვლა</span></a>
             <a href="signup.html?next=forum.html%3Fnew%3D1" class="btn btn-ghost btn-sm"><span class="en">Sign up</span><span class="ka">რეგისტრაცია</span></a>
@@ -286,9 +286,9 @@
       <div class="thread-row${t.pinned ? ' pinned' : ''}" data-id="${t.id}" onclick="showThread(${t.id})">
         <div>
           <div class="meta-top">
-            <span class="thread-cat-tag">${escapeHtml(t.category)}</span>
-            ${t.pinned ? '<span class="pinned-badge">Pinned</span>' : ''}
-            ${t.locked ? '<span class="locked-badge">Locked</span>' : ''}
+            <span class="thread-cat-tag">${escapeHtml(trKa(t.category))}</span>
+            ${t.pinned ? `<span class="pinned-badge">${isKa ? 'დამაგრებული' : 'Pinned'}</span>` : ''}
+            ${t.locked ? `<span class="locked-badge">${isKa ? 'დაბლოკილი' : 'Locked'}</span>` : ''}
           </div>
           <div class="thread-title">${escapeHtml(t.title)}</div>
           <div class="thread-snippet">${escapeHtml(snippet)}</div>
@@ -296,7 +296,7 @@
         </div>
         <div class="thread-stats">
           <span class="replies">${replies}</span>
-          ${replies === 1 ? 'reply' : 'replies'}
+          ${isKa ? 'პასუხი' : (replies === 1 ? 'reply' : 'replies')}
         </div>
       </div>
     `;
@@ -308,7 +308,7 @@
     const titleEl = document.getElementById('list-title');
 
     const isKa = document.documentElement.lang === 'ka';
-    titleEl.textContent = currentCat === 'all' ? (isKa ? 'ყველა თემა' : 'All threads') : currentCat;
+    titleEl.textContent = currentCat === 'all' ? (isKa ? 'ყველა თემა' : 'All threads') : trKa(currentCat);
 
     const filtered = currentCat === 'all'
       ? allThreads
@@ -377,7 +377,7 @@
     history.pushState({}, '', '?thread=' + id);
     showView('thread');
     const container = document.getElementById('thread-detail-container');
-    container.innerHTML = '<div class="loading-state">Loading…</div>';
+    container.innerHTML = '<div class="loading-state">' + (document.documentElement.lang==='ka' ? 'იტვირთება…' : 'Loading…') + '</div>';
 
     if (!sb) { container.innerHTML = '<div class="empty">Database unavailable.</div>'; return; }
 
@@ -401,11 +401,11 @@
     const user = await AUTH.getUser();
     let replyForm;
     if (thread.locked) {
-      replyForm = `<div class="locked-banner">This thread is locked. No new replies can be posted.</div>`;
+      replyForm = `<div class="locked-banner">${document.documentElement.lang==='ka' ? 'ეს თემა დაბლოკილია. ახალი პასუხების დამატება შეუძლებელია.' : 'This thread is locked. No new replies can be posted.'}</div>`;
     } else if (!user) {
       replyForm = `
         <div class="locked-banner" style="text-align:left">
-          <strong>Log in to reply.</strong>
+          <strong><span class="en">Log in to reply.</span><span class="ka">პასუხის დასაწერად გაიარეთ ავტორიზაცია.</span></strong>
           <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
             <a href="login.html?next=${encodeURIComponent('forum.html?thread=' + id)}" class="btn btn-primary btn-sm"><span class="en">Log in</span><span class="ka">შესვლა</span></a>
             <a href="signup.html?next=${encodeURIComponent('forum.html?thread=' + id)}" class="btn btn-ghost btn-sm"><span class="en">Sign up</span><span class="ka">რეგისტრაცია</span></a>
@@ -419,14 +419,14 @@
       replyForm = `
         <div class="reply-form-card">
           <div class="form-error-banner" id="reply-error" style="margin-bottom:12px"></div>
-          <textarea id="reply-body" placeholder="Write your reply… Be specific and helpful." maxlength="2000"></textarea>
+          <textarea id="reply-body" placeholder="${document.documentElement.lang==='ka' ? 'დაწერეთ პასუხი… იყავით კონკრეტული და დამხმარე.' : 'Write your reply… Be specific and helpful.'}" maxlength="2000"></textarea>
           <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted-soft);cursor:pointer">
             <input type="checkbox" id="reply-incognito" onchange="onReplyIncognitoToggle(this)" />
-            <span>Post anonymously${incogName ? ' as <strong id="reply-incog-display" style="color:var(--ink);font-family:var(--font-georgian)">' + escapeHtml(incogName) + '</strong>' : ' <span id="reply-incog-display" style="color:var(--muted)">(a random Georgian alias will be assigned)</span>'}</span>
+            <span>${document.documentElement.lang==='ka' ? 'ანონიმურად გამოქვეყნება' : 'Post anonymously'}${incogName ? ' as <strong id="reply-incog-display" style="color:var(--ink);font-family:var(--font-georgian)">' + escapeHtml(incogName) + '</strong>' : ' <span id="reply-incog-display" style="color:var(--muted)">' + (document.documentElement.lang==='ka' ? '(მოგენიჭებათ შემთხვევითი ქართული ფსევდონიმი)' : '(a random Georgian alias will be assigned)') + '</span>'}</span>
           </label>
           <div class="actions">
-            <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">Post reply as ${escapeHtml(dispName)}</button>
-            <span class="hint">Replies appear immediately. You can delete them from <a href="account.html"><span class="en">My account</span><span class="ka">ჩემი პროფილი</span></a>.</span>
+            <button class="btn btn-primary btn-sm" id="reply-submit" onclick="postReply(${id})">${document.documentElement.lang==='ka' ? 'პასუხის გამოქვეყნება, ავტორი:' : 'Post reply as'} ${escapeHtml(dispName)}</button>
+            <span class="hint"><span class="en">Replies appear immediately. You can delete them from <a href="account.html">My account</a>.</span><span class="ka">პასუხები მაშინვე ჩნდება. მათი წაშლა შეგიძლიათ <a href="account.html">ჩემი პროფილიდან</a>.</span></span>
           </div>
         </div>
       `;
@@ -435,18 +435,18 @@
     container.innerHTML = `
       <div class="thread-detail">
         <div class="header-meta">
-          <span class="thread-cat-tag">${escapeHtml(thread.category)}</span>
-          ${thread.pinned ? '<span class="pinned-badge">Pinned</span>' : ''}
-          ${thread.locked ? '<span class="locked-badge">Locked</span>' : ''}
+          <span class="thread-cat-tag">${escapeHtml(trKa(thread.category))}</span>
+          ${thread.pinned ? `<span class="pinned-badge">${isKa ? 'დამაგრებული' : 'Pinned'}</span>` : ''}
+          ${thread.locked ? `<span class="locked-badge">${isKa ? 'დაბლოკილი' : 'Locked'}</span>` : ''}
           <span class="date">${timeAgo(thread.created_at)}</span>
         </div>
         <h1>${escapeHtml(thread.title)}</h1>
-        <div class="header-meta"><span class="author"><strong>${escapeHtml(thread.author_name)}</strong> wrote:</span></div>
+        <div class="header-meta"><span class="author"><strong>${escapeHtml(thread.author_name)}</strong> ${isKa ? 'წერს:' : 'wrote:'}</span></div>
         <div class="body-text">${escapeHtml(thread.body)}</div>
       </div>
 
-      <div class="replies-header">${(replies || []).length} ${(replies || []).length === 1 ? 'reply' : 'replies'}</div>
-      ${repliesHtml || '<div class="empty" style="padding:40px 20px">No replies yet. Be the first.</div>'}
+      <div class="replies-header">${(replies || []).length} ${isKa ? 'პასუხი' : ((replies || []).length === 1 ? 'reply' : 'replies')}</div>
+      ${repliesHtml || `<div class="empty" style="padding:40px 20px">${isKa ? 'ჯერ პასუხები არ არის. იყავით პირველი.' : 'No replies yet. Be the first.'}</div>`}
       ${replyForm}
     `;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -493,7 +493,7 @@
     const incognito = document.getElementById('reply-incognito').checked;
 
     if (!body || body.length < 5) {
-      errBox.textContent = 'Reply too short. Add a bit more context.';
+      errBox.textContent = document.documentElement.lang==='ka' ? 'პასუხი ძალიან მოკლეა. დაამატეთ ცოტა კონტექსტი.' : 'Reply too short. Add a bit more context.';
       errBox.style.display = 'block';
       return;
     }
@@ -508,7 +508,7 @@
       ? (currentProfile?.incognito_name || 'Anonymous')
       : (currentProfile?.display_name || user.email.split('@')[0]);
 
-    submitBtn.disabled = true; submitBtn.textContent = 'Posting…';
+    submitBtn.disabled = true; submitBtn.textContent = document.documentElement.lang==='ka' ? 'ქვეყნდება…' : 'Posting…';
     const { error } = await sb.from('forum_replies').insert({
       thread_id: threadId,
       user_id: user.id,
@@ -520,7 +520,7 @@
 
     if (error) {
       console.error(error);
-      errBox.textContent = 'Could not post reply. ' + (error.message || '');
+      errBox.textContent = (document.documentElement.lang==='ka' ? 'პასუხის გამოქვეყნება ვერ მოხერხდა. ' : 'Could not post reply. ') + (error.message || '');
       errBox.style.display = 'block';
       return;
     }
@@ -558,7 +558,7 @@
     }
 
     if (!cat || !title || !body) {
-      errBox.textContent = 'Please fill category, title, and body.';
+      errBox.textContent = document.documentElement.lang==='ka' ? 'გთხოვთ, შეავსოთ კატეგორია, სათაური და ტექსტი.' : 'Please fill category, title, and body.';
       errBox.style.display = 'block';
       return;
     }
@@ -581,11 +581,11 @@
       author_name,
       incognito
     }).select().single();
-    submitBtn.disabled = false; submitBtn.textContent = 'Post thread';
+    submitBtn.disabled = false; submitBtn.textContent = document.documentElement.lang==='ka' ? 'თემის გამოქვეყნება' : 'Post thread';
 
     if (error) {
       console.error(error);
-      errBox.textContent = 'Could not post. ' + (error.message || '');
+      errBox.textContent = (document.documentElement.lang==='ka' ? 'გამოქვეყნება ვერ მოხერხდა. ' : 'Could not post. ') + (error.message || '');
       errBox.style.display = 'block';
       return;
     }
@@ -627,7 +627,7 @@
         if (currentProfile?.incognito_name) {
           incEl.textContent = currentProfile.incognito_name;
         } else {
-          incEl.textContent = 'a random Georgian alias';
+          incEl.textContent = document.documentElement.lang==='ka' ? 'შემთხვევითი ქართული ფსევდონიმი' : 'a random Georgian alias';
           incEl.style.fontFamily = 'inherit';
           incEl.style.color = 'var(--muted)';
           incEl.style.fontWeight = '400';
@@ -653,7 +653,7 @@
       incEl.style.fontWeight = '700';
       return;
     }
-    incEl.textContent = 'assigning…';
+    incEl.textContent = document.documentElement.lang==='ka' ? 'ენიჭება…' : 'assigning…';
     incEl.style.color = 'var(--muted)';
     const newName = await AUTH.ensureIncognitoName();
     currentProfile = await AUTH.getProfile();

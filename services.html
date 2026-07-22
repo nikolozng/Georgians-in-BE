@@ -436,7 +436,7 @@
       <!-- LISTINGS GRID -->
       <div>
         <div class="results-header">
-          <p class="results-count" id="results-count">Loading services…</p>
+          <p class="results-count" id="results-count"><span class="en">Loading services…</span><span class="ka">იტვირთება…</span></p>
           <select class="sort-select" id="sort-select" onchange="filterCards()">
             <option value="newest">Newest first</option>
             <option value="alpha">A – Z</option>
@@ -444,7 +444,7 @@
         </div>
 
         <div class="service-card-grid" id="cards-grid">
-          <p class="loading-state">Loading services…</p>
+          <p class="loading-state"><span class="en">Loading services…</span><span class="ka">იტვირთება…</span></p>
         </div>
 
       </div><!-- /listings -->
@@ -467,7 +467,7 @@
     </div>
 
     <div class="form-success" id="form-success">
-      <span id="success-msg-en"><strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.</span>
+      <span id="success-msg-en" class="en"><strong>Thank you!</strong> Your listing has been submitted and will be reviewed within 48 hours.</span>
       <br /><span id="success-msg-ka" class="ka" style="font-family:var(--font-georgian)">გმადლობთ! თქვენი განცხადება გაიგზავნა და განიხილება 48 საათში.</span>
     </div>
 
@@ -1036,7 +1036,7 @@
 
     if (result.error) {
       console.error('Failed to load services:', result.error);
-      grid.innerHTML = '<p class="no-results">Could not load services. Please refresh the page.</p>';
+      grid.innerHTML = '<p class="no-results">' + (currentLang==='ka' ? 'სერვისების ჩატვირთვა ვერ მოხერხდა. გთხოვთ, განაახლოთ გვერდი.' : 'Could not load services. Please refresh the page.') + '</p>';
       countEl.innerHTML = '<strong>0</strong> services';
       return;
     }
@@ -1044,7 +1044,7 @@
     allServices = result.data || [];
 
     if (allServices.length === 0) {
-      grid.innerHTML = '<p class="no-results">No services listed yet. Be the first — list yours below.</p>';
+      grid.innerHTML = '<p class="no-results">' + (currentLang==='ka' ? 'ჯერ სერვისები არ არის. იყავით პირველი — დაამატეთ ქვემოთ.' : 'No services listed yet. Be the first — list yours below.') + '</p>';
       countEl.innerHTML = '<strong>0</strong> services yet';
       updateCategoryCounts();
       return;

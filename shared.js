@@ -31,12 +31,48 @@
   };
 
   window.timeAgo = function (iso) {
+    const ka = document.documentElement.lang === 'ka';
     const s = (Date.now() - new Date(iso).getTime()) / 1000;
-    if (s < 60) return 'just now';
-    if (s < 3600) return Math.floor(s / 60) + 'm ago';
-    if (s < 86400) return Math.floor(s / 3600) + 'h ago';
-    if (s < 86400 * 30) return Math.floor(s / 86400) + 'd ago';
-    return new Date(iso).toLocaleDateString();
+    if (s < 60) return ka ? 'ახლახ' : 'just now';
+    if (s < 3600) return Math.floor(s / 60) + (ka ? ' წთ წინ' : 'm ago');
+    if (s < 86400) return Math.floor(s / 3600) + (ka ? ' სთ წინ' : 'h ago');
+    if (s < 86400 * 30) return Math.floor(s / 86400) + (ka ? ' დღის წინ' : 'd ago');
+    return new Date(iso).toLocaleDateString(ka ? 'ka-GE' : undefined);
+  };
+
+  /* ────────── Enum-value translations (for DB values shown on cards) ──────────
+     Filter/select VALUES stay English in the database; this maps them to Georgian
+     for display only. Use window.trKa(value) inside card templates. */
+  window.geosinKa = {
+    // cities
+    'Brussels': 'ბრიუსელი', 'Antwerp': 'ანტვერპენი', 'Ghent': 'გენტი',
+    'Liège': 'ლიეჟი', 'Bruges': 'ბრიუგე', 'Remote': 'დისტანციური',
+    'Remote / Online': 'დისტანციური / ონლაინ', 'Other': 'სხვა',
+    // housing types
+    'Room': 'ოთახი', 'Apartment': 'ბინა', 'Studio': 'სტუდიო', 'House': 'სახლი',
+    'Roommate wanted': 'იძებნება თანამოსახლე',
+    // job contract types
+    'Full-time': 'სრული განაკვეთი', 'Part-time': 'ნახევარი განაკვეთი',
+    'Contract / Freelance': 'კონტრაქტი / ფრილანსი', 'Internship': 'სტაჟირება',
+    'Temporary': 'დროებითი',
+    // languages
+    'English': 'ინგლისური', 'Georgian': 'ქართული', 'Dutch': 'ჰოლანდიური', 'French': 'ფრანგული',
+    // event categories
+    'Workshop': 'ვორქშოპი', 'Concert': 'კონცერტი', 'Religious': 'რელიგიური',
+    'Networking': 'ნეთვორქინგი',
+    // forum categories
+    'General': 'ზოგადი', 'Arrival & paperwork': 'ჩამოსვლა და საბუთები',
+    'Housing': 'საცხოვრებელი', 'Jobs & work': 'სამსახური და სამუშაო',
+    'Healthcare': 'ჯანდაცვა', 'Schools & kids': 'სკოლები და ბავშვები',
+    'Language learning': 'ენის სწავლა', 'Recommendations': 'რეკომენდაციები',
+    'Lost & found': 'დაკარგული და ნაპოვნი', 'Events': 'ღონისძიებები',
+    // places categories (stored by keyword value)
+    'restaurant': 'რესტორანი / კაფე', 'shop': 'მაღაზია (ქართული პროდუქტი)',
+    'bakery': 'საცხობი', 'church': 'ეკლესია', 'community': 'საზოგადოებრივი / კულტურული',
+    'other': 'სხვა'
+  };
+  window.trKa = function (v) {
+    return (document.documentElement.lang === 'ka' && window.geosinKa[v]) ? window.geosinKa[v] : v;
   };
 
   window.setLang = function (lang) {
@@ -47,6 +83,11 @@
     });
     document.querySelectorAll('[data-placeholder-en]').forEach(el => {
       el.placeholder = lang === 'ka' ? el.dataset.placeholderKa : el.dataset.placeholderEn;
+    });
+    // Translate <option> / <button> labels that carry data-en/data-ka.
+    // The element's `value` stays untouched, so saved DB values remain English.
+    document.querySelectorAll('[data-en][data-ka]').forEach(el => {
+      el.textContent = lang === 'ka' ? el.dataset.ka : el.dataset.en;
     });
     // html[lang] drives the CSS that shows/hides .en and .ka spans (style.css)
     document.documentElement.lang = lang === 'ka' ? 'ka' : 'en';
