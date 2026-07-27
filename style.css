@@ -127,8 +127,16 @@ html[lang="ka"] [data-lang-block="ka"] { display: revert !important; }
 .flag-ge {
   transform: rotateY(180deg);
   background:
-    linear-gradient(#e8112d, #e8112d) center / 100% 30% no-repeat,
-    linear-gradient(#e8112d, #e8112d) center / 30% 100% no-repeat,
+    linear-gradient(#e8112d,#e8112d)  2px  4.7px / 8px 2.6px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 4.7px  2px  / 2.6px 8px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 22px  4.7px / 8px 2.6px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 24.7px 2px  / 2.6px 8px no-repeat,
+    linear-gradient(#e8112d,#e8112d)  2px 24.7px / 8px 2.6px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 4.7px 22px  / 2.6px 8px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 22px 24.7px / 8px 2.6px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 24.7px 22px / 2.6px 8px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 0 11.5px / 32px 9px no-repeat,
+    linear-gradient(#e8112d,#e8112d) 11.5px 0 / 9px 32px no-repeat,
     #fff;
 }
 @keyframes flagFlip {
