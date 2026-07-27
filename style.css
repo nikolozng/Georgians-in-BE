@@ -112,7 +112,7 @@ html[lang="ka"] [data-lang-block="ka"] { display: revert !important; }
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  animation: flagFlip 6s ease-in-out infinite;
+  animation: flagFlip 2s ease-in-out infinite;
 }
 .flag-face {
   position: absolute;
