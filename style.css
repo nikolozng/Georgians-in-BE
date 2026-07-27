@@ -102,15 +102,42 @@ html[lang="ka"] [data-lang-block="ka"] { display: revert !important; }
 .nav-logo-mark {
   width: 32px;
   height: 32px;
-  background: var(--rausch);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: -0.5px;
+  flex-shrink: 0;
+  perspective: 140px;
+}
+.flag-flip {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: flagFlip 6s ease-in-out infinite;
+}
+.flag-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  backface-visibility: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+.flag-be {
+  background: linear-gradient(90deg, #17110c 0 33.33%, #f9d616 33.33% 66.66%, #e63946 66.66% 100%);
+}
+.flag-ge {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(#e8112d, #e8112d) center / 100% 30% no-repeat,
+    linear-gradient(#e8112d, #e8112d) center / 30% 100% no-repeat,
+    #fff;
+}
+@keyframes flagFlip {
+  0%, 42%   { transform: rotateY(0deg); }
+  50%, 92%  { transform: rotateY(180deg); }
+  100%      { transform: rotateY(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flag-flip { animation: none; }
 }
 .nav-logo-text {
   font-size: 17px;

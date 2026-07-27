@@ -135,7 +135,7 @@
   const NAV_HTML = `
   <div class="container nav-inner">
     <a href="/index.html" class="nav-logo">
-      <div class="nav-logo-mark">G</div>
+      <div class="nav-logo-mark"><span class="flag-flip"><span class="flag-face flag-be"></span><span class="flag-face flag-ge"></span></span></div>
       <span class="nav-logo-text">geosin<span>.be</span></span>
     </a>
     <div class="nav-links" id="nav-links">
@@ -188,7 +188,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="/index.html" class="nav-logo">
-          <div class="nav-logo-mark">G</div>
+          <div class="nav-logo-mark"><span class="flag-flip"><span class="flag-face flag-be"></span><span class="flag-face flag-ge"></span></span></div>
           <span class="nav-logo-text">geosin<span>.be</span></span>
         </a>
         <p>
