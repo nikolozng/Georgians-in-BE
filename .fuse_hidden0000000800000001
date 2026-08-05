@@ -674,7 +674,7 @@
     document.getElementById('new-thread-form').addEventListener('submit', submitNewThread);
     loadThreads().then(route);
     refreshNewThreadGate();
-    sb && sb.auth.onAuthStateChange(() => setTimeout(refreshNewThreadGate, 0)); // defer: Supabase holds a lock during this callback
+    sb && sb.auth.onAuthStateChange(() => refreshNewThreadGate());
   })();
 </script>
 </body>

@@ -523,7 +523,7 @@
     setLang(localStorage.getItem('geosin-lang') || 'en');
     loadJobs();
     refreshAuthGate();
-    sb && sb.auth.onAuthStateChange(() => setTimeout(refreshAuthGate, 0)); // defer: Supabase holds a lock during this callback
+    sb && sb.auth.onAuthStateChange(() => refreshAuthGate());
     if (location.hash === '#post') setTimeout(() => document.getElementById('post').scrollIntoView({ behavior: 'smooth' }), 200);
   })();
 </script>

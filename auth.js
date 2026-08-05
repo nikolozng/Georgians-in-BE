@@ -281,10 +281,21 @@
   }
 
   // Re-render when auth state changes (login/logout in another tab too).
-  // Also clear caches so the next getUser/getProfile sees fresh data.
-  sb.auth.onAuthStateChange(() => {
+  //
+  // IMPORTANT: Supabase runs this callback while it holds an internal lock.
+  // Calling sb.auth.getSession() (or any query that needs the token) from
+  // *inside* the callback deadlocks until our 5s timeout fires, and we'd
+  // wrongly conclude the user is logged out. That's what made the "log in
+  // to add a place" box appear after switching browser tabs — Supabase
+  // re-checks the session on tab focus and fires this event.
+  //
+  // So: take the user straight from the `session` argument we're handed
+  // (no network call), and push any real work out of the callback with
+  // setTimeout(..., 0) so it runs after the lock is released.
+  sb.auth.onAuthStateChange((event, session) => {
     clearAuthCache();
-    renderNavAuth();
+    _userCache = session?.user || null;   // fill from the event, don't re-fetch
+    setTimeout(renderNavAuth, 0);
   });
 
   window.renderNavAuth = renderNavAuth;
