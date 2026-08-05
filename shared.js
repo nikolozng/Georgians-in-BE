@@ -139,19 +139,18 @@
       <span class="nav-logo-text">geosin<span>.be</span></span>
     </a>
     <div class="nav-links" id="nav-links">
-      <a href="/index.html" data-page="index.html"><span class="en">Home</span><span class="ka">მთავარი</span></a>
-      <a href="/services.html" data-page="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
       <a href="/jobs.html" data-page="jobs.html"><span class="en">Jobs</span><span class="ka">ვაკანსიები</span></a>
       <a href="/housing.html" data-page="housing.html"><span class="en">Housing</span><span class="ka">ბინები</span></a>
+      <a href="/services.html" data-page="services.html"><span class="en">Services</span><span class="ka">სერვისები</span></a>
+      <a href="/places.html" data-page="places.html"><span class="en">Places</span><span class="ka">ადგილები</span></a>
       <div class="nav-dropdown">
         <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
           <span class="en">Community</span><span class="ka">საზოგადოება</span>
           <svg class="nav-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="nav-dropdown-menu">
-          <a href="/events.html" data-page="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
           <a href="/forum.html" data-page="forum.html"><span class="en">Forum</span><span class="ka">ფორუმი</span></a>
-          <a href="/places.html" data-page="places.html"><span class="en">Places</span><span class="ka">ადგილები</span></a>
+          <a href="/events.html" data-page="events.html"><span class="en">Events</span><span class="ka">ღონისძიებები</span></a>
         </div>
       </div>
       <div class="nav-dropdown">
