@@ -47,29 +47,79 @@
     .view-toggle button.active { background: var(--ink); color: #fff; }
     [data-theme="dark"] .view-toggle button.active { color: #141414; }
 
-    .places-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+    /* ── Uniform place cards ── */
+    .places-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 900px) { .places-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) { .places-grid { grid-template-columns: 1fr; } }
-    .p-card { border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
-    .p-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
-    .p-card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
-    .p-card-body { padding: 22px 24px; }
-    .p-type-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-full); margin-bottom: 10px; }
+
+    .p-card {
+      display: flex; flex-direction: column; height: 100%;
+      border: 1px solid var(--hairline); border-radius: var(--r-md);
+      background: var(--canvas); overflow: hidden; cursor: pointer;
+      text-align: left; padding: 0; font: inherit; color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .p-card:hover, .p-card:focus-visible { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
+    .p-card:focus-visible { outline: none; }
+
+    .p-card-media {
+      position: relative; width: 100%; aspect-ratio: 4 / 3;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: var(--surface);
+    }
+    .p-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .p-card-media .p-ph-icon { width: 30%; max-width: 74px; height: auto; }
+
+    .p-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+    .p-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 20px; }
+    .p-card-city { font-size: 12px; color: var(--muted); }
+    .p-type-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-full); }
     .pt-restaurant { background: rgba(212,83,126,0.12); color: #d4537e; }
     .pt-shop       { background: rgba(29,158,117,0.12); color: #1d9e75; }
     .pt-bakery     { background: rgba(186,117,23,0.12); color: #ba7517; }
     .pt-church     { background: rgba(127,119,221,0.14); color: #7f77dd; }
     .pt-community  { background: rgba(55,138,221,0.12); color: #378add; }
     .pt-other      { background: var(--surface); color: var(--muted); }
-    .p-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .p-card .name-ka { font-family: var(--font-georgian); font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    .p-card .city-line { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
-    .p-card p.desc { font-size: 14px; color: var(--body-text); line-height: 1.55; margin-bottom: 12px; }
-    .p-card.collapsed p.desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .desc-toggle { background: none; border: none; color: var(--rausch); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0; margin-bottom: 12px; display: block; }
-    .desc-toggle:hover { text-decoration: underline; }
-    .p-links { display: flex; gap: 10px 16px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--hairline); }
+    .p-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.3; margin: 0; }
+    /* min-height reserves both lines so short descriptions don't shrink the card */
+    .p-card p.desc {
+      font-size: 14px; color: var(--body-text); line-height: 1.5; margin: 0; min-height: 42px;
+      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .p-links { display: flex; gap: 10px 16px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--hairline); }
     .p-links a { color: var(--rausch); font-size: 13px; font-weight: 700; text-decoration: none; }
     .p-links a:hover { text-decoration: underline; }
+
+    /* ── Place detail modal ── */
+    .pl-modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(2px);
+      display: none; align-items: center; justify-content: center; padding: 24px; z-index: 100;
+    }
+    .pl-modal-backdrop.open { display: flex; }
+    .pl-modal {
+      position: relative; background: var(--canvas); border-radius: var(--r-md);
+      max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    }
+    .pl-modal-close {
+      position: absolute; top: 14px; right: 14px; width: 36px; height: 36px;
+      background: rgba(255,255,255,0.95); border: 1px solid var(--hairline); border-radius: 50%;
+      cursor: pointer; font-size: 20px; line-height: 1; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; z-index: 2;
+    }
+    .pl-modal-media { position: relative; width: 100%; aspect-ratio: 4 / 3; background: var(--surface); overflow: hidden; }
+    .pl-modal-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pl-modal-body { padding: 26px 28px; }
+    .pl-modal-body .p-type-badge { margin-bottom: 12px; }
+    .pl-modal-body h2 { font-size: 24px; font-weight: 800; color: var(--ink); line-height: 1.25; margin-bottom: 2px; }
+    .pl-modal-body .name-ka { font-family: var(--font-georgian); font-size: 15px; color: var(--muted); margin-bottom: 10px; }
+    .pl-modal-body .city-line { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+    .pl-modal-body .desc { font-size: 15px; line-height: 1.7; color: var(--body-text); white-space: pre-wrap; margin-bottom: 20px; }
+    [data-theme="dark"] .pl-modal-close { background: var(--surface); border-color: var(--hairline); color: var(--ink); }
+    [data-theme="dark"] .p-card { background: var(--surface); }
+    [data-theme="dark"] .pl-modal { background: var(--surface); }
+    @media (max-width: 540px) { .pl-modal-body { padding: 22px 20px; } .pl-modal-body h2 { font-size: 21px; } }
 
     #map-wrap { display: none; }
     #map-wrap.active { display: block; }
@@ -271,6 +321,13 @@
   </div>
 </section>
 
+<div class="pl-modal-backdrop" id="place-modal" onclick="closePlaceIfBackdrop(event)">
+  <div class="pl-modal" role="dialog" aria-modal="true" aria-labelledby="place-modal-title">
+    <button type="button" class="pl-modal-close" onclick="closePlace()" aria-label="Close">×</button>
+    <div id="place-modal-content"></div>
+  </div>
+</div>
+
 <footer class="site-footer" data-footer="full"></footer>
 
 <script src="/shared.js?v=5"></script>
@@ -295,10 +352,35 @@
     church: '#7f77dd', community: '#378add', other: '#888780'
   };
 
+  // Placeholder glyphs — drawn when a place has no photo (or the photo fails to load)
+  const TYPE_ICON = {
+    restaurant: '<path d="M4 3v6a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V3"/><path d="M6.5 3v8"/><path d="M6.5 11v10"/><path d="M18 21V3a4 4 0 0 0-3 3.9V12a1 1 0 0 0 1 1h3"/>',
+    shop:       '<path d="M3 9l1.5-5h15L21 9"/><path d="M4.5 9v11h15V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M9.5 20v-5.5h5V20"/>',
+    bakery:     '<path d="M4 11.5C4 8.5 6.7 6.5 10 6.5h4c3.3 0 6 2 6 5 0 1.6-1.1 2.6-2 2.9V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-4.6c-.9-.3-2-1.3-2-2.9Z"/><path d="M10.5 10 9 13"/><path d="M14 10l-1.5 3"/>',
+    church:     '<path d="M12 2.5V8"/><path d="M9.5 4.75h5"/><path d="M12 8 5 12.5V21h14v-8.5z"/><path d="M10 21v-3.5a2 2 0 0 1 4 0V21"/>',
+    community:  '<circle cx="9" cy="7.5" r="3.5"/><path d="M2.5 20.5v-1.5a4.5 4.5 0 0 1 4.5-4.5h4a4.5 4.5 0 0 1 4.5 4.5v1.5"/><path d="M16 4.3a3.5 3.5 0 0 1 0 6.7"/><path d="M17.5 14.7a4.5 4.5 0 0 1 4 4.4v1.4"/>',
+    other:      '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'
+  };
+
   function isKa() { return document.documentElement.lang === 'ka'; }
 
-  function renderCard(p) {
-    const t = TYPE_LABEL[p.type] || TYPE_LABEL.other;
+  function typeKey(t) { return TYPE_LABEL[t] ? t : 'other'; }
+  function typeName(t) { const l = TYPE_LABEL[typeKey(t)]; return isKa() ? l.ka : l.en; }
+
+  // Tinted block + centred icon, used behind every photo so a broken image
+  // degrades to the placeholder instead of a blank box.
+  function mediaHtml(p, cls) {
+    const key = typeKey(p.type);
+    const color = TYPE_COLOR[key];
+    const imgSrc = safeUrl(p.image_url);
+    return `
+      <div class="${cls}" style="background:${color}1f">
+        <svg class="p-ph-icon" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TYPE_ICON[key]}</svg>
+        ${imgSrc ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.remove()" />` : ''}
+      </div>`;
+  }
+
+  function linksHtml(p) {
     const links = [];
     const site = safeUrl(p.website);
     const mapl = safeUrl(p.map_url);
@@ -306,23 +388,81 @@
     else if (mapl) links.push(`<a href="${escapeHtml(mapl)}" target="_blank" rel="noopener">${isKa() ? 'რუკაზე' : 'Map'}</a>`);
     if (site) links.push(`<a href="${escapeHtml(site)}" target="_blank" rel="noopener">${isKa() ? 'ვებგვერდი' : 'Website'}</a>`);
     if (p.phone) links.push(`<a href="tel:${escapeHtml(p.phone.replace(/\s+/g, ''))}">${escapeHtml(p.phone)}</a>`);
+    return links.length ? `<div class="p-links">${links.join('')}</div>` : '';
+  }
 
+  function renderCard(p) {
     const desc = isKa() && p.description_ka ? p.description_ka : p.description;
-    const imgSrc = safeUrl(p.image_url);
     return `
-      <article class="p-card collapsed">
-        ${imgSrc ? `<img class="p-card-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.remove()" />` : ''}
+      <article class="p-card" data-id="${escapeHtml(p.id)}" role="button" tabindex="0"
+               aria-label="${escapeHtml(p.name)}">
+        ${mediaHtml(p, 'p-card-media')}
         <div class="p-card-body">
-          <span class="p-type-badge pt-${escapeHtml(p.type)}">${isKa() ? t.ka : t.en}</span>
+          <div class="p-card-meta">
+            <span class="p-type-badge pt-${escapeHtml(typeKey(p.type))}">${typeName(p.type)}</span>
+            <span class="p-card-city">${escapeHtml(trKa(p.city))}</span>
+          </div>
           <h3>${escapeHtml(p.name)}</h3>
-          ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
-          <div class="city-line">${escapeHtml(trKa(p.city))}${p.address ? ' · ' + escapeHtml(p.address) : ''}</div>
           <p class="desc">${escapeHtml(desc)}</p>
-          ${links.length ? `<div class="p-links">${links.join('')}</div>` : ''}
         </div>
       </article>
     `;
   }
+
+  /* ── Detail modal ── */
+  let openPlaceId = null;
+
+  function renderPlaceModal(id) {
+    const p = allPlaces.find(x => String(x.id) === String(id));
+    if (!p) return false;
+    const desc = isKa() && p.description_ka ? p.description_ka : p.description;
+    const cityLine = escapeHtml(trKa(p.city)) + (p.address ? ' · ' + escapeHtml(p.address) : '');
+    document.getElementById('place-modal-content').innerHTML = `
+      ${safeUrl(p.image_url) ? mediaHtml(p, 'pl-modal-media') : ''}
+      <div class="pl-modal-body">
+        <span class="p-type-badge pt-${escapeHtml(typeKey(p.type))}">${typeName(p.type)}</span>
+        <h2 id="place-modal-title">${escapeHtml(p.name)}</h2>
+        ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
+        <div class="city-line">${cityLine}</div>
+        <div class="desc">${escapeHtml(desc)}</div>
+        ${linksHtml(p)}
+      </div>
+    `;
+    return true;
+  }
+
+  function openPlace(id) {
+    if (!renderPlaceModal(id)) return;
+    openPlaceId = id;
+    document.getElementById('place-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.querySelector('#place-modal .pl-modal-close').focus();
+  }
+
+  function closePlace() {
+    openPlaceId = null;
+    document.getElementById('place-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closePlaceIfBackdrop(e) {
+    if (e.target.classList.contains('pl-modal-backdrop')) closePlace();
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && openPlaceId != null) closePlace();
+  });
+
+  // Delegated — the grid is re-rendered on every filter / language change
+  document.getElementById('p-list').addEventListener('click', function (e) {
+    const card = e.target.closest('.p-card');
+    if (card) openPlace(card.dataset.id);
+  });
+  document.getElementById('p-list').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.p-card');
+    if (card) { e.preventDefault(); openPlace(card.dataset.id); }
+  });
 
   function getChecked(id) { return [...document.querySelectorAll('#' + id + ' input:checked')].map(i => i.value); }
 
@@ -350,19 +490,6 @@
       list.innerHTML = `<p class="no-results">${isKa() ? 'ადგილი ვერ მოიძებნა ამ ფილტრებით.' : 'No places match your filters.'}</p>`;
     } else {
       list.innerHTML = filtered.map(renderCard).join('');
-      list.querySelectorAll('.p-card').forEach(function (card) {
-        var desc = card.querySelector('p.desc');
-        if (!desc || desc.scrollHeight <= desc.clientHeight) return;
-        var btn = document.createElement('button');
-        btn.className = 'desc-toggle';
-        btn.textContent = isKa() ? 'ვრცლად ▾' : 'Show more ▾';
-        btn.onclick = function () {
-          card.classList.toggle('collapsed');
-          var open = !card.classList.contains('collapsed');
-          btn.textContent = open ? (isKa() ? 'ნაკლები ▴' : 'Show less ▴') : (isKa() ? 'ვრცლად ▾' : 'Show more ▾');
-        };
-        desc.after(btn);
-      });
     }
     countEl.innerHTML = isKa()
       ? `ნაჩვენებია <strong>${filtered.length}</strong> / ${allPlaces.length}`
@@ -512,7 +639,10 @@
     document.getElementById('form-card').style.display = u ? '' : 'none';
   }
 
-  window.onLangChange = function () { if (allPlaces.length) applyFilter(); };
+  window.onLangChange = function () {
+    if (allPlaces.length) applyFilter();
+    if (openPlaceId != null) renderPlaceModal(openPlaceId);
+  };
 
   (function () {
     setLang(localStorage.getItem('geosin-lang') || 'en');
