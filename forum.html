@@ -272,6 +272,7 @@
   let allThreads = [];
   let replyCounts = {}; // thread_id -> count
   let currentCat = 'all';
+  let isKa = document.documentElement.lang === 'ka';
 
   function showView(name) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -307,7 +308,6 @@
     const countEl = document.getElementById('list-count');
     const titleEl = document.getElementById('list-title');
 
-    const isKa = document.documentElement.lang === 'ka';
     titleEl.textContent = currentCat === 'all' ? (isKa ? 'ყველა თემა' : 'All threads') : trKa(currentCat);
 
     const filtered = currentCat === 'all'
@@ -666,7 +666,7 @@
   }
 
   // Re-render the thread list in the right language when the toggle is used
-  window.onLangChange = function () { if (allThreads.length) applyCategoryFilter(); };
+  window.onLangChange = function () { isKa = document.documentElement.lang === 'ka'; if (allThreads.length) applyCategoryFilter(); };
 
   /* ================ INIT ================ */
   (function() {
