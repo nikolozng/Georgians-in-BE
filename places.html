@@ -47,7 +47,7 @@
     .view-toggle button.active { background: var(--ink); color: #fff; }
     [data-theme="dark"] .view-toggle button.active { color: #141414; }
 
-    .places-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .places-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
     @media (max-width: 600px) { .places-grid { grid-template-columns: 1fr; } }
     .p-card { border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
     .p-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
@@ -64,6 +64,9 @@
     .p-card .name-ka { font-family: var(--font-georgian); font-size: 13px; color: var(--muted); margin-bottom: 8px; }
     .p-card .city-line { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
     .p-card p.desc { font-size: 14px; color: var(--body-text); line-height: 1.55; margin-bottom: 12px; }
+    .p-card.collapsed p.desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .desc-toggle { background: none; border: none; color: var(--rausch); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0; margin-bottom: 12px; display: block; }
+    .desc-toggle:hover { text-decoration: underline; }
     .p-links { display: flex; gap: 10px 16px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--hairline); }
     .p-links a { color: var(--rausch); font-size: 13px; font-weight: 700; text-decoration: none; }
     .p-links a:hover { text-decoration: underline; }
@@ -307,7 +310,7 @@
     const desc = isKa() && p.description_ka ? p.description_ka : p.description;
     const imgSrc = safeUrl(p.image_url);
     return `
-      <article class="p-card">
+      <article class="p-card collapsed">
         ${imgSrc ? `<img class="p-card-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.remove()" />` : ''}
         <div class="p-card-body">
           <span class="p-type-badge pt-${escapeHtml(p.type)}">${isKa() ? t.ka : t.en}</span>
@@ -347,6 +350,19 @@
       list.innerHTML = `<p class="no-results">${isKa() ? 'ადგილი ვერ მოიძებნა ამ ფილტრებით.' : 'No places match your filters.'}</p>`;
     } else {
       list.innerHTML = filtered.map(renderCard).join('');
+      list.querySelectorAll('.p-card').forEach(function (card) {
+        var desc = card.querySelector('p.desc');
+        if (!desc || desc.scrollHeight <= desc.clientHeight) return;
+        var btn = document.createElement('button');
+        btn.className = 'desc-toggle';
+        btn.textContent = isKa() ? 'ვრცლად ▾' : 'Show more ▾';
+        btn.onclick = function () {
+          card.classList.toggle('collapsed');
+          var open = !card.classList.contains('collapsed');
+          btn.textContent = open ? (isKa() ? 'ნაკლები ▴' : 'Show less ▴') : (isKa() ? 'ვრცლად ▾' : 'Show more ▾');
+        };
+        desc.after(btn);
+      });
     }
     countEl.innerHTML = isKa()
       ? `ნაჩვენებია <strong>${filtered.length}</strong> / ${allPlaces.length}`
@@ -377,9 +393,9 @@
     js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     js.onload = () => {
       map = L.map('places-map').setView([50.85, 4.35], 8); // Belgium
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         maxZoom: 18,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
       }).addTo(map);
       markerLayer = L.layerGroup().addTo(map);
       renderMarkers();
@@ -394,7 +410,21 @@
     if (!map || !markerLayer) return;
     markerLayer.clearLayers();
     const withCoords = filteredPlaces().filter(p => p.lat != null && p.lng != null);
-    if (!withCoords.length) return;
+    const note = document.getElementById('map-no-markers');
+    if (!withCoords.length) {
+      if (!note) {
+        const p = document.createElement('p');
+        p.id = 'map-no-markers';
+        p.className = 'map-note';
+        p.style.cssText = 'text-align:center;padding:14px 0;color:var(--muted);font-size:14px';
+        p.innerHTML = isKa()
+          ? 'ადგილებს ჯერ კოორდინატები არ აქვს — მარკერები მალე გამოჩნდება.'
+          : 'Places don’t have coordinates yet — markers will appear once they’re geocoded.';
+        document.getElementById('map-wrap').appendChild(p);
+      }
+      return;
+    }
+    if (note) note.remove();
     const bounds = [];
     withCoords.forEach(p => {
       const site = safeUrl(p.website);

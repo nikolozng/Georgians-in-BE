@@ -175,6 +175,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <span>Guides (Q&amp;A)</span>
       </div>
+      <div class="nav-sec">Tools</div>
+      <div class="nav-item" data-page="geocode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Geocode places</span>
+      </div>
     </aside>
 
     <main class="main">
@@ -249,6 +254,19 @@
         </div>
         <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="addCL()">+ Add step</button></div>
         <div id="clList"><div class="empty">Loading…</div></div>
+      </section>
+
+      <!-- GEOCODE PLACES -->
+      <section class="page" id="page-geocode">
+        <h1 class="page-title">Geocode places</h1>
+        <p class="page-sub">Fill in lat/lng for places that have an address but no coordinates. Uses OpenStreetMap Nominatim (1 req/sec, free).</p>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="geo-btn" onclick="startGeocode()">Geocode places</button>
+            <span id="geo-status" style="font-size:14px;color:var(--muted)"></span>
+          </div>
+          <div id="geo-log"></div>
+        </div>
       </section>
 
       <!-- GUIDES Q&A -->
@@ -671,6 +689,48 @@ document.querySelectorAll('#gChips .chip').forEach(c=>c.addEventListener('click'
   document.querySelectorAll('#gChips .chip').forEach(x=>x.classList.remove('on'));
   c.classList.add('on'); gKey=c.dataset.g; loadGuides();
 }));
+
+/* ---------- geocode places ---------- */
+async function startGeocode(){
+  const btn=document.getElementById('geo-btn');
+  const status=document.getElementById('geo-status');
+  const log=document.getElementById('geo-log');
+  btn.disabled=true;
+  status.textContent='Loading places…';
+  log.innerHTML='';
+
+  const {data,error}=await sb.from('places').select('id,name,address,city,lat,lng').eq('approved',true);
+  if(error){status.textContent='Error loading places: '+error.message;btn.disabled=false;return;}
+  const need=(data||[]).filter(p=>(p.address||p.city)&&p.lat==null&&p.lng==null);
+  if(!need.length){status.textContent='All places already have coordinates — nothing to do.';btn.disabled=false;return;}
+  status.textContent='Geocoding '+need.length+' place'+(need.length===1?'':'s')+'…';
+
+  let ok=0,fail=0;
+  for(let i=0;i<need.length;i++){
+    const p=need[i];
+    const q=[p.address,p.city,'Belgium'].filter(Boolean).join(', ');
+    status.textContent='('+(i+1)+'/'+need.length+') '+esc(p.name)+'…';
+    try{
+      const res=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q),{
+        headers:{'User-Agent':'geosin.be admin geocoder (niccogigauri@gmail.com)'}
+      });
+      const arr=await res.json();
+      if(arr.length&&arr[0].lat&&arr[0].lon){
+        const lat=parseFloat(arr[0].lat),lng=parseFloat(arr[0].lon);
+        const {error:ue}=await sb.from('places').update({lat:lat,lng:lng}).eq('id',p.id);
+        if(ue){fail++;log.innerHTML+='<div class="row"><span class="pill event">FAIL</span><div class="body"><div class="ttl">'+esc(p.name)+'</div><div class="meta">DB error: '+esc(ue.message)+'</div></div></div>';}
+        else{ok++;log.innerHTML+='<div class="row"><span class="pill live">OK</span><div class="body"><div class="ttl">'+esc(p.name)+'</div><div class="meta">'+lat.toFixed(5)+', '+lng.toFixed(5)+'</div></div></div>';}
+      }else{
+        fail++;log.innerHTML+='<div class="row"><span class="pill event">FAIL</span><div class="body"><div class="ttl">'+esc(p.name)+'</div><div class="meta">No results for: '+esc(q)+'</div></div></div>';
+      }
+    }catch(e){
+      fail++;log.innerHTML+='<div class="row"><span class="pill event">FAIL</span><div class="body"><div class="ttl">'+esc(p.name)+'</div><div class="meta">'+esc(e.message)+'</div></div></div>';
+    }
+    if(i<need.length-1) await new Promise(r=>setTimeout(r,1100));
+  }
+  status.textContent='Done — '+ok+' geocoded, '+fail+' failed.';
+  btn.disabled=false;
+}
 
 /* ---------- shared refresh ---------- */
 async function refresh(){ await Promise.all([loadQueue(), loadLive(), loadStats()]); }
