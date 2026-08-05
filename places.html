@@ -49,8 +49,10 @@
 
     .places-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     @media (max-width: 600px) { .places-grid { grid-template-columns: 1fr; } }
-    .p-card { border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); padding: 22px 24px; transition: border-color 0.15s, box-shadow 0.15s; }
+    .p-card { border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
     .p-card:hover { border-color: var(--rausch); box-shadow: 0 4px 14px rgba(255,56,92,0.08); }
+    .p-card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .p-card-body { padding: 22px 24px; }
     .p-type-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-full); margin-bottom: 10px; }
     .pt-restaurant { background: rgba(212,83,126,0.12); color: #d4537e; }
     .pt-shop       { background: rgba(29,158,117,0.12); color: #1d9e75; }
@@ -251,6 +253,11 @@
             <input class="form-input" id="p-map" type="url" maxlength="300" placeholder="https://maps.google.com/…" />
             <span class="form-hint"><span class="en">Helps us pin it on the map faster.</span><span class="ka">გვეხმარება რუკაზე სწრაფად მოვნიშნოთ.</span></span>
           </div>
+          <div class="form-group span-2">
+            <label class="form-label" for="p-image"><span class="en">Photo link (optional)</span><span class="ka">ფოტოს ბმული</span></label>
+            <input class="form-input" id="p-image" type="url" maxlength="500" placeholder="https://..." data-placeholder-en="https://..." data-placeholder-ka="https://..." />
+            <span class="form-hint"><span class="en">Link to a photo — from Google Maps, Facebook, or any image URL.</span><span class="ka">ფოტოს ბმული — Google Maps-იდან, Facebook-იდან ან ნებისმიერი სურათის URL.</span></span>
+          </div>
         </div>
         <div style="margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
           <button type="submit" class="btn btn-primary" id="p-submit"><span class="en">Submit place</span><span class="ka">გაგზავნა</span></button>
@@ -298,14 +305,18 @@
     if (p.phone) links.push(`<a href="tel:${escapeHtml(p.phone.replace(/\s+/g, ''))}">${escapeHtml(p.phone)}</a>`);
 
     const desc = isKa() && p.description_ka ? p.description_ka : p.description;
+    const imgSrc = safeUrl(p.image_url);
     return `
       <article class="p-card">
-        <span class="p-type-badge pt-${escapeHtml(p.type)}">${isKa() ? t.ka : t.en}</span>
-        <h3>${escapeHtml(p.name)}</h3>
-        ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
-        <div class="city-line">${escapeHtml(trKa(p.city))}${p.address ? ' · ' + escapeHtml(p.address) : ''}</div>
-        <p class="desc">${escapeHtml(desc)}</p>
-        ${links.length ? `<div class="p-links">${links.join('')}</div>` : ''}
+        ${imgSrc ? `<img class="p-card-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.remove()" />` : ''}
+        <div class="p-card-body">
+          <span class="p-type-badge pt-${escapeHtml(p.type)}">${isKa() ? t.ka : t.en}</span>
+          <h3>${escapeHtml(p.name)}</h3>
+          ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
+          <div class="city-line">${escapeHtml(trKa(p.city))}${p.address ? ' · ' + escapeHtml(p.address) : ''}</div>
+          <p class="desc">${escapeHtml(desc)}</p>
+          ${links.length ? `<div class="p-links">${links.join('')}</div>` : ''}
+        </div>
       </article>
     `;
   }
@@ -450,7 +461,8 @@
       description: descEl.value.trim(),
       website: document.getElementById('p-website').value.trim() || null,
       phone: document.getElementById('p-phone').value.trim() || null,
-      map_url: document.getElementById('p-map').value.trim() || null
+      map_url: document.getElementById('p-map').value.trim() || null,
+      image_url: document.getElementById('p-image').value.trim() || null
     };
     const { error } = await sb.from('places').insert(row);
     submitBtn.disabled = false;
