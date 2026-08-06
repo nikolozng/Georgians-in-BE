@@ -2,7 +2,13 @@
 .gitignore
 .cursorrules
 .assetsignore
+.claude
 .fuse_hidden*
 *.md
-SETUP.sql
+*.sql
 wrangler.jsonc
+worker.js
+supabase
+node_modules
+.wrangler
+package-lock.json

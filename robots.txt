@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://geosin.be/sitemap.xml
+Sitemap: https://geosin.be/blog/sitemap.xml

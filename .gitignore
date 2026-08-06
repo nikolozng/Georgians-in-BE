@@ -2,3 +2,8 @@
 *.bak
 *~
 .DS_Store
+
+# Local tooling (wrangler for previewing the blog Worker)
+node_modules/
+package-lock.json
+.wrangler/

@@ -164,7 +164,7 @@
           <a href="/scams.html" data-page="scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a>
         </div>
       </div>
-      <a href="/blog.html" data-page="blog.html"><span class="en">Blog</span><span class="ka">ბლოგი</span></a>
+      <a href="/blog" data-page="blog"><span class="en">Blog</span><span class="ka">ბლოგი</span></a>
     </div>
     <div class="nav-actions" id="nav-actions">
       <div class="lang-toggle">
@@ -219,7 +219,7 @@
           <li><a href="/checklists.html"><span class="en">Checklists</span><span class="ka">ჩეკლისტები</span></a></li>
           <li><a href="/scams.html"><span class="en">Avoid Scams</span><span class="ka">თაღლითობის პრევენცია</span></a></li>
           <li><a href="/guides.html"><span class="en">Guides / FAQ</span><span class="ka">გზამკვლევები</span></a></li>
-          <li><a href="/blog.html"><span class="en">Blog</span><span class="ka">ბლოგი</span></a></li>
+          <li><a href="/blog"><span class="en">Blog</span><span class="ka">ბლოგი</span></a></li>
           <li><a href="/about.html"><span class="en">About</span><span class="ka">შესახებ</span></a></li>
         </ul>
       </div>
@@ -258,8 +258,8 @@
       // so add the .html back before matching against data-page.
       let page = location.pathname.split('/').pop() || 'index.html';
       if (!page.includes('.')) page += '.html';
-      // Individual posts live at /blog/<slug>.html — highlight the Blog link for them
-      if (/^\/blog\//.test(location.pathname)) page = 'blog.html';
+      // The blog is served by the Worker at /blog and /blog/<slug> (no .html)
+      if (/^\/blog(\/|$)/.test(location.pathname)) page = 'blog';
       const link = nav.querySelector('a[data-page="' + page + '"]');
       if (link) {
         link.classList.add('active');

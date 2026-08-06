@@ -1,8 +1,27 @@
 {
   "name": "geosin-be",
   "compatibility_date": "2026-05-06",
+
+  // worker.js server-renders /blog, /blog/<slug> and /blog/sitemap.xml, and
+  // 301s the old /blog.html URLs. Every other request falls through to the
+  // static files below, exactly as before.
+  "main": "worker.js",
+
   "assets": {
     "directory": ".",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+
+    // Without this, Cloudflare answers browser navigations that match no file
+    // with 404.html and never runs the Worker — so /blog would 404 for real
+    // visitors even though curl saw it fine. These paths go to worker.js first.
+    "run_worker_first": ["/blog", "/blog/*", "/blog.html"]
+  },
+
+  // Public values — the same pair that already ships in auth.js.
+  // Row-level security in Supabase is what actually protects the data.
+  "vars": {
+    "SUPABASE_URL": "https://kikvckuaorpspxhtnpzd.supabase.co",
+    "SUPABASE_ANON_KEY": "sb_publishable_FsuRAVFjLNQ1q650FHw2cA_UhtakskW"
   }
 }
