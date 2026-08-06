@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYHRCQ0D5Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WYHRCQ0D5Y');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — news &amp; guides for Georgians in Belgium — geosin.be</title>
+  <meta name="description" content="Short, practical articles and news for Georgians living in Belgium — paperwork, permits, driving, taxes and everyday life, in Georgian and English." />
+  <meta property="og:title" content="Blog — news &amp; guides for Georgians in Belgium — geosin.be" />
+  <meta property="og:image" content="https://geosin.be/assets/hero-bruges.jpg" />
+  <meta property="og:description" content="Short, practical articles and news for Georgians living in Belgium, in Georgian and English." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geosin.be/blog.html" />
+  <link rel="canonical" href="https://geosin.be/blog.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    // Apply saved theme + language before first paint to prevent flash
+    (function () {
+      var t = localStorage.getItem('geosin-theme')
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      if (localStorage.getItem('geosin-lang') === 'ka') document.documentElement.lang = 'ka';
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css?v=5" />
+  <style>
+    .blog-filters {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      padding-bottom: 20px; border-bottom: 1px solid var(--hairline); margin-bottom: 28px;
+    }
+    .blog-count { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+    .post-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--hairline); }
+
+    .post-row {
+      display: block; padding: 24px 0; border-bottom: 1px solid var(--hairline);
+      transition: background 0.12s; margin: 0 -16px; padding-left: 16px; padding-right: 16px;
+    }
+    .post-row:hover { background: var(--surface); }
+
+    .post-meta {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted); margin-bottom: 8px;
+    }
+    .post-tag {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 3px 10px; border-radius: var(--r-full);
+      background: var(--surface); color: var(--muted); border: 1px solid var(--hairline);
+    }
+    .post-tag.news  { background: var(--rausch-light); color: var(--rausch-active); border-color: transparent; }
+    .post-tag.guide { background: #e6f4ea; color: #1a7f37; border-color: transparent; }
+
+    .post-row h2 { font-size: 20px; font-weight: 700; line-height: 1.35; margin-bottom: 6px; color: var(--ink); }
+    .post-row:hover h2 { color: var(--rausch); }
+    .post-row p { font-size: 15px; color: var(--body-text); line-height: 1.6; max-width: 70ch; }
+
+    .post-more {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 14px; font-weight: 600; color: var(--rausch); margin-top: 10px;
+    }
+
+    .empty-state {
+      background: var(--canvas); border: 1px dashed var(--hairline); border-radius: var(--r-md);
+      padding: 48px 24px; text-align: center; color: var(--muted);
+    }
+
+    /* Dark mode: the two coloured tags need their own values (light tints are unreadable) */
+    [data-theme="dark"] .post-tag.news  { background: #3a0f1a; color: #ff7d96; }
+    [data-theme="dark"] .post-tag.guide { background: #0d2013; color: #4ade80; }
+
+    @media (max-width: 700px) {
+      .post-row h2 { font-size: 18px; }
+      .post-row p  { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" id="site-nav" data-nav></nav>
+
+<div class="page-header">
+  <div class="container">
+    <p class="section-eyebrow" style="margin-bottom:8px">
+      <span data-lang-block="en">News &amp; articles</span>
+      <span data-lang-block="ka" style="display:none">სიახლეები და სტატიები</span>
+    </p>
+    <h1>
+      <span data-lang-block="en">Blog</span>
+      <span data-lang-block="ka" class="ka" style="display:none">ბლოგი</span>
+    </h1>
+    <p class="sub">
+      <span data-lang-block="en">Short, practical writing about life in Belgium — rules that change, deadlines worth knowing, and step-by-step guides.</span>
+      <span data-lang-block="ka" style="display:none" class="ka">მოკლე, პრაქტიკული სტატიები ბელგიაში ცხოვრებაზე — წესები, რომლებიც იცვლება, მნიშვნელოვანი ვადები და ნაბიჯ-ნაბიჯ გზამკვლევები.</span>
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <div class="blog-filters" id="blog-filters"></div>
+    <div class="blog-count" id="blog-count"></div>
+
+    <div id="post-list">
+      <div class="empty-state"><span class="en">Loading posts…</span><span class="ka">იტვირთება…</span></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer" data-footer="full"></footer>
+
+<script src="/shared.js?v=6"></script>
+<script>
+  const TAGS = [
+    { key: 'all',   en: 'All posts', ka: 'ყველა' },
+    { key: 'news',  en: 'News',      ka: 'სიახლეები' },
+    { key: 'guide', en: 'Guides',    ka: 'გზამკვლევები' }
+  ];
+
+  let posts = [];
+  let currentTag = 'all';
+
+  function isKa() { return document.documentElement.lang === 'ka'; }
+
+  // Georgian month names are spelled out here on purpose: not every browser
+  // ships ka-GE locale data, and the ones that don't fall back to English.
+  const KA_MONTHS = ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი',
+                     'ივლისი', 'აგვისტო', 'სექტემბერი', 'ოქტომბერი', 'ნოემბერი', 'დეკემბერი'];
+
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    if (isKa()) return `${d.getDate()} ${KA_MONTHS[d.getMonth()]}, ${d.getFullYear()}`;
+    return d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function filtered() {
+    return currentTag === 'all'
+      ? posts
+      : posts.filter(p => (p.tags || []).includes(currentTag));
+  }
+
+  function renderFilters() {
+    const counts = { all: posts.length };
+    posts.forEach(p => (p.tags || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+    document.getElementById('blog-filters').innerHTML = TAGS.map(t => `
+      <button class="cat-pill${t.key === currentTag ? ' active' : ''}" data-tag="${t.key}" onclick="setTag('${t.key}')">
+        ${isKa() ? t.ka : t.en} (${counts[t.key] || 0})
+      </button>
+    `).join('');
+  }
+
+  function setTag(key) {
+    currentTag = key;
+    renderFilters();
+    renderList();
+  }
+
+  function renderList() {
+    const list = document.getElementById('post-list');
+    const countEl = document.getElementById('blog-count');
+    const items = filtered();
+
+    countEl.textContent = isKa()
+      ? `${items.length} სტატია`
+      : `${items.length} post${items.length === 1 ? '' : 's'}`;
+
+    if (!items.length) {
+      list.innerHTML = `<div class="empty-state">${isKa()
+        ? 'ამ კატეგორიაში სტატია ჯერ არ არის.'
+        : 'No posts in this category yet.'}</div>`;
+      return;
+    }
+
+    list.innerHTML = `<div class="post-list">${items.map(p => {
+      const title   = isKa() ? (p.title_ka   || p.title_en)   : p.title_en;
+      const summary = isKa() ? (p.summary_ka || p.summary_en) : p.summary_en;
+      const tagsHtml = (p.tags || []).map(t => {
+        const meta = TAGS.find(x => x.key === t);
+        return `<span class="post-tag ${escapeHtml(t)}">${meta ? (isKa() ? meta.ka : meta.en) : escapeHtml(t)}</span>`;
+      }).join('');
+      return `
+        <a class="post-row" href="/blog/${encodeURIComponent(p.slug)}.html">
+          <div class="post-meta">
+            ${tagsHtml}
+            <time datetime="${escapeHtml(p.date)}">${escapeHtml(fmtDate(p.date))}</time>
+          </div>
+          <h2>${escapeHtml(title)}</h2>
+          <p>${escapeHtml(summary)}</p>
+          <span class="post-more">
+            ${isKa() ? 'სრულად წაკითხვა' : 'Read more'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </a>`;
+    }).join('')}</div>`;
+  }
+
+  async function loadPosts() {
+    try {
+      const res = await fetch('/blog/posts.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      // Newest first
+      posts = (Array.isArray(data) ? data : []).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+      renderFilters();
+      renderList();
+    } catch (e) {
+      console.error(e);
+      document.getElementById('post-list').innerHTML =
+        `<div class="empty-state"><span class="en">Could not load posts. Please refresh.</span><span class="ka">სტატიები ვერ ჩაიტვირთა. გთხოვთ, განაახლოთ გვერდი.</span></div>`;
+    }
+  }
+
+  window.onLangChange = function () { if (posts.length) { renderFilters(); renderList(); } };
+
+  loadPosts();
+</script>
+</body>
+</html>

@@ -39,6 +39,17 @@
     .check-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
     .check-list label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--body-text); cursor: pointer; }
     .check-list input { accent-color: var(--rausch); width: 15px; height: 15px; cursor: pointer; }
+    /* Only shown when at least one filter (or the search box) is active */
+    .clear-filters {
+      display: none; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; margin-top: 16px; padding: 8px 10px;
+      background: none; border: 1px solid var(--hairline); border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer;
+      font-family: inherit;
+    }
+    .clear-filters:hover { border-color: var(--rausch); color: var(--rausch); }
+    .clear-filters.visible { display: flex; }
+
     .search-bar-sm { display: flex; align-items: center; gap: 8px; border: 1px solid var(--hairline); border-radius: var(--r-sm); padding: 10px 14px; margin-bottom: 18px; }
     .search-bar-sm:focus-within { border-color: var(--ink); }
     .search-bar-sm input { border: none; outline: none; font-size: 14px; color: var(--ink); width: 100%; background: none; }
@@ -57,8 +68,8 @@
     [data-theme="dark"] .view-toggle button.active { color: #141414; }
 
     /* ── Uniform place cards ── */
-    .places-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    @media (max-width: 900px) { .places-grid { grid-template-columns: repeat(2, 1fr); } }
+    /* auto-fill: as many ~260px columns as fit — no fixed column count needed */
+    .places-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
     @media (max-width: 600px) { .places-grid { grid-template-columns: 1fr; } }
 
     .p-card {
@@ -72,14 +83,14 @@
     .p-card:focus-visible { outline: none; }
 
     .p-card-media {
-      position: relative; width: 100%; aspect-ratio: 4 / 3;
+      position: relative; width: 100%; aspect-ratio: 3 / 2;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden; background: var(--surface);
     }
     .p-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     .p-card-media .p-ph-icon { width: 30%; max-width: 74px; height: auto; }
 
-    .p-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+    .p-card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 5px; }
     .p-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 20px; }
     .p-card-city { font-size: 12px; color: var(--muted); }
     .p-type-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-full); }
@@ -89,10 +100,10 @@
     .pt-church     { background: rgba(127,119,221,0.14); color: #7f77dd; }
     .pt-community  { background: rgba(55,138,221,0.12); color: #378add; }
     .pt-other      { background: var(--surface); color: var(--muted); }
-    .p-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.3; margin: 0; }
+    .p-card h3 { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.3; margin: 0; }
     /* min-height reserves both lines so short descriptions don't shrink the card */
     .p-card p.desc {
-      font-size: 14px; color: var(--body-text); line-height: 1.5; margin: 0; min-height: 42px;
+      font-size: 13px; color: var(--body-text); line-height: 1.5; margin: 0; min-height: 39px;
       display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
@@ -181,24 +192,29 @@
 
         <h5><span class="en">Type</span><span class="ka">ტიპი</span></h5>
         <div class="check-list" id="type-filter">
-          <label><input type="checkbox" value="restaurant" onchange="applyFilter()" checked /> <span class="en">Restaurant / Café</span><span class="ka">რესტორანი / კაფე</span></label>
-          <label><input type="checkbox" value="shop" onchange="applyFilter()" checked /> <span class="en">Shop</span><span class="ka">მაღაზია</span></label>
-          <label><input type="checkbox" value="bakery" onchange="applyFilter()" checked /> <span class="en">Bakery</span><span class="ka">საცხობი</span></label>
-          <label><input type="checkbox" value="church" onchange="applyFilter()" checked /> <span class="en">Church</span><span class="ka">ეკლესია</span></label>
-          <label><input type="checkbox" value="community" onchange="applyFilter()" checked /> <span class="en">Community</span><span class="ka">საზოგადოებრივი</span></label>
-          <label><input type="checkbox" value="other" onchange="applyFilter()" checked /> <span class="en">Other</span><span class="ka">სხვა</span></label>
+          <label><input type="checkbox" value="restaurant" onchange="applyFilter()" /> <span class="en">Restaurant / Café</span><span class="ka">რესტორანი / კაფე</span></label>
+          <label><input type="checkbox" value="shop" onchange="applyFilter()" /> <span class="en">Shop</span><span class="ka">მაღაზია</span></label>
+          <label><input type="checkbox" value="bakery" onchange="applyFilter()" /> <span class="en">Bakery</span><span class="ka">საცხობი</span></label>
+          <label><input type="checkbox" value="church" onchange="applyFilter()" /> <span class="en">Church</span><span class="ka">ეკლესია</span></label>
+          <label><input type="checkbox" value="community" onchange="applyFilter()" /> <span class="en">Community</span><span class="ka">საზოგადოებრივი</span></label>
+          <label><input type="checkbox" value="other" onchange="applyFilter()" /> <span class="en">Other</span><span class="ka">სხვა</span></label>
         </div>
 
         <hr class="sidebar-divider" />
         <h5><span class="en">City</span><span class="ka">ქალაქი</span></h5>
         <div class="check-list" id="city-filter">
-          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" checked /> <span class="en">Brussels</span><span class="ka">ბრიუსელი</span></label>
-          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" checked /> <span class="en">Antwerp</span><span class="ka">ანტვერპენი</span></label>
-          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" checked /> <span class="en">Ghent</span><span class="ka">გენტი</span></label>
-          <label><input type="checkbox" value="Liège" onchange="applyFilter()" checked /> <span class="en">Liège</span><span class="ka">ლიეჟი</span></label>
-          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" checked /> <span class="en">Bruges</span><span class="ka">ბრიუგე</span></label>
-          <label><input type="checkbox" value="Other" onchange="applyFilter()" checked /> <span class="en">Other</span><span class="ka">სხვა</span></label>
+          <label><input type="checkbox" value="Brussels" onchange="applyFilter()" /> <span class="en">Brussels</span><span class="ka">ბრიუსელი</span></label>
+          <label><input type="checkbox" value="Antwerp" onchange="applyFilter()" /> <span class="en">Antwerp</span><span class="ka">ანტვერპენი</span></label>
+          <label><input type="checkbox" value="Ghent" onchange="applyFilter()" /> <span class="en">Ghent</span><span class="ka">გენტი</span></label>
+          <label><input type="checkbox" value="Liège" onchange="applyFilter()" /> <span class="en">Liège</span><span class="ka">ლიეჟი</span></label>
+          <label><input type="checkbox" value="Bruges" onchange="applyFilter()" /> <span class="en">Bruges</span><span class="ka">ბრიუგე</span></label>
+          <label><input type="checkbox" value="Other" onchange="applyFilter()" /> <span class="en">Other</span><span class="ka">სხვა</span></label>
         </div>
+
+        <button type="button" id="clear-filters" class="clear-filters" onclick="clearFilters()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <span class="en">Clear filters</span><span class="ka">ფილტრების გასუფთავება</span>
+        </button>
       </aside>
 
       <div>
@@ -339,7 +355,7 @@
 
 <footer class="site-footer" data-footer="full"></footer>
 
-<script src="/shared.js?v=5"></script>
+<script src="/shared.js?v=6"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js?v=9"></script>
 <script>
@@ -373,6 +389,14 @@
 
   function isKa() { return document.documentElement.lang === 'ka'; }
 
+  // In Georgian mode the Georgian name becomes the title (when the place has one);
+  // the other-language name is kept as a subtitle in the detail modal.
+  function displayName(p) { return (isKa() && p.name_ka) ? p.name_ka : p.name; }
+  function altName(p) {
+    if (isKa()) return p.name_ka ? p.name : '';
+    return p.name_ka || '';
+  }
+
   function typeKey(t) { return TYPE_LABEL[t] ? t : 'other'; }
   function typeName(t) { const l = TYPE_LABEL[typeKey(t)]; return isKa() ? l.ka : l.en; }
 
@@ -385,7 +409,7 @@
     return `
       <div class="${cls}" style="background:${color}1f">
         <svg class="p-ph-icon" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TYPE_ICON[key]}</svg>
-        ${imgSrc ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.remove()" />` : ''}
+        ${imgSrc ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(displayName(p))}" loading="lazy" onerror="this.remove()" />` : ''}
       </div>`;
   }
 
@@ -404,14 +428,14 @@
     const desc = isKa() && p.description_ka ? p.description_ka : p.description;
     return `
       <article class="p-card" data-id="${escapeHtml(p.id)}" role="button" tabindex="0"
-               aria-label="${escapeHtml(p.name)}">
+               aria-label="${escapeHtml(displayName(p))}">
         ${mediaHtml(p, 'p-card-media')}
         <div class="p-card-body">
           <div class="p-card-meta">
             <span class="p-type-badge pt-${escapeHtml(typeKey(p.type))}">${typeName(p.type)}</span>
             <span class="p-card-city">${escapeHtml(trKa(p.city))}</span>
           </div>
-          <h3>${escapeHtml(p.name)}</h3>
+          <h3>${escapeHtml(displayName(p))}</h3>
           <p class="desc">${escapeHtml(desc)}</p>
         </div>
       </article>
@@ -430,8 +454,8 @@
       ${safeUrl(p.image_url) ? mediaHtml(p, 'pl-modal-media') : ''}
       <div class="pl-modal-body">
         <span class="p-type-badge pt-${escapeHtml(typeKey(p.type))}">${typeName(p.type)}</span>
-        <h2 id="place-modal-title">${escapeHtml(p.name)}</h2>
-        ${p.name_ka ? `<div class="name-ka">${escapeHtml(p.name_ka)}</div>` : ''}
+        <h2 id="place-modal-title">${escapeHtml(displayName(p))}</h2>
+        ${altName(p) ? `<div class="name-ka">${escapeHtml(altName(p))}</div>` : ''}
         <div class="city-line">${cityLine}</div>
         <div class="desc">${escapeHtml(desc)}</div>
         ${linksHtml(p)}
@@ -479,9 +503,10 @@
     const q = (document.getElementById('p-search').value || '').toLowerCase().trim();
     const types = getChecked('type-filter');
     const cities = getChecked('city-filter');
+    // Nothing ticked in a group = no restriction from that group
     return allPlaces.filter(p => {
-      if (!types.includes(p.type || 'other')) return false;
-      if (!cities.includes(p.city) && !(p.city && !['Brussels','Antwerp','Ghent','Liège','Bruges'].includes(p.city) && cities.includes('Other'))) return false;
+      if (types.length && !types.includes(p.type || 'other')) return false;
+      if (cities.length && !cities.includes(p.city) && !(p.city && !['Brussels','Antwerp','Ghent','Liège','Bruges'].includes(p.city) && cities.includes('Other'))) return false;
       if (q) {
         const hay = [p.name, p.name_ka, p.description, p.description_ka, p.city, p.address].join(' ').toLowerCase();
         if (!hay.includes(q)) return false;
@@ -490,10 +515,20 @@
     });
   }
 
+  function clearFilters() {
+    document.querySelectorAll('#type-filter input, #city-filter input').forEach(i => { i.checked = false; });
+    document.getElementById('p-search').value = '';
+    applyFilter();
+  }
+
   function applyFilter() {
     const list = document.getElementById('p-list');
     const countEl = document.getElementById('results-count');
     const filtered = filteredPlaces();
+
+    const anyActive = document.querySelectorAll('#type-filter input:checked, #city-filter input:checked').length > 0
+      || !!document.getElementById('p-search').value.trim();
+    document.getElementById('clear-filters').classList.toggle('visible', anyActive);
 
     if (filtered.length === 0) {
       list.innerHTML = `<p class="no-results">${isKa() ? 'ადგილი ვერ მოიძებნა ამ ფილტრებით.' : 'No places match your filters.'}</p>`;
@@ -564,7 +599,7 @@
     const bounds = [];
     withCoords.forEach(p => {
       const site = safeUrl(p.website);
-      const popup = `<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.address || p.city)}` +
+      const popup = `<strong>${escapeHtml(displayName(p))}</strong><br>${escapeHtml(trKa(p.address || p.city))}` +
         (site ? `<br><a href="${escapeHtml(site)}" target="_blank" rel="noopener">${isKa() ? 'ვებგვერდი' : 'Website'}</a>` : '');
       L.circleMarker([p.lat, p.lng], {
         radius: 9, weight: 2, color: '#fff',
